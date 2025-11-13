@@ -68,6 +68,15 @@ REDIS_PASSWORD=ваш_redis_пароль
    ```
 3. Сохраните токен бота
 
+#### Telegram Bot Configuration
+
+**Webhook Setup (Production):**
+- Бот автоматически использует webhook в production для избежания конфликтов подключений
+- Webhook URL: `https://ваш-backend.amvera.io/bot<TELEGRAM_BOT_TOKEN>`
+- **Polling Mode (Development):** Используется для локальной разработки
+
+**Важно:** Убедитесь, что `FRONTEND_URL` указывает на production frontend для корректной работы Web App.
+
 ## Развертывание Redis
 
 ### ✅ Redis доступен в Amvera Cloud!
@@ -86,11 +95,11 @@ REDIS_PASSWORD=ваш_redis_пароль
 #### 3. Настройка переменных окружения
 В backend сервисе добавьте (используйте значения из настроек Redis сервиса):
 ```
-REDIS_URL=redis://redis:6379
 REDIS_PASSWORD=ваш_пароль
+NODE_ENV=production
 ```
 
-**Примечание:** Если REDIS_URL не работает, попробуйте использовать только REDIS_PASSWORD, и система автоматически подключится к локальному Redis (если он доступен) или использует in-memory fallback.
+**Важно:** Не устанавливайте `REDIS_URL` в production - система автоматически использует localhost Redis или in-memory fallback при недоступности Redis.
 
 ## Развертывание Backend
 

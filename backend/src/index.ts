@@ -30,8 +30,30 @@ app.use(express.json());
 // Routes
 app.use('/api/kucoin', kucoinRoutes);
 
-// Telegram Bot
-const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN!, { polling: true });
+// Telegram Bot - use webhook in production, polling in development
+const isProduction = process.env.NODE_ENV === 'production';
+console.log(`🔧 Environment: NODE_ENV=${process.env.NODE_ENV}, isProduction=${isProduction}`);
+
+const botOptions = isProduction
+  ? {
+    webHook: {
+      port: parseInt(process.env.PORT || '5000')
+    }
+  }
+  : { polling: true };
+
+console.log(`🤖 Telegram bot mode: ${isProduction ? 'webhook' : 'polling'}`);
+
+const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN!, botOptions);
+
+// Set webhook URL in production
+if (isProduction) {
+  const webhookUrl = `${process.env.FRONTEND_URL || 'https://kucoinbot-backend-alex69288.amvera.io'}/bot${process.env.TELEGRAM_BOT_TOKEN}`;
+  bot.setWebHook(webhookUrl);
+  console.log(`✅ Telegram webhook set to: ${webhookUrl}`);
+} else {
+  console.log('ℹ️ Using Telegram polling for development');
+}
 
 // Graceful shutdown
 process.on('SIGTERM', () => {
@@ -59,6 +81,12 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log('User disconnected:', socket.id);
   });
+});
+
+// Telegram webhook endpoint
+app.post(`/bot${process.env.TELEGRAM_BOT_TOKEN}`, (req, res) => {
+  bot.processUpdate(req.body);
+  res.sendStatus(200);
 });
 
 // Basic routes

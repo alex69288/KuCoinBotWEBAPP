@@ -88,13 +88,17 @@ try {
   // Try to import Bull and create Redis queue
   const Queue = (await import('bull')).default;
 
-  // Redis configuration with fallback
+  // Redis configuration - disable URL parsing in production due to Amvera issues
+  console.log(`🔧 Redis config: NODE_ENV=${process.env.NODE_ENV}, REDIS_URL=${process.env.REDIS_URL ? 'present' : 'not set'}`);
+
   let redisConfig: any = {
     host: '127.0.0.1',
     port: 6379,
   };
 
-  if (process.env.REDIS_URL) {
+  // In production, don't use REDIS_URL as it may point to HTTP endpoints
+  // Use only REDIS_PASSWORD for authentication
+  if (process.env.NODE_ENV !== 'production' && process.env.REDIS_URL) {
     try {
       const redisUrl = new URL(process.env.REDIS_URL);
       redisConfig = {
@@ -102,15 +106,17 @@ try {
         port: parseInt(redisUrl.port) || 6379,
         password: redisUrl.password || process.env.REDIS_PASSWORD || undefined,
       };
-      console.log('✅ Using Redis URL configuration');
+      console.log('✅ Using Redis URL configuration (development only)');
     } catch (error) {
       console.warn('⚠️ Invalid REDIS_URL format, using localhost fallback');
       redisConfig.password = process.env.REDIS_PASSWORD || undefined;
     }
   } else {
-    console.log('ℹ️ No REDIS_URL provided, using localhost Redis');
+    console.log('ℹ️ Using localhost Redis (production) or in-memory fallback');
     redisConfig.password = process.env.REDIS_PASSWORD || undefined;
   }
+
+  console.log(`🔧 Final Redis config: ${JSON.stringify({ host: redisConfig.host, port: redisConfig.port, hasPassword: !!redisConfig.password })}`);
 
   tradingQueue = new Queue('trading', {
     redis: redisConfig,
