@@ -10,6 +10,6 @@ build:
   additionalCommands: npm run build
 
 run:
-  command: node dist/index.js
+  command: node backend/dist/index.js
   containerPort: 5000
   persistenceMount: /data
