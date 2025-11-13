@@ -8,16 +8,18 @@
     "build": "tsc && vite build",
     "build-script": "npm run build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "node serve.cjs",
+    "serve": "node serve.cjs"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.17.15",
+    "axios": "^1.6.2",
+    "express": "^5.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "@tanstack/react-query": "^5.17.15",
-    "zustand": "^4.4.7",
     "recharts": "^2.9.3",
     "socket.io-client": "^4.7.4",
-    "axios": "^1.6.2"
+    "zustand": "^4.4.7"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",

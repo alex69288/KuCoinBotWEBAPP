@@ -11,5 +11,5 @@ build:
     cd frontend && npm run build
 
 run:
-  command: npm run preview
+  command: cd frontend && npm run preview
   containerPort: 4173
