@@ -6,7 +6,7 @@ meta:
 
 build:
   installCommand: npm install
-  additionalCommands: npm run build
+  buildCommand: build
 
 run:
   command: npm run preview
