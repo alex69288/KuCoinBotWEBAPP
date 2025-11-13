@@ -5,9 +5,10 @@ meta:
     version: latest
 
 build:
-  dockerfile: Dockerfile.redis
+  dockerfile: Dockerfile
 
 run:
   containerPort: 6379
   port: 6379
   persistenceMount: /data
+  command: redis-server --appendonly yes

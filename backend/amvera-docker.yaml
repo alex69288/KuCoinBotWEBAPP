@@ -10,6 +10,7 @@ build:
 run:
   containerPort: 8080
   port: 443
+  command: npm start
   env:
     - NODE_ENV=production
     - PORT=8080

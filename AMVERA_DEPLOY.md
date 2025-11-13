@@ -574,3 +574,83 @@ VITE_API_URL=https://kucoinbot-backend-docker.amvera.io/api
 
 **Если frontend не работает:**
 - Проверьте `VITE_API_URL` - он должен указывать на backend
+
+### Конфигурация полей amvera.yaml для Docker
+
+#### Раздел `build`:
+
+**`dockerfile`** - Укажите имя файла Dockerfile:
+- Для backend: `Dockerfile` (файл `backend/Dockerfile`)
+- Для frontend: `Dockerfile` (файл `frontend/Dockerfile`)
+- Для redis: `Dockerfile` (файл `redis/Dockerfile`)
+
+**`image`** - Используется ТОЛЬКО если нет Dockerfile:
+- Пример: `node:18-alpine` или `nginx:alpine`
+- Если указан `dockerfile`, этот параметр игнорируется
+
+**`command`** - Команда сборки (опционально):
+- Обычно не нужна, если команды указаны в Dockerfile
+- Пример: `npm run build && npm run test`
+
+#### Раздел `run`:
+
+**`containerPort`** - Порт внутри контейнера:
+- Backend: `8080` (порт приложения)
+- Frontend: `80` (порт nginx)
+- Redis: `6379` (порт Redis)
+
+**`port`** - Внешний порт Amvera:
+- Backend: `443` (HTTPS)
+- Frontend: `80` (HTTP) или `443` (HTTPS)
+- Redis: `6379` (внутренний порт Amvera)
+
+**`command`** - Команда запуска контейнера:
+- Backend: `npm start`
+- Frontend: `nginx -g 'daemon off;'`
+- Redis: `redis-server --appendonly yes`
+
+**`persistenceMount`** - Точка монтирования для данных:
+- Redis: `/data` (для сохранения данных Redis)
+
+**`env`** - Переменные окружения (массив):
+```yaml
+env:
+  - NODE_ENV=production
+  - PORT=8080
+```
+
+### Примеры заполнения полей:
+
+#### Backend сервис:
+```yaml
+build:
+  dockerfile: Dockerfile  # файл backend/Dockerfile
+
+run:
+  containerPort: 8080    # порт в контейнере
+  port: 443             # внешний порт Amvera
+  command: npm start    # команда запуска
+```
+
+#### Frontend сервис:
+```yaml
+build:
+  dockerfile: Dockerfile  # файл frontend/Dockerfile
+
+run:
+  containerPort: 80      # порт nginx в контейнере
+  port: 80              # внешний порт Amvera
+  command: nginx -g 'daemon off;'  # запуск nginx
+```
+
+#### Redis сервис:
+```yaml
+build:
+  dockerfile: Dockerfile  # файл redis/Dockerfile
+
+run:
+  containerPort: 6379    # порт Redis
+  port: 6379            # внешний порт Amvera
+  command: redis-server --appendonly yes  # команда запуска
+  persistenceMount: /data  # сохранение данных
+```

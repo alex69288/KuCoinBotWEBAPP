@@ -10,5 +10,6 @@ build:
 run:
   containerPort: 80
   port: 80
+  command: nginx -g 'daemon off;'
   env:
     - VITE_API_URL=https://kucoinbot-backend-docker.amvera.io/api
