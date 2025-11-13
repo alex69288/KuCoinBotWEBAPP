@@ -12,7 +12,7 @@
 
 **Решение:**
 1. **Удалите REDIS_URL** из переменных окружения backend сервиса в Amvera
-2. **Установите BACKEND_URL** = `https://kucoinbot-backend-alex69288.amvera.io`
+2. **Установите BACKEND_URL** = `https://kucoinbot-backend-alex69288.amvera.io` (без слэша в конце!)
 3. **Перезапустите** backend сервис
 4. **Подождите 2-3 минуты** после перезапуска перед проверкой логов
 

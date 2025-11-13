@@ -45,7 +45,7 @@ try {
     // Set webhook URL in production
     if (isProduction) {
         // Use BACKEND_URL for webhook, fallback to constructed URL
-        const backendUrl = process.env.BACKEND_URL || `https://kucoinbot-backend-alex69288.amvera.io`;
+        const backendUrl = (process.env.BACKEND_URL || `https://kucoinbot-backend-alex69288.amvera.io`).replace(/\/$/, ''); // Remove trailing slash
         const webhookUrl = `${backendUrl}/bot${process.env.TELEGRAM_BOT_TOKEN}`;
         console.log(`🔗 Setting webhook to backend URL: ${backendUrl}`);
         await bot.setWebHook(webhookUrl);
