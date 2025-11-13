@@ -310,63 +310,89 @@ WEBAPP_URL=https://kucoinbot-frontend-alex69288.amvera.io
 ### Требования
 - Docker и Docker Compose установлены
 - Минимум 2GB RAM, 2 CPU cores
+- Настроенный `.env` файл (уже создан в корне проекта)
 
 ### Быстрый запуск
 
-1. **Клонируйте репозиторий:**
-   ```bash
-   git clone <your-repo-url>
-   cd KuCoinBotV5WEBAPP
-   ```
-
-2. **Создайте .env файл в корне проекта:**
+1. **Убедитесь, что .env файл настроен:**
    ```env
-   # KuCoin API
-   KUCOIN_API_KEY=your_kucoin_api_key
-   KUCOIN_API_SECRET=your_kucoin_api_secret
-   KUCOIN_API_PASSPHRASE=your_kucoin_passphrase
-
-   # Telegram Bot
-   TELEGRAM_BOT_TOKEN=your_telegram_bot_token
-
-   # URLs (для локального развертывания)
-   FRONTEND_URL=http://localhost
+   # Server Configuration
+   PORT=8080
    BACKEND_URL=http://localhost:8080
+   FRONTEND_URL=http://localhost
+
+   # KuCoin API Keys
+   KUCOIN_API_KEY=ваш_ключ_kucoin
+   KUCOIN_API_SECRET=ваш_секрет_kucoin
+   KUCOIN_API_PASSPHRASE=ваш_пароль_kucoin
+
+   # Telegram Bot Configuration
+   TELEGRAM_BOT_TOKEN=ваш_токен_бота
+   TELEGRAM_CHAT_ID=ваш_chat_id
+   WEBAPP_URL=http://localhost
+
+   # Redis Configuration
+   REDIS_URL=redis://redis:6379
 
    # Environment
    NODE_ENV=production
    ```
 
-3. **Запустите сервисы:**
+2. **Запустите сервисы:**
    ```bash
    docker-compose up -d
    ```
 
-4. **Проверьте статус:**
+3. **Проверьте статус:**
    ```bash
    docker-compose ps
    ```
 
+4. **Проверьте логи:**
+   ```bash
+   docker-compose logs -f backend
+   docker-compose logs -f frontend
+   ```
+
 ### Доступ к сервисам
-- **Frontend:** http://localhost
+- **Frontend (React SPA):** http://localhost
 - **Backend API:** http://localhost:8080
-- **Redis:** localhost:6379 (внутри контейнеров)
+- **Backend Health Check:** http://localhost:8080/health
+- **Redis:** localhost:6379 (внутри контейнеров, недоступен извне)
 
 ### Управление сервисами
 ```bash
-# Остановить сервисы
+# Остановить все сервисы
 docker-compose down
 
-# Пересобрать и запустить
-docker-compose up --build
+# Пересобрать и запустить заново
+docker-compose up --build -d
 
-# Просмотр логов
+# Просмотр логов всех сервисов
+docker-compose logs -f
+
+# Просмотр логов конкретного сервиса
 docker-compose logs -f backend
 docker-compose logs -f frontend
+docker-compose logs -f redis
 
-# Очистка
+# Перезапустить конкретный сервис
+docker-compose restart backend
+
+# Очистить volumes (данные Redis будут удалены!)
 docker-compose down -v
 ```
+
+### Структура сервисов
+- **redis:** Redis с персистентностью данных (`redis_data` volume)
+- **backend:** Node.js приложение (порт 8080) с health checks
+- **frontend:** Nginx с React SPA (порт 80) с health checks
+
+### Health Checks
+Все сервисы имеют автоматические health checks:
+- Redis: проверка подключения каждые 10 секунд
+- Backend: HTTP запрос к `/health` каждые 30 секунд
+- Frontend: HTTP запрос к корню каждые 30 секунд
 
 ### Структура Docker сервисов
 - **redis:** Redis с персистентностью данных
@@ -378,7 +404,86 @@ docker-compose down -v
 - Для HTTPS настройте reverse proxy (nginx, traefik, etc.)
 
 ### Производственное развертывание
-1. Настройте домен и SSL сертификаты
-2. Измените `FRONTEND_URL` и `BACKEND_URL` на ваш домен
-3. Используйте docker-compose.prod.yml для продакшена (если нужно)
-4. Настройте firewall для портов 80, 8080, 6379
+
+#### На сервере/VPS:
+1. **Установите Docker и Docker Compose:**
+   ```bash
+   # Ubuntu/Debian
+   sudo apt update
+   sudo apt install docker.io docker-compose
+   sudo systemctl enable docker
+   sudo systemctl start docker
+   ```
+
+2. **Клонируйте репозиторий:**
+   ```bash
+   git clone https://github.com/alex69288/KuCoinBotV5.git
+   cd KuCoinBotV5WEBAPP
+   ```
+
+3. **Настройте .env файл:**
+   - Измените URLs на ваш домен/IP
+   - Установите реальные API ключи
+
+4. **Запустите сервисы:**
+   ```bash
+   docker-compose up -d
+   ```
+
+#### Настройка домена и HTTPS:
+1. **Получите SSL сертификат** (Let's Encrypt):
+   ```bash
+   sudo apt install certbot
+   sudo certbot certonly --standalone -d yourdomain.com
+   ```
+
+2. **Настройте Nginx reverse proxy** (опционально):
+   ```nginx
+   server {
+       listen 443 ssl;
+       server_name yourdomain.com;
+       
+       ssl_certificate /etc/letsencrypt/live/yourdomain.com/fullchain.pem;
+       ssl_certificate_key /etc/letsencrypt/live/yourdomain.com/privkey.pem;
+       
+       location / {
+           proxy_pass http://localhost;
+           proxy_set_header Host $host;
+           proxy_set_header X-Real-IP $remote_addr;
+       }
+       
+       location /api {
+           proxy_pass http://localhost:8080;
+           proxy_set_header Host $host;
+           proxy_set_header X-Real-IP $remote_addr;
+       }
+   }
+   ```
+
+3. **Обновите .env файл:**
+   ```env
+   FRONTEND_URL=https://yourdomain.com
+   BACKEND_URL=https://yourdomain.com
+   WEBAPP_URL=https://yourdomain.com
+   ```
+
+#### Firewall настройки:
+```bash
+# Разрешить только необходимые порты
+sudo ufw allow 22    # SSH
+sudo ufw allow 80    # HTTP
+sudo ufw allow 443   # HTTPS
+sudo ufw --force enable
+```
+
+#### Мониторинг:
+```bash
+# Статус сервисов
+docker-compose ps
+
+# Использование ресурсов
+docker stats
+
+# Логи с фильтром ошибок
+docker-compose logs -f | grep -i error
+```
