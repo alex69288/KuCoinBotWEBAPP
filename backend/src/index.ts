@@ -19,7 +19,7 @@ const io = new Server(server, {
   }
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = parseInt(process.env.PORT || '5000', 10);
 
 // Middleware
 app.use(helmet());
@@ -55,12 +55,26 @@ try {
 
   // Set webhook URL in production
   if (isProduction) {
-    // Use BACKEND_URL for webhook, fallback to constructed URL
-    const backendUrl = (process.env.BACKEND_URL || `https://kucoinbot-backend-alex69288.amvera.io`).replace(/\/$/, ''); // Remove trailing slash
-    const webhookUrl = `${backendUrl}/bot${process.env.TELEGRAM_BOT_TOKEN}`;
-    console.log(`🔗 Setting webhook to backend URL: ${backendUrl}`);
-    await bot.setWebHook(webhookUrl);
-    console.log(`✅ Telegram webhook set to: ${webhookUrl}`);
+    try {
+      // Use BACKEND_URL for webhook, fallback to constructed URL
+      const backendUrl = (process.env.BACKEND_URL || `https://kucoinbot-backend-alex69288.amvera.io`).replace(/\/$/, ''); // Remove trailing slash
+      const webhookUrl = `${backendUrl}/bot${process.env.TELEGRAM_BOT_TOKEN}`;
+
+      // Check if webhook is already set
+      const webhookInfo = await bot.getWebHookInfo();
+      console.log(`🔍 Current webhook info: ${JSON.stringify(webhookInfo)}`);
+
+      if (webhookInfo.url === webhookUrl) {
+        console.log(`✅ Webhook already set to correct URL: ${webhookUrl}`);
+      } else {
+        console.log(`🔗 Setting webhook to backend URL: ${backendUrl}`);
+        await bot.setWebHook(webhookUrl);
+        console.log(`✅ Telegram webhook set to: ${webhookUrl}`);
+      }
+    } catch (error) {
+      console.error('❌ Failed to set webhook:', error);
+      // Continue anyway - webhook might already be set
+    }
   } else {
     console.log('ℹ️ Using Telegram polling for development');
   }
@@ -125,6 +139,22 @@ try {
   if (isProduction) {
     console.log('⏳ Waiting 5 seconds before starting server...');
     await new Promise(resolve => setTimeout(resolve, 5000));
+
+    // Try to check if port is available
+    try {
+      const { createServer } = await import('net');
+      const testServer = createServer();
+      await new Promise((resolve, reject) => {
+        testServer.listen(PORT, '127.0.0.1', () => {
+          testServer.close();
+          resolve(true);
+        });
+        testServer.on('error', reject);
+      });
+      console.log('✅ Port check completed - port was available');
+    } catch (error) {
+      console.log('ℹ️ Port check completed - port is in use (expected)');
+    }
   }
 
   server.listen({
@@ -136,6 +166,7 @@ try {
     console.error('Failed to start server:', error);
     if (error.code === 'EADDRINUSE') {
       console.error(`Port ${PORT} is already in use. Please check if another instance is running.`);
+      console.error('💡 Try waiting longer or check Amvera configuration');
     }
     process.exit(1);
   });
