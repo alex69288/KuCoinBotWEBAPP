@@ -209,6 +209,36 @@ build:
   dockerfile: Dockerfile  # Amvera уже в папке backend/
 ```
 
+### Важно: Имена файлов конфигурации
+
+**Amvera ищет файл `amvera.yaml` в корне папки сервиса.**
+
+❌ **Не работает:** `amvera-docker.yaml`  
+✅ **Работает:** `amvera.yaml`
+
+Поэтому переименуйте файлы:
+- `backend/amvera-docker.yaml` → `backend/amvera.yaml`
+- `frontend/amvera-docker.yaml` → `frontend/amvera.yaml`
+- `redis/amvera.yaml` (уже правильно)
+
+### Структура файлов после исправления:
+
+```
+backend/
+├── amvera.yaml      # Docker конфигурация
+├── Dockerfile       # Docker образ
+└── ...
+
+frontend/
+├── amvera.yaml      # Docker конфигурация  
+├── Dockerfile       # Docker образ
+└── ...
+
+redis/
+├── amvera.yaml      # Docker конфигурация
+└── Dockerfile       # Docker образ
+```
+
 ## Переменные окружения для Backend
 
 **ОБЯЗАТЕЛЬНЫЕ переменные (все должны быть установлены!):**

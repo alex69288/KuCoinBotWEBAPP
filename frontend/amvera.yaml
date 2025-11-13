@@ -1,15 +1,15 @@
 meta:
-  environment: node
+  environment: docker
   toolchain:
-    name: browser
-    version: 20
+    name: docker
+    version: latest
 
 build:
-  installCommand: npm install
-  additionalCommands: |
-    cd frontend && npm install
-    cd frontend && npm run build
+  dockerfile: Dockerfile
 
 run:
-  command: cd frontend && npm run preview
   containerPort: 80
+  port: 80
+  command: nginx -g 'daemon off;'
+  env:
+    - VITE_API_URL=https://kucoinbot-backend-docker.amvera.io/api

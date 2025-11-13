@@ -1,14 +1,17 @@
 meta:
-  environment: node
+  environment: docker
   toolchain:
-    name: npm
-    version: 20
+    name: docker
+    version: latest
 
 build:
-  additionalCommands: npm run build
-  persistenceMount: /data
+  dockerfile: Dockerfile
 
 run:
-  command: npm run start
   containerPort: 8080
   port: 443
+  command: npm start
+  env:
+    - NODE_ENV=production
+    - PORT=8080
+    - PORT=8080
