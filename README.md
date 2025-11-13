@@ -88,7 +88,19 @@ A Telegram Web App for trading on KuCoin cryptocurrency exchange with real-time 
    ./start-dev.sh
    ```
 
-6. **Access the application**
+6. **Production deployment**
+
+   For local production testing or server deployment:
+   ```bash
+   # Windows
+   start-production.bat
+
+   # Linux/Mac
+   chmod +x start-production.sh
+   ./start-production.sh
+   ```
+
+7. **Access the application**
    - Frontend: http://localhost:3000
    - Backend API: http://localhost:5000
 
