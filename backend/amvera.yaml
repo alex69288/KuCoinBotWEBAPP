@@ -6,9 +6,7 @@ meta:
 
 build:
   additionalCommands: npm run build
-  persistenceMount:
-    - path: /data
-      size: 1Gi
+  persistenceMount: /data
 
 run:
   command: npm run start
