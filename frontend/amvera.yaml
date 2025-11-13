@@ -5,6 +5,7 @@ meta:
     version: latest
 
 build:
+  context: frontend
   dockerfile: Dockerfile
 
 run:
