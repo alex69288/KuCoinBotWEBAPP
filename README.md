@@ -114,6 +114,15 @@ TELEGRAM_CHAT_ID=your_chat_id
 REDIS_URL=redis://localhost:6379
 ```
 
+#### Variable Descriptions
+- `PORT` - Server port (default: 5000)
+- `FRONTEND_URL` - Frontend application URL for CORS
+- `KUCOIN_API_KEY` - KuCoin API key (leave empty for sandbox mode)
+- `KUCOIN_API_SECRET` - KuCoin API secret
+- `KUCOIN_API_PASSPHRASE` - KuCoin API passphrase
+- `TELEGRAM_BOT_TOKEN` - Telegram bot token from @BotFather
+- `REDIS_URL` - Redis connection URL for Bull queues (default: redis://127.0.0.1:6379)
+
 ### Telegram Bot Setup
 
 1. Create a bot with @BotFather on Telegram
@@ -233,6 +242,69 @@ Build and serve static files, or deploy to Vercel/Netlify.
    git remote set-url origin https://github.com/alex69288/KuCoinBotV5.git
    # Use your GitHub username and token when prompted
    ```
+
+## Deployment on Amvera
+
+This project is configured for deployment on [Amvera Cloud](https://amvera.ru/).
+
+### Backend Deployment
+
+1. **Create Backend Application**:
+   - Go to Amvera dashboard
+   - Create new application
+   - Connect your GitHub repository
+   - The `backend/amvera.yaml` file will be automatically detected
+
+2. **Configure Environment Variables**:
+   In the application settings, add these variables:
+   ```
+   KUCOIN_API_KEY=your_kucoin_api_key
+   KUCOIN_API_SECRET=your_kucoin_secret
+   KUCOIN_API_PASSPHRASE=your_kucoin_passphrase
+   TELEGRAM_BOT_TOKEN=your_telegram_bot_token
+   FRONTEND_URL=https://your-frontend-app.amvera.io
+   REDIS_URL=redis://amvera-<username>-run-<redis-project>:6379
+   ```
+
+3. **Create Redis Database**:
+   - Create a new pre-configured service
+   - Choose "Databases" → "Redis"
+   - Set tariff "Начальный" or higher
+   - Add environment variable: `REDIS_ARGS=--requirepass your_strong_password`
+   - Note the internal domain name for connection
+
+### Frontend Deployment
+
+1. **Create Frontend Application**:
+   - Create new application in Amvera
+   - Connect the same GitHub repository
+   - Set source path to `frontend/`
+   - The `frontend/amvera.yaml` will be automatically detected
+
+2. **Configure Environment Variables**:
+   ```
+   VITE_API_URL=https://your-backend-app.amvera.io/api
+   ```
+
+### Networking Setup
+
+1. **Backend Networking**:
+   - The backend will be available at `https://kucoinbot-backend-<username>.amvera.io`
+
+2. **Frontend Networking**:
+   - The frontend will be available at `https://kucoinbot-frontend-<username>.amvera.io`
+
+3. **Update Telegram Bot**:
+   - Set web app URL in bot settings to your frontend URL
+   - Add `?chat_id=<user_id>` parameter support
+
+### Database Connection
+
+For production, connect the backend to Redis:
+- Create Redis service in Amvera
+- Use the internal domain: `amvera-<username>-run-<redis-project>`
+- Port: `6379`
+- Set `REDIS_URL` in backend environment variables
 
 ## License
 
