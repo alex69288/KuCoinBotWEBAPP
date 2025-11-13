@@ -86,10 +86,10 @@ Redis доступен в Amvera Cloud!
 - `FRONTEND_URL` - URL фронтенда (например: `https://kucoinbot-frontend-alex69288.amvera.io`)
 - `BACKEND_URL` - **ОБЯЗАТЕЛЬНО!** URL бэкенда (например: `https://kucoinbot-backend-alex69288.amvera.io`)
 - `NODE_ENV` - **ОБЯЗАТЕЛЬНО!** установите строго в `production`
+- `PORT` - **ОБЯЗАТЕЛЬНО!** установите на `10000` (должен совпадать с containerPort)
 
 **Опциональные (для Redis):**
 - `REDIS_PASSWORD` - Пароль Redis (если используется)
-- `PORT` - Порт сервера (по умолчанию 10000)
 
 **КРИТИЧНО: НЕ устанавливайте `REDIS_URL` в Amvera!**
 
@@ -103,6 +103,7 @@ Redis доступен в Amvera Cloud!
 3. Перейдите в раздел "Переменные окружения"
 4. **Убедитесь, что установлены:**
    - `NODE_ENV=production`
+   - `PORT=10000` (обязательно! должен совпадать с containerPort)
    - `BACKEND_URL=https://kucoinbot-backend-alex69288.amvera.io` (замените на ваш реальный URL)
    - `FRONTEND_URL=https://kucoinbot-frontend-alex69288.amvera.io`
 5. **Убедитесь, что НЕ установлена:** `REDIS_URL`
