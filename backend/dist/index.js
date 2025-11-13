@@ -125,7 +125,7 @@ try {
             const { createServer } = await import('net');
             const testServer = createServer();
             await new Promise((resolve, reject) => {
-                testServer.listen(PORT, '127.0.0.1', () => {
+                testServer.listen(PORT, '0.0.0.0', () => {
                     testServer.close();
                     resolve(true);
                 });
@@ -139,9 +139,9 @@ try {
     }
     server.listen({
         port: PORT,
-        host: isProduction ? '127.0.0.1' : '127.0.0.1'
+        host: isProduction ? '0.0.0.0' : '127.0.0.1'
     }, () => {
-        console.log(`Server running on ${isProduction ? '127.0.0.1' : '127.0.0.1'}:${PORT}`);
+        console.log(`Server running on ${isProduction ? '0.0.0.0' : '127.0.0.1'}:${PORT}`);
     }).on('error', (error) => {
         console.error('Failed to start server:', error);
         if (error.code === 'EADDRINUSE') {
