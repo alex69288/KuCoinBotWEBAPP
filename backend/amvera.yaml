@@ -6,11 +6,10 @@ meta:
 
 build:
   additionalCommands: npm run build
+  persistenceMount:
+    - path: /data
+      size: 1Gi
 
 run:
   command: npm run start
   containerPort: 5000
-
-persistenceMount:
-  - path: /data
-    size: 1Gi
