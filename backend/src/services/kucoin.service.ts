@@ -8,7 +8,8 @@ export class KuCoinService {
       apiKey: process.env.KUCOIN_API_KEY,
       secret: process.env.KUCOIN_API_SECRET,
       password: process.env.KUCOIN_API_PASSPHRASE,
-      sandbox: !process.env.KUCOIN_API_KEY, // Use sandbox if no API key
+      // KuCoin doesn't support sandbox mode
+      // sandbox: !process.env.KUCOIN_API_KEY,
     });
   }
 
