@@ -26,21 +26,28 @@
 ### 2. Настройка переменных окружения
 В панели управления Amvera настройте следующие переменные:
 
-#### Backend переменные:
+#### Backend переменные (Node.js Server):
 ```
 KUCOIN_API_KEY=ваш_kucoin_api_key
 KUCOIN_API_SECRET=ваш_kucoin_api_secret
 KUCOIN_API_PASSPHRASE=ваш_kucoin_api_passphrase
 TELEGRAM_BOT_TOKEN=ваш_telegram_bot_token
+TELEGRAM_CHAT_ID=ваш_telegram_chat_id
 REDIS_URL=redis://amvera-<username>-run-<redis-project>:6379
 REDIS_PASSWORD=ваш_redis_пароль
-NODE_ENV=production
+FRONTEND_URL=https://ваш-frontend.amvera.io
 PORT=80
+NODE_ENV=production
 ```
 
-#### Frontend переменные:
+#### Frontend переменные (Node.js Browser):
 ```
 VITE_API_URL=https://ваш-backend.amvera.io
+```
+
+#### Redis переменные (если используется внешний Redis):
+```
+REDIS_PASSWORD=ваш_redis_пароль
 ```
 
 ### 3. Получение API ключей KuCoin
