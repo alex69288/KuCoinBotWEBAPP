@@ -49,14 +49,18 @@ Redis доступен в Amvera Cloud!
 - `KUCOIN_API_SECRET` - Секрет KuCoin
 - `KUCOIN_API_PASSPHRASE` - Пароль KuCoin
 - `TELEGRAM_BOT_TOKEN` - Токен Telegram бота
-- `FRONTEND_URL` - URL фронтенда
+- `FRONTEND_URL` - URL фронтенда (например: `https://kucoinbot-frontend-alex69288.amvera.io`)
+- `BACKEND_URL` - **ОБЯЗАТЕЛЬНО** URL бэкенда (например: `https://kucoinbot-backend-alex69288.amvera.io`)
 - `NODE_ENV` - **ОБЯЗАТЕЛЬНО** установите в `production` для корректной работы webhook и Redis
 
 Опциональные (для Redis):
 - `REDIS_PASSWORD` - Пароль Redis (если используется)
 - `PORT` - Порт сервера (по умолчанию 5000)
 
-**Важно:** Не устанавливайте `REDIS_URL` в продакшене на Amvera! Redis должен быть доступен по localhost:6379.
+**Важно:** 
+- **НЕ устанавливайте** `REDIS_URL` в продакшене на Amvera! Redis должен быть доступен по localhost:6379.
+- **NODE_ENV** должен быть строго `production` (не `PRODUCTION` или другие варианты).
+- **BACKEND_URL** должен указывать на ваш backend сервис в Amvera.
 
 ## Домены
 
@@ -99,8 +103,37 @@ Redis доступен в Amvera Cloud!
 1. Перейдите в раздел "Логи" вашего backend сервиса в Amvera
 2. Ищите сообщения:
    - `🔧 Environment: NODE_ENV=production, isProduction=true`
+   - `🔧 URLs: FRONTEND_URL=https://..., BACKEND_URL=https://...`
+   - `🔧 Bot Token: present`
    - `🤖 Telegram bot mode: webhook`
-   - `🔧 Redis config: NODE_ENV=production, REDIS_URL=not set`
+   - `� Setting webhook to backend URL: https://...`
+   - `✅ Telegram webhook set to: https://kucoinbot-backend-.../bot...`
+   - `�🔧 Redis config: NODE_ENV=production, REDIS_URL=not set`
    - `🔧 Final Redis config: {"host":"127.0.0.1","port":6379,"hasPassword":true/false}`
 
-Если видите другие значения, перепроверьте переменные окружения и перезапустите сервис.
+**Если видите другие значения:**
+- `NODE_ENV=undefined` → Установите `NODE_ENV=production`
+- `BACKEND_URL=undefined` → Установите URL вашего backend сервиса
+- `🤖 Telegram bot mode: polling` → Проверьте NODE_ENV
+- `🔧 Redis config: REDIS_URL=present` → Удалите REDIS_URL переменную
+- Webhook URL содержит `localhost` → Проверьте BACKEND_URL
+
+### Конкретные ошибки и их решения
+
+#### Ошибка "409 Conflict: terminated by other getUpdates request"
+**Причина:** Бот использует polling вместо webhook
+**Решение:** 
+1. Установите `NODE_ENV=production`
+2. Установите `BACKEND_URL` на URL вашего backend сервиса
+3. Перезапустите сервис
+
+#### Ошибка "Protocol error, got "H" as reply type byte"
+**Причина:** REDIS_URL указывает на HTTP endpoint вместо Redis
+**Решение:** Удалите переменную `REDIS_URL` из настроек сервиса
+
+#### Ошибка "listen EADDRINUSE: address already in use"
+**Причина:** Порт уже занят другим процессом
+**Решение:** 
+1. Проверьте, что нет других экземпляров приложения
+2. Перезапустите сервис в Amvera
+3. Если проблема persists, измените порт через переменную `PORT`

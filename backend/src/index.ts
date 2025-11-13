@@ -33,6 +33,8 @@ app.use('/api/kucoin', kucoinRoutes);
 // Telegram Bot - use webhook in production, polling in development
 const isProduction = process.env.NODE_ENV === 'production';
 console.log(`🔧 Environment: NODE_ENV=${process.env.NODE_ENV}, isProduction=${isProduction}`);
+console.log(`🔧 URLs: FRONTEND_URL=${process.env.FRONTEND_URL}, BACKEND_URL=${process.env.BACKEND_URL}`);
+console.log(`🔧 Bot Token: ${process.env.TELEGRAM_BOT_TOKEN ? 'present' : 'missing'}`);
 
 const botOptions = isProduction
   ? {
@@ -48,7 +50,10 @@ const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN!, botOptions);
 
 // Set webhook URL in production
 if (isProduction) {
-  const webhookUrl = `${process.env.FRONTEND_URL || 'https://kucoinbot-backend-alex69288.amvera.io'}/bot${process.env.TELEGRAM_BOT_TOKEN}`;
+  // Use BACKEND_URL for webhook, fallback to constructed URL
+  const backendUrl = process.env.BACKEND_URL || `https://kucoinbot-backend-alex69288.amvera.io`;
+  const webhookUrl = `${backendUrl}/bot${process.env.TELEGRAM_BOT_TOKEN}`;
+  console.log(`🔗 Setting webhook to backend URL: ${backendUrl}`);
   bot.setWebHook(webhookUrl);
   console.log(`✅ Telegram webhook set to: ${webhookUrl}`);
 } else {
