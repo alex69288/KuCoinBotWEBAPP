@@ -12,4 +12,4 @@ build:
 
 run:
   command: cd frontend && npm run preview
-  containerPort: 4173
+  containerPort: 80
