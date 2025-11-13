@@ -121,8 +121,11 @@ try {
     });
   });
 
-  server.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+  server.listen({
+    port: PORT,
+    host: isProduction ? '0.0.0.0' : '127.0.0.1'
+  }, () => {
+    console.log(`Server running on ${isProduction ? '0.0.0.0' : '127.0.0.1'}:${PORT}`);
   }).on('error', (error: any) => {
     console.error('Failed to start server:', error);
     if (error.code === 'EADDRINUSE') {
