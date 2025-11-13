@@ -24,5 +24,5 @@
 Проект настроен для развертывания на Amvera Cloud с файлами `amvera.yaml` в директориях `backend/` и `frontend/`.
 - **Backend**: Node.js сервер с Express, использует `backend/amvera.yaml` для конфигурации сборки/запуска
 - **Frontend**: React SPA, использует `frontend/amvera.yaml` для обслуживания статических файлов
-- **База данных**: Поддержка Redis для очередей Bull (опционально, есть fallback на in-memory очередь)
+- **База данных**: Поддержка Redis для очередей Bull (доступен в Amvera с persistenceMount и REDIS_ARGS)
 - **Переменные окружения**: Настраиваются через панель Amvera, не в `.env` для продакшена

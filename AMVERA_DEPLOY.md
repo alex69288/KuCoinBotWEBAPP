@@ -16,14 +16,18 @@
 4. Добавьте переменную: `VITE_API_URL=https://your-backend-app.amvera.io/api`
 
 ### 3. Redis (опционально, для очередей)
-**ВНИМАНИЕ:** Redis недоступен в России через Amvera Cloud!
+**ОБНОВЛЕНИЕ:** Redis доступен в Amvera Cloud!
 
-**Альтернативы:**
-1. **Без Redis** - приложение автоматически использует in-memory очередь
-2. **Внешний Redis** - используйте облачный Redis (Upstash, Redis Labs)
-3. **Локальный Redis** - для локальной разработки
+1. Создайте преднастроенный сервис "Redis"
+2. Тариф "Начальный" или выше
+3. **persistenceMount**: `/data` (для сохранения данных Redis)
+4. **REDIS_ARGS**: `--requirepass ваш_пароль` (обязательно!)
+5. В backend добавьте: `REDIS_URL=redis://amvera-<username>-run-<redis-project>:6379`
+6. Добавьте переменную: `REDIS_PASSWORD=ваш_пароль`
 
-Если Redis недоступен, приложение будет работать с in-memory очередью (подходит для небольшого количества ордеров).
+**Пример настройки Redis сервиса:**
+- persistenceMount: `/data`
+- REDIS_ARGS: `--requirepass mySecurePass123`
 
 ### 4. Настройка Telegram бота
 - В настройках бота установите Web App URL: `https://your-frontend-app.amvera.io`
@@ -38,8 +42,9 @@
 - `TELEGRAM_BOT_TOKEN` - Токен Telegram бота
 - `FRONTEND_URL` - URL фронтенда
 
-Опциональные:
-- `REDIS_URL` - URL Redis для очередей (если доступен)
+Опциональные (для Redis):
+- `REDIS_URL` - URL Redis сервиса Amvera
+- `REDIS_PASSWORD` - Пароль Redis (если используется)
 - `PORT` - Порт сервера (по умолчанию 5000)
 
 ## Домены

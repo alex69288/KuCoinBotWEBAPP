@@ -89,7 +89,11 @@ try {
   const Queue = (await import('bull')).default;
 
   tradingQueue = new Queue('trading', {
-    redis: process.env.REDIS_URL || 'redis://127.0.0.1:6379',
+    redis: {
+      host: process.env.REDIS_URL ? new URL(process.env.REDIS_URL).hostname : '127.0.0.1',
+      port: process.env.REDIS_URL ? parseInt(new URL(process.env.REDIS_URL).port) || 6379 : 6379,
+      password: process.env.REDIS_PASSWORD || undefined,
+    },
     defaultJobOptions: {
       removeOnComplete: 50,
       removeOnFail: 50,
@@ -119,7 +123,7 @@ try {
   });
 
 } catch (error) {
-  console.warn('⚠️ Redis not available, using in-memory queue:', error.message);
+  console.warn('⚠️ Redis not available, using in-memory queue:', error instanceof Error ? error.message : String(error));
 
   // Fallback to in-memory queue
   tradingQueue = new InMemoryTradingQueue();
