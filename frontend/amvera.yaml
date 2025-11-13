@@ -5,6 +5,7 @@ meta:
     version: 20
 
 build:
+  installCommand: npm install
   additionalCommands: npm run build
 
 run:
