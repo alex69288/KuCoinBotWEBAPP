@@ -1,0 +1,12 @@
+meta:
+  environment: node
+  toolchain:
+    name: npm
+    version: 20
+
+build:
+  additionalCommands: echo "Build completed"
+
+run:
+  command: echo "Application started"
+  containerPort: 3000
