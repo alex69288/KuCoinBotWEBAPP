@@ -5,11 +5,10 @@ meta:
     version: 20
 
 build:
-  installCommand: npm install
-  buildCommand: npm run build
+  additionalCommands: npm run build
 
 run:
-  runCommand: npm run preview
+  command: npm run preview
   containerPort: 4173
 
 run:
