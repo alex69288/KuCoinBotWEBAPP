@@ -156,6 +156,59 @@ WEBAPP_URL=https://kucoinbot-frontend-alex69288.amvera.io
 - В настройках бота установите Web App URL: `https://your-frontend-app.amvera.io`
 - Бот будет автоматически открывать веб-приложение
 
+## Как Amvera определяет пути к сервисам
+
+**Важно понимать логику работы Amvera:**
+1. **Путь к сервису** - это папка, которую вы указываете при создании приложения в Amvera
+   - Backend: `backend/` 
+   - Frontend: `frontend/`
+   - Redis: `redis/`
+2. **Контекст сборки** - Amvera переходит в указанную папку и ищет там файлы
+   - В папке `backend/` ищется `Dockerfile` (не `backend/Dockerfile`)
+   - В папке `frontend/` ищется `Dockerfile` (не `frontend/Dockerfile`)
+3. **Конфигурация** - в `amvera.yaml` указывается путь относительно папки сервиса:
+   ```yaml
+   build:
+     dockerfile: Dockerfile  # файл в корне папки сервиса
+   ```
+
+### Примеры правильных настроек:
+
+#### Backend сервис (папка: `backend/`)
+```yaml
+# backend/amvera-docker.yaml
+build:
+  dockerfile: Dockerfile  # ищется backend/Dockerfile
+```
+
+#### Frontend сервис (папка: `frontend/`)
+```yaml
+# frontend/amvera-docker.yaml  
+build:
+  dockerfile: Dockerfile  # ищется frontend/Dockerfile
+```
+
+#### Redis сервис (папка: `redis/`)
+```yaml
+# redis/amvera.yaml
+build:
+  dockerfile: Dockerfile  # ищется redis/Dockerfile
+```
+
+### Распространенные ошибки:
+
+❌ **Неправильно:**
+```yaml
+build:
+  dockerfile: backend/Dockerfile  # ошибка!
+```
+
+✅ **Правильно:**
+```yaml
+build:
+  dockerfile: Dockerfile  # Amvera уже в папке backend/
+```
+
 ## Переменные окружения для Backend
 
 **ОБЯЗАТЕЛЬНЫЕ переменные (все должны быть установлены!):**
@@ -623,8 +676,9 @@ env:
 
 #### Backend сервис:
 ```yaml
+# backend/amvera-docker.yaml
 build:
-  dockerfile: Dockerfile  # файл backend/Dockerfile
+  dockerfile: Dockerfile  # ищется backend/Dockerfile
 
 run:
   containerPort: 8080    # порт в контейнере
@@ -634,8 +688,9 @@ run:
 
 #### Frontend сервис:
 ```yaml
+# frontend/amvera-docker.yaml  
 build:
-  dockerfile: Dockerfile  # файл frontend/Dockerfile
+  dockerfile: Dockerfile  # ищется frontend/Dockerfile
 
 run:
   containerPort: 80      # порт nginx в контейнере
@@ -645,8 +700,9 @@ run:
 
 #### Redis сервис:
 ```yaml
+# redis/amvera.yaml
 build:
-  dockerfile: Dockerfile  # файл redis/Dockerfile
+  dockerfile: Dockerfile  # ищется redis/Dockerfile
 
 run:
   containerPort: 6379    # порт Redis
