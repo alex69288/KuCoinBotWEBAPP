@@ -2,6 +2,7 @@
   "name": "kucoin-bot-backend",
   "version": "1.0.0",
   "description": "Backend for KuCoin trading bot webapp in Telegram",
+  "type": "module",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
