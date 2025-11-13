@@ -5,7 +5,7 @@ meta:
     version: latest
 
 build:
-  dockerfile: Dockerfile
+  dockerfile: frontend/Dockerfile
 
 run:
   containerPort: 80

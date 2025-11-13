@@ -5,7 +5,7 @@ meta:
     version: latest
 
 build:
-  dockerfile: Dockerfile
+  dockerfile: redis/Dockerfile
 
 run:
   containerPort: 6379
