@@ -3,10 +3,13 @@ meta:
   toolchain:
     name: npm
     version: 20
+  source:
+    path: backend
 
 build:
-  additionalCommands: echo "Build completed"
+  additionalCommands: npm run build
 
 run:
-  command: echo "Application started"
-  containerPort: 3000
+  command: npm run start
+  containerPort: 5000
+  persistenceMount: /data
