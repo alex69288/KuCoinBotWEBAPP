@@ -4,13 +4,10 @@ meta:
     name: browser
     version: 20
 
-build:
-  installCommand: npm install
-  buildCommand: build
-
-run:
-  command: npm run preview
-  containerPort: 4173
+build: build
+install: npm install
+run: npm run preview
+containerPort: 4173
 
 run:
   runCommand: npm run preview
