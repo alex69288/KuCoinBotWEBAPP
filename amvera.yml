@@ -12,5 +12,5 @@ build:
 
 run:
   command: node backend/dist/index.js
-  containerPort: 8080
+  containerPort: 9000
   persistenceMount: /data
