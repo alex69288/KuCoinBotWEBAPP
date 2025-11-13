@@ -33,6 +33,25 @@ app.use('/api/kucoin', kucoinRoutes);
 // Telegram Bot
 const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN!, { polling: true });
 
+// Graceful shutdown
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received, shutting down gracefully');
+  bot.stopPolling();
+  server.close(() => {
+    console.log('Server closed');
+    process.exit(0);
+  });
+});
+
+process.on('SIGINT', () => {
+  console.log('SIGINT received, shutting down gracefully');
+  bot.stopPolling();
+  server.close(() => {
+    console.log('Server closed');
+    process.exit(0);
+  });
+});
+
 // Socket.io connection
 io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
@@ -50,12 +69,14 @@ app.get('/health', (req, res) => {
 // Telegram bot commands
 bot.onText(/\/start/, (msg) => {
   const chatId = msg.chat.id;
+  const frontendUrl = process.env.FRONTEND_URL || 'https://kucoinbot-frontend-alex69288.amvera.io';
+
   bot.sendMessage(chatId, 'Welcome to KuCoin Trading Bot! Click below to open the web app.', {
     reply_markup: {
       inline_keyboard: [[
         {
           text: 'Open Trading Bot',
-          web_app: { url: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/?chat_id=${chatId}` }
+          web_app: { url: `${frontendUrl}/?chat_id=${chatId}` }
         }
       ]]
     }

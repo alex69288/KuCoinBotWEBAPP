@@ -81,15 +81,16 @@ REDIS_PASSWORD=ваш_redis_пароль
 6. **REDIS_ARGS**: `--requirepass ваш_пароль` (обязательно!)
 
 #### 2. Получение Redis URL
-После создания сервиса Redis, URL будет доступен в настройках сервиса в формате:
-`redis://amvera-<username>-run-<redis-project>:6379`
+После создания сервиса Redis, URL будет доступен в настройках сервиса. В Amvera Redis обычно доступен по внутреннему hostname.
 
 #### 3. Настройка переменных окружения
-В backend сервисе добавьте:
+В backend сервисе добавьте (используйте значения из настроек Redis сервиса):
 ```
-REDIS_URL=redis://amvera-<username>-run-<redis-project>:6379
+REDIS_URL=redis://redis:6379
 REDIS_PASSWORD=ваш_пароль
 ```
+
+**Примечание:** Если REDIS_URL не работает, попробуйте использовать только REDIS_PASSWORD, и система автоматически подключится к локальному Redis (если он доступен) или использует in-memory fallback.
 
 ## Развертывание Backend
 

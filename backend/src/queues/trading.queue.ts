@@ -88,12 +88,32 @@ try {
   // Try to import Bull and create Redis queue
   const Queue = (await import('bull')).default;
 
+  // Redis configuration with fallback
+  let redisConfig: any = {
+    host: '127.0.0.1',
+    port: 6379,
+  };
+
+  if (process.env.REDIS_URL) {
+    try {
+      const redisUrl = new URL(process.env.REDIS_URL);
+      redisConfig = {
+        host: redisUrl.hostname,
+        port: parseInt(redisUrl.port) || 6379,
+        password: redisUrl.password || process.env.REDIS_PASSWORD || undefined,
+      };
+      console.log('✅ Using Redis URL configuration');
+    } catch (error) {
+      console.warn('⚠️ Invalid REDIS_URL format, using localhost fallback');
+      redisConfig.password = process.env.REDIS_PASSWORD || undefined;
+    }
+  } else {
+    console.log('ℹ️ No REDIS_URL provided, using localhost Redis');
+    redisConfig.password = process.env.REDIS_PASSWORD || undefined;
+  }
+
   tradingQueue = new Queue('trading', {
-    redis: {
-      host: process.env.REDIS_URL ? new URL(process.env.REDIS_URL).hostname : '127.0.0.1',
-      port: process.env.REDIS_URL ? parseInt(new URL(process.env.REDIS_URL).port) || 6379 : 6379,
-      password: process.env.REDIS_PASSWORD || undefined,
-    },
+    redis: redisConfig,
     defaultJobOptions: {
       removeOnComplete: 50,
       removeOnFail: 50,
@@ -101,8 +121,21 @@ try {
   });
 
   // Test Redis connection
-  await tradingQueue.isReady();
-  console.log('✅ Redis queue initialized successfully');
+  try {
+    await tradingQueue.isReady();
+    console.log('✅ Redis queue initialized successfully');
+  } catch (error) {
+    console.error('❌ Redis connection failed:', error);
+    console.log('⚠️ Falling back to in-memory queue (jobs will not persist)');
+
+    // Create in-memory queue as fallback
+    tradingQueue = new Queue('trading', {
+      defaultJobOptions: {
+        removeOnComplete: 50,
+        removeOnFail: 50,
+      },
+    });
+  }
 
   // Process trading jobs
   tradingQueue.process(async (job: any) => {
