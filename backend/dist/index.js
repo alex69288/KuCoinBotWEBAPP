@@ -1,21 +1,16 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const cors_1 = __importDefault(require("cors"));
-const helmet_1 = __importDefault(require("helmet"));
-const compression_1 = __importDefault(require("compression"));
-const http_1 = require("http");
-const socket_io_1 = require("socket.io");
-const node_telegram_bot_api_1 = __importDefault(require("node-telegram-bot-api"));
-const dotenv_1 = __importDefault(require("dotenv"));
-const kucoin_routes_js_1 = __importDefault(require("./routes/kucoin.routes.js"));
-dotenv_1.default.config();
-const app = (0, express_1.default)();
-const server = (0, http_1.createServer)(app);
-const io = new socket_io_1.Server(server, {
+import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import compression from 'compression';
+import { createServer } from 'http';
+import { Server } from 'socket.io';
+import TelegramBot from 'node-telegram-bot-api';
+import dotenv from 'dotenv';
+import kucoinRoutes from './routes/kucoin.routes.js';
+dotenv.config();
+const app = express();
+const server = createServer(app);
+const io = new Server(server, {
     cors: {
         origin: process.env.FRONTEND_URL || "http://localhost:3000",
         methods: ["GET", "POST"]
@@ -23,14 +18,14 @@ const io = new socket_io_1.Server(server, {
 });
 const PORT = process.env.PORT || 5000;
 // Middleware
-app.use((0, helmet_1.default)());
-app.use((0, cors_1.default)());
-app.use((0, compression_1.default)());
-app.use(express_1.default.json());
+app.use(helmet());
+app.use(cors());
+app.use(compression());
+app.use(express.json());
 // Routes
-app.use('/api/kucoin', kucoin_routes_js_1.default);
+app.use('/api/kucoin', kucoinRoutes);
 // Telegram Bot
-const bot = new node_telegram_bot_api_1.default(process.env.TELEGRAM_BOT_TOKEN, { polling: true });
+const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, { polling: true });
 // Socket.io connection
 io.on('connection', (socket) => {
     console.log('User connected:', socket.id);

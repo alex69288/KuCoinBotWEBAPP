@@ -1,13 +1,11 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = require("express");
-const kucoin_service_js_1 = require("../services/kucoin.service.js");
-const trading_queue_js_1 = require("../queues/trading.queue.js");
-const router = (0, express_1.Router)();
+import { Router } from 'express';
+import { kucoinService } from '../services/kucoin.service.js';
+import { addTradeJob } from '../queues/trading.queue.js';
+const router = Router();
 // Get balance
 router.get('/balance', async (req, res) => {
     try {
-        const balance = await kucoin_service_js_1.kucoinService.getBalance();
+        const balance = await kucoinService.getBalance();
         res.json(balance);
     }
     catch (error) {
@@ -18,7 +16,7 @@ router.get('/balance', async (req, res) => {
 router.get('/ticker/:symbol', async (req, res) => {
     try {
         const { symbol } = req.params;
-        const ticker = await kucoin_service_js_1.kucoinService.getTicker(symbol);
+        const ticker = await kucoinService.getTicker(symbol);
         res.json(ticker);
     }
     catch (error) {
@@ -30,7 +28,7 @@ router.get('/orderbook/:symbol', async (req, res) => {
     try {
         const { symbol } = req.params;
         const limit = parseInt(req.query.limit) || 20;
-        const orderBook = await kucoin_service_js_1.kucoinService.getOrderBook(symbol, limit);
+        const orderBook = await kucoinService.getOrderBook(symbol, limit);
         res.json(orderBook);
     }
     catch (error) {
@@ -41,7 +39,7 @@ router.get('/orderbook/:symbol', async (req, res) => {
 router.post('/orders', async (req, res) => {
     try {
         const { symbol, type, side, amount, price, userId } = req.body;
-        const job = await (0, trading_queue_js_1.addTradeJob)({
+        const job = await addTradeJob({
             symbol,
             type,
             side,
@@ -63,7 +61,7 @@ router.post('/orders', async (req, res) => {
 router.get('/orders/open', async (req, res) => {
     try {
         const { symbol } = req.query;
-        const orders = await kucoin_service_js_1.kucoinService.getOpenOrders(symbol);
+        const orders = await kucoinService.getOpenOrders(symbol);
         res.json(orders);
     }
     catch (error) {
@@ -75,7 +73,7 @@ router.delete('/orders/:orderId', async (req, res) => {
     try {
         const { orderId } = req.params;
         const { symbol } = req.query;
-        const result = await kucoin_service_js_1.kucoinService.cancelOrder(orderId, symbol);
+        const result = await kucoinService.cancelOrder(orderId, symbol);
         res.json(result);
     }
     catch (error) {
@@ -85,12 +83,12 @@ router.delete('/orders/:orderId', async (req, res) => {
 // Get markets
 router.get('/markets', async (req, res) => {
     try {
-        const markets = await kucoin_service_js_1.kucoinService.getMarkets();
+        const markets = await kucoinService.getMarkets();
         res.json(markets);
     }
     catch (error) {
         res.status(500).json({ error: 'Failed to fetch markets' });
     }
 });
-exports.default = router;
+export default router;
 //# sourceMappingURL=kucoin.routes.js.map

@@ -1,13 +1,8 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.kucoinService = exports.KuCoinService = void 0;
-const ccxt_1 = __importDefault(require("ccxt"));
-class KuCoinService {
+import ccxt from 'ccxt';
+export class KuCoinService {
+    exchange;
     constructor() {
-        this.exchange = new ccxt_1.default.kucoin({
+        this.exchange = new ccxt.kucoin({
             apiKey: process.env.KUCOIN_API_KEY,
             secret: process.env.KUCOIN_API_SECRET,
             password: process.env.KUCOIN_API_PASSPHRASE,
@@ -78,6 +73,5 @@ class KuCoinService {
         }
     }
 }
-exports.KuCoinService = KuCoinService;
-exports.kucoinService = new KuCoinService();
+export const kucoinService = new KuCoinService();
 //# sourceMappingURL=kucoin.service.js.map

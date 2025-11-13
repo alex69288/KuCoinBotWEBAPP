@@ -1,7 +1,7 @@
 import ccxt from 'ccxt';
 
 export class KuCoinService {
-  private exchange: ccxt.kucoin;
+  private exchange: any;
 
   constructor() {
     this.exchange = new ccxt.kucoin({
