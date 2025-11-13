@@ -15,15 +15,16 @@
 3. Укажите путь: `frontend/`
 4. Добавьте переменную: `VITE_API_URL=https://your-backend-app.amvera.io/api`
 
-### 3. Redis (опционально, для очередей)
-**ОБНОВЛЕНИЕ:** Redis доступен в Amvera Cloud!
+### 3. Redis (рекомендуется для очередей)
+Redis доступен в Amvera Cloud!
 
 1. Создайте преднастроенный сервис "Redis"
 2. Тариф "Начальный" или выше
-3. **persistenceMount**: `/data` (для сохранения данных Redis)
-4. **REDIS_ARGS**: `--requirepass ваш_пароль` (обязательно!)
-5. В backend добавьте: `REDIS_URL=redis://amvera-<username>-run-<redis-project>:6379`
-6. Добавьте переменную: `REDIS_PASSWORD=ваш_пароль`
+3. **persistenceMount**: `/data` (обязательно для сохранения данных Redis)
+4. **REDIS_ARGS**: `--requirepass ваш_пароль` (обязательно для безопасности!)
+5. В backend добавьте переменные:
+   - `REDIS_URL=redis://amvera-<username>-run-<redis-project>:6379`
+   - `REDIS_PASSWORD=ваш_пароль`
 
 **Пример настройки Redis сервиса:**
 - persistenceMount: `/data`
