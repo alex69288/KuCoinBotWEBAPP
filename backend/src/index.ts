@@ -19,7 +19,7 @@ const io = new Server(server, {
   }
 });
 
-const PORT = parseInt(process.env.PORT || '5000', 10);
+const PORT = parseInt(process.env.PORT || '8080', 10);
 
 // Middleware
 app.use(helmet());
