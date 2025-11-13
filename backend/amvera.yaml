@@ -11,4 +11,5 @@ run:
   command: npm run start
   containerPort: 5000
 
-persistenceMount: /data
+persistenceMount:
+  path: /data
