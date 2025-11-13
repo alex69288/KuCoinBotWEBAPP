@@ -7,7 +7,10 @@ meta:
     path: backend
 
 build:
-  additionalCommands: npm run build
+  installCommand: npm install
+  additionalCommands: |
+    cd backend && npm install
+    npm run build
 
 run:
   command: node backend/dist/index.js

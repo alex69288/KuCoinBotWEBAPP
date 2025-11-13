@@ -111,8 +111,8 @@ const TradingInterface: React.FC = () => {
                   <button
                     onClick={() => setOrderType('limit')}
                     className={`px-3 py-1 rounded ${orderType === 'limit'
-                        ? 'bg-blue-500 text-white'
-                        : 'bg-gray-200 text-gray-700'
+                      ? 'bg-blue-500 text-white'
+                      : 'bg-gray-200 text-gray-700'
                       }`}
                   >
                     Limit
@@ -120,8 +120,8 @@ const TradingInterface: React.FC = () => {
                   <button
                     onClick={() => setOrderType('market')}
                     className={`px-3 py-1 rounded ${orderType === 'market'
-                        ? 'bg-blue-500 text-white'
-                        : 'bg-gray-200 text-gray-700'
+                      ? 'bg-blue-500 text-white'
+                      : 'bg-gray-200 text-gray-700'
                       }`}
                   >
                     Market
@@ -137,8 +137,8 @@ const TradingInterface: React.FC = () => {
                   <button
                     onClick={() => setOrderSide('buy')}
                     className={`px-3 py-1 rounded ${orderSide === 'buy'
-                        ? 'bg-green-500 text-white'
-                        : 'bg-gray-200 text-gray-700'
+                      ? 'bg-green-500 text-white'
+                      : 'bg-gray-200 text-gray-700'
                       }`}
                   >
                     Buy
@@ -146,8 +146,8 @@ const TradingInterface: React.FC = () => {
                   <button
                     onClick={() => setOrderSide('sell')}
                     className={`px-3 py-1 rounded ${orderSide === 'sell'
-                        ? 'bg-red-500 text-white'
-                        : 'bg-gray-200 text-gray-700'
+                      ? 'bg-red-500 text-white'
+                      : 'bg-gray-200 text-gray-700'
                       }`}
                   >
                     Sell
@@ -187,8 +187,8 @@ const TradingInterface: React.FC = () => {
                 onClick={handleCreateOrder}
                 disabled={!amount || (orderType === 'limit' && !price)}
                 className={`w-full py-2 rounded font-medium ${orderSide === 'buy'
-                    ? 'bg-green-500 hover:bg-green-600 text-white'
-                    : 'bg-red-500 hover:bg-red-600 text-white'
+                  ? 'bg-green-500 hover:bg-green-600 text-white'
+                  : 'bg-red-500 hover:bg-red-600 text-white'
                   } disabled:opacity-50 disabled:cursor-not-allowed`}
               >
                 {orderSide === 'buy' ? 'Buy' : 'Sell'} {selectedSymbol}
