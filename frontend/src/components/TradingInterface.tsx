@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useTradingStore } from '../store/trading.store';
 import { kucoinApi } from '../api/kucoin.api';
-import { Line } from 'recharts';
 
 const TradingInterface: React.FC = () => {
   const { selectedSymbol, setSelectedSymbol, balance, setBalance } = useTradingStore();

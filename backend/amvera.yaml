@@ -8,9 +8,6 @@ build:
   additionalCommands: npm run build
 
 run:
-  scriptName: npm
-  scriptArguments: ["run", "start"]
-  nodeArguments: ["--max-old-space-size=512"]
   command: npm run start
   containerPort: 5000
   persistenceMount: /data

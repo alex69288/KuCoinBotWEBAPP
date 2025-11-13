@@ -8,9 +8,5 @@ build:
   additionalCommands: npm run build
 
 run:
-  scriptName: npm
-  scriptArguments: ["run", "preview"]
-  nodeArguments: ["--max-old-space-size=256"]
   command: npm run preview
   containerPort: 4173
-  persistenceMount: /data
