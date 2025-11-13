@@ -121,11 +121,17 @@ try {
     });
   });
 
+  // Add delay before starting server to allow previous instance to shut down
+  if (isProduction) {
+    console.log('⏳ Waiting 5 seconds before starting server...');
+    await new Promise(resolve => setTimeout(resolve, 5000));
+  }
+
   server.listen({
     port: PORT,
-    host: isProduction ? '0.0.0.0' : '127.0.0.1'
+    host: isProduction ? '127.0.0.1' : '127.0.0.1'
   }, () => {
-    console.log(`Server running on ${isProduction ? '0.0.0.0' : '127.0.0.1'}:${PORT}`);
+    console.log(`Server running on ${isProduction ? '127.0.0.1' : '127.0.0.1'}:${PORT}`);
   }).on('error', (error: any) => {
     console.error('Failed to start server:', error);
     if (error.code === 'EADDRINUSE') {
