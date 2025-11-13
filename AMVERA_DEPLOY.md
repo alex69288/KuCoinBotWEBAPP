@@ -12,7 +12,7 @@
 
 **Решение:**
 1. **Удалите REDIS_URL** из переменных окружения backend сервиса в Amvera
-2. **Установите BACKEND_URL** = `https://kucoinbot-backend-alex69288.amvera.io:5001` (без слэша в конце!)
+2. **Установите BACKEND_URL** = `https://kucoinbot-backend-alex69288.amvera.io` (без слэша в конце!)
 3. **Перезапустите** backend сервис
 4. **Подождите 2-3 минуты** после перезапуска перед проверкой логов
 
@@ -28,8 +28,8 @@
 2. Выберите backend сервис (kucoinbot-backend-alex69288)
 3. Перейдите в раздел "Переменные окружения"
 4. **Удалите** переменную `REDIS_URL` (если она есть)
-5. **Добавьте/обновите** переменную `BACKEND_URL` со значением `https://kucoinbot-backend-alex69288.amvera.io:5001` (без слэша в конце!)
-6. **Добавьте/обновите** переменную `FRONTEND_URL` со значением `https://kucoinbot-frontend-alex69288.amvera.io:80`
+5. **Добавьте/обновите** переменную `BACKEND_URL` со значением `https://kucoinbot-backend-alex69288.amvera.io` (без слэша в конце!)
+6. **Добавьте/обновите** переменную `FRONTEND_URL` со значением `https://kucoinbot-frontend-alex69288.amvera.io`
 7. Сохраните изменения
 8. Перезапустите сервис
 9. Проверьте логи через 2-3 минуты
@@ -83,10 +83,10 @@ Redis доступен в Amvera Cloud!
 - `KUCOIN_API_SECRET` - Секрет KuCoin
 - `KUCOIN_API_PASSPHRASE` - Пароль KuCoin
 - `TELEGRAM_BOT_TOKEN` - Токен Telegram бота
-- `FRONTEND_URL` - URL фронтенда (например: `https://kucoinbot-frontend-alex69288.amvera.io:80`)
-- `BACKEND_URL` - **ОБЯЗАТЕЛЬНО!** URL бэкенда (например: `https://kucoinbot-backend-alex69288.amvera.io:5001`)
+- `FRONTEND_URL` - URL фронтенда (например: `https://kucoinbot-frontend-alex69288.amvera.io`)
+- `BACKEND_URL` - **ОБЯЗАТЕЛЬНО!** URL бэкенда (например: `https://kucoinbot-backend-alex69288.amvera.io`)
 - `NODE_ENV` - **ОБЯЗАТЕЛЬНО!** установите строго в `production`
-- `PORT` - **ОБЯЗАТЕЛЬНО!** установите на `5001` (должен совпадать с containerPort)
+- `PORT` - **ОБЯЗАТЕЛЬНО!** установите на `443` (должен совпадать с containerPort)
 
 **Опциональные (для Redis):**
 - `REDIS_PASSWORD` - Пароль Redis (если используется)
@@ -104,8 +104,8 @@ Redis доступен в Amvera Cloud!
 4. **Убедитесь, что установлены:**
    - `NODE_ENV=production`
    - `PORT=10000` (обязательно! должен совпадать с containerPort)
-   - `BACKEND_URL=https://kucoinbot-backend-alex69288.amvera.io:5001` (замените на ваш реальный URL)
-   - `FRONTEND_URL=https://kucoinbot-frontend-alex69288.amvera.io:80`
+   - `BACKEND_URL=https://kucoinbot-backend-alex69288.amvera.io` (замените на ваш реальный URL)
+   - `FRONTEND_URL=https://kucoinbot-frontend-alex69288.amvera.io`
 5. **Убедитесь, что НЕ установлена:** `REDIS_URL`
 
 ### Шаг 2: Перезапустите сервис
@@ -196,7 +196,7 @@ Redis доступен в Amvera Cloud!
 **Причина:** REDIS_URL указывает на HTTP endpoint вместо Redis
 **Решение:** Удалите переменную `REDIS_URL` из настроек сервиса
 
-#### ❌ Ошибка "listen EADDRINUSE: address already in use 0.0.0.0:5001"
+#### ❌ Ошибка "listen EADDRINUSE: address already in use 0.0.0.0:443"
 **Причина:** Порт уже занят другим процессом или предыдущим запуском приложения
 **Решение:**
 1. Дождитесь завершения предыдущего процесса (1-2 минуты)
@@ -206,7 +206,7 @@ Redis доступен в Amvera Cloud!
 
 #### ❌ В логах: "BACKEND_URL=undefined"
 **Причина:** Переменная окружения не установлена
-**Решение:** Добавьте `BACKEND_URL=https://kucoinbot-backend-alex69288.amvera.io:5001`
+**Решение:** Добавьте `BACKEND_URL=https://kucoinbot-backend-alex69288.amvera.io`
 
 #### ❌ В логах: "Failed to start server: Error: listen EADDRINUSE"
 **Причина:** Порт уже используется другим процессом или предыдущим инстансом приложения
