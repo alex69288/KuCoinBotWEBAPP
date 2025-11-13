@@ -1,0 +1,15 @@
+meta:
+  environment: docker
+  toolchain:
+    name: docker
+    version: latest
+
+build:
+  dockerfile: Dockerfile
+
+run:
+  containerPort: 8080
+  port: 443
+  env:
+    - NODE_ENV=production
+    - PORT=8080

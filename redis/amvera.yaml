@@ -1,0 +1,13 @@
+meta:
+  environment: docker
+  toolchain:
+    name: docker
+    version: latest
+
+build:
+  dockerfile: Dockerfile.redis
+
+run:
+  containerPort: 6379
+  port: 6379
+  persistenceMount: /data
