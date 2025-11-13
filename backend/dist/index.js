@@ -120,22 +120,6 @@ try {
     if (isProduction) {
         console.log('⏳ Waiting 5 seconds before starting server...');
         await new Promise(resolve => setTimeout(resolve, 5000));
-        // Try to check if port is available
-        try {
-            const { createServer } = await import('net');
-            const testServer = createServer();
-            await new Promise((resolve, reject) => {
-                testServer.listen(PORT, '0.0.0.0', () => {
-                    testServer.close();
-                    resolve(true);
-                });
-                testServer.on('error', reject);
-            });
-            console.log('✅ Port check completed - port was available');
-        }
-        catch (error) {
-            console.log('ℹ️ Port check completed - port is in use (expected)');
-        }
     }
     server.listen({
         port: PORT,
