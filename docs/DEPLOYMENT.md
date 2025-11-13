@@ -139,22 +139,24 @@ env:
 Amvera использует `frontend/amvera.yaml`:
 
 ```yaml
+meta:
+  environment: node
+  toolchain:
+    name: browser
+    version: 20
+
 build:
-  type: node
-  nodeVersion: '20'
-  buildCommand: npm run build
   installCommand: npm install
+  additionalCommands: |
+    cd frontend && npm install
+    cd frontend && npm run build
 
 run:
-  type: node
-  nodeVersion: '20'
-  runCommand: npm run preview
-  port: 80
-
-env:
-  - name: NODE_ENV
-    value: production
+  command: cd frontend && npm run preview
+  containerPort: 4173
 ```
+
+**Важно:** Frontend использует собственный Express сервер (`serve.cjs`) для правильной работы SPA routing. Сервер настроен на fallback всех маршрутов к `index.html`, что позволяет корректно работать с React Router.
 
 ### 3. Настройка переменных
 Добавьте переменную `VITE_API_URL` с URL вашего backend сервиса.
@@ -202,10 +204,17 @@ curl https://ваш-backend.amvera.io/api/kucoin/balance
 2. Убедитесь в корректности переменных окружения
 3. Проверьте подключение к Redis
 
-### Frontend не загружается
-1. Проверьте сборку (npm run build)
-2. Убедитесь в правильности VITE_API_URL
-3. Проверьте CORS настройки backend
+### Frontend не загружается (Cannot GET /)
+1. **Проверьте логи сборки** - убедитесь, что `npm run build` прошел успешно
+2. **Проверьте переменную VITE_API_URL** - должна указывать на ваш backend URL
+3. **Проверьте SPA fallback** - сервер должен возвращать `index.html` для всех маршрутов кроме `/assets/`
+4. **Проверьте порт** - frontend использует порт 4173
+5. **Проверьте CORS настройки backend** - должен разрешать запросы от frontend URL
+
+**Решение проблемы "Cannot GET /":**
+- Frontend использует Express сервер с SPA fallback
+- Все маршруты, кроме статических файлов, возвращают `index.html`
+- Это позволяет React Router работать корректно в production
 
 ### Бот не отвечает
 1. Проверьте токен Telegram бота
