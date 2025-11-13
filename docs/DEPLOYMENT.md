@@ -9,7 +9,7 @@
 ### Компоненты
 1. **Backend** - Node.js сервер (Express + Socket.io)
 2. **Frontend** - React веб-приложение
-3. **Redis** - База данных для очередей Bull
+3. **Redis** - База данных для очередей Bull (опционально, недоступен в РФ)
 
 ### Конфигурация
 - Backend использует `backend/amvera.yaml`
@@ -32,7 +32,7 @@ KUCOIN_API_KEY=ваш_kucoin_api_key
 KUCOIN_API_SECRET=ваш_kucoin_api_secret
 KUCOIN_API_PASSPHRASE=ваш_kucoin_api_passphrase
 TELEGRAM_BOT_TOKEN=ваш_telegram_bot_token
-REDIS_URL=redis://redis:6379
+REDIS_URL=redis://ваш-redis-url:6379 (опционально)
 NODE_ENV=production
 PORT=80
 ```
@@ -62,15 +62,26 @@ VITE_API_URL=https://ваш-backend.amvera.io
 
 ## Развертывание Redis
 
-### 1. Создание Redis сервиса
-1. В панели Amvera нажмите "Создать сервис"
-2. Выберите "Redis" как тип сервиса
-3. Укажите имя сервиса (например, "redis")
-4. Выберите тарифный план
-5. Нажмите "Создать"
+### ВНИМАНИЕ: Redis недоступен в России через Amvera Cloud!
 
-### 2. Получение Redis URL
-После создания сервиса Redis, URL будет доступен в настройках сервиса.
+### Альтернативы для очередей:
+
+#### 1. In-Memory очередь (рекомендуется)
+Приложение автоматически использует встроенную память для очередей Bull.
+- **Преимущества**: Просто, не требует настройки
+- **Недостатки**: Очереди не сохраняются при перезапуске, ограничено количество одновременных задач
+
+#### 2. Внешний Redis (для продакшена)
+Используйте облачные сервисы Redis:
+- **Upstash** (https://upstash.com) - Redis как сервис
+- **Redis Labs** (https://redis.com) - облачный Redis
+- **AWS ElastiCache** или другие
+
+#### 3. Локальный Redis (для разработки)
+```bash
+# Установка Redis локально
+redis-server
+```
 
 ## Развертывание Backend
 
