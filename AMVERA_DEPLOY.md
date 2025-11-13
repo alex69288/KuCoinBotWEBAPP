@@ -86,7 +86,7 @@ Redis доступен в Amvera Cloud!
 - `FRONTEND_URL` - URL фронтенда (например: `https://kucoinbot-frontend-alex69288.amvera.io`)
 - `BACKEND_URL` - **ОБЯЗАТЕЛЬНО!** URL бэкенда (например: `https://kucoinbot-backend-alex69288.amvera.io`)
 - `NODE_ENV` - **ОБЯЗАТЕЛЬНО!** установите строго в `production`
-- `PORT` - **ОБЯЗАТЕЛЬНО!** установите на `3001` (должен совпадать с containerPort)
+- `PORT` - **ОБЯЗАТЕЛЬНО!** установите на `4000` (должен совпадать с containerPort)
 
 **Опциональные (для Redis):**
 - `REDIS_PASSWORD` - Пароль Redis (если используется)
@@ -196,7 +196,7 @@ Redis доступен в Amvera Cloud!
 **Причина:** REDIS_URL указывает на HTTP endpoint вместо Redis
 **Решение:** Удалите переменную `REDIS_URL` из настроек сервиса
 
-#### ❌ Ошибка "listen EADDRINUSE: address already in use 0.0.0.0:3001"
+#### ❌ Ошибка "listen EADDRINUSE: address already in use 0.0.0.0:4000"
 **Причина:** Порт уже занят другим процессом или предыдущим запуском приложения
 **Решение:**
 1. Дождитесь завершения предыдущего процесса (1-2 минуты)
