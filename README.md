@@ -214,6 +214,26 @@ Build and serve static files, or deploy to Vercel/Netlify.
 3. Add tests for new functionality
 4. Use meaningful commit messages
 
+### Git Setup
+
+1. **SSH Key Setup (Recommended)**:
+   ```bash
+   # Run setup script
+   setup-ssh.bat
+
+   # Or manually:
+   ssh-keygen -t ed25519 -C "your_email@example.com"
+   ssh-add ~/.ssh/id_ed25519
+   ```
+
+   Add the public key (`cat ~/.ssh/id_ed25519.pub`) to GitHub: Settings → SSH and GPG keys
+
+2. **Or use Personal Access Token**:
+   ```bash
+   git remote set-url origin https://github.com/alex69288/KuCoinBotV5.git
+   # Use your GitHub username and token when prompted
+   ```
+
 ## License
 
 MIT License
