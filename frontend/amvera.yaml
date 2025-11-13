@@ -3,12 +3,15 @@ meta:
   toolchain:
     name: browser
     version: 20
+  source:
+    path: frontend
 
-build: "npm run build"
-install: "npm install"
-run: "npm run preview"
-containerPort: 4173
+build:
+  installCommand: npm install
+  additionalCommands: |
+    cd frontend && npm install
+    npm run build
 
 run:
-  runCommand: npm run preview
+  command: npm run preview
   containerPort: 4173
