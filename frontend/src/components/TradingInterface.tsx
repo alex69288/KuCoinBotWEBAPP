@@ -31,6 +31,13 @@ const TradingInterface: React.FC = () => {
     refetchInterval: 2000, // Update every 2 seconds
   });
 
+  // Fetch order history
+  const { data: orderHistoryData } = useQuery({
+    queryKey: ['orderHistory', selectedSymbol],
+    queryFn: () => kucoinApi.getOrderHistory(selectedSymbol),
+    refetchInterval: 10000, // Update every 10 seconds
+  });
+
   useEffect(() => {
     if (balanceData) {
       setBalance(balanceData);
@@ -254,6 +261,45 @@ const TradingInterface: React.FC = () => {
                     </div>
                   </div>
                 </div>
+              )}
+            </div>
+
+            {/* Order History */}
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h2 className="text-xl font-semibold mb-4">Order History</h2>
+              {orderHistoryData && orderHistoryData.length > 0 ? (
+                <div className="overflow-x-auto">
+                  <table className="min-w-full table-auto">
+                    <thead>
+                      <tr className="bg-gray-50">
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Symbol</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Side</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Price</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {orderHistoryData.slice(0, 10).map((order: any, index: number) => (
+                        <tr key={index}>
+                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{order.symbol}</td>
+                          <td className={`px-4 py-2 whitespace-nowrap text-sm ${order.side === 'buy' ? 'text-green-600' : 'text-red-600'}`}>
+                            {order.side?.toUpperCase()}
+                          </td>
+                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{order.amount}</td>
+                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">${order.price}</td>
+                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{order.status}</td>
+                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
+                            {new Date(order.timestamp || order.datetime).toLocaleString()}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <p className="text-gray-500">No order history available</p>
               )}
             </div>
           </div>

@@ -50,6 +50,22 @@ export const kucoinApi = {
     return response.data;
   },
 
+  // Get order history
+  getOrderHistory: async (symbol?: string, limit = 50) => {
+    const response = await api.get('/kucoin/orders/history', {
+      params: { symbol, limit }
+    });
+    return response.data;
+  },
+
+  // Get trades
+  getTrades: async (symbol?: string, limit = 50) => {
+    const response = await api.get('/kucoin/trades', {
+      params: { symbol, limit }
+    });
+    return response.data;
+  },
+
   // Cancel order
   cancelOrder: async (orderId: string, symbol?: string) => {
     const response = await api.delete(`/kucoin/orders/${orderId}`, {
