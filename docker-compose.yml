@@ -24,7 +24,8 @@ services:
       - PORT=8080
       - BACKEND_URL=http://localhost:8080
       - FRONTEND_URL=http://localhost
-      - REDIS_URL=redis://redis:6379
+      - REDIS_URL=redis://127.0.0.1:6379
+      - CHOKIDAR_USEPOLLING=true
     env_file:
       - .env
     depends_on:
@@ -33,14 +34,15 @@ services:
     volumes:
       - ./backend:/app
       - /app/node_modules
+    command: sh start-with-delay.sh
     restart: always
     stdin_open: true
     tty: true
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8080/health" ]
-      interval: 30s
+      test: [ "CMD", "curl", "-f", "http://127.0.0.1:8080/health" ]
+      interval: 10s
       timeout: 10s
-      retries: 3
+      retries: 6
 
   frontend:
     build:
@@ -56,6 +58,7 @@ services:
     volumes:
       - ./frontend:/app
       - /app/node_modules
+    command: sh start-with-delay.sh
     restart: always
     stdin_open: true
     tty: true
