@@ -4,10 +4,6 @@
     "start": "echo 'Application started'",
     "test": "jest"
   },
-  "jest": {
-    "preset": "ts-jest",
-    "testEnvironment": "node"
-  },
   "devDependencies": {
     "@types/jest": "^30.0.0",
     "@types/node": "^24.10.1",
