@@ -7,6 +7,8 @@ interface BotConfig {
     telegramToken: string;
     telegramChatId: string;
     symbols: string[];
+    strategy: 'ema-ml' | 'price-action' | 'macd-rsi' | 'bollinger';
+    strategyConfig: any;
 }
 export declare class KuCoinBot {
     private kucoinService;
@@ -15,7 +17,12 @@ export declare class KuCoinBot {
     private positions;
     private dailyStats;
     private riskManager;
+    private strategy;
+    private marketData;
     constructor(config: BotConfig);
+    private initializeStrategy;
+    private updateMarketData;
+    private calculatePositionSize;
     start(): Promise<void>;
     stop(): Promise<void>;
     private runMainLoop;

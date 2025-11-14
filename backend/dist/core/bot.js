@@ -1,5 +1,6 @@
 import { KuCoinService } from '../services/kucoin.service.js';
 import { addTradeJob } from '../queues/trading.queue.js';
+import { EmaMlStrategy } from '../strategies/ema-ml.strategy.js';
 export class KuCoinBot {
     kucoinService;
     config;
@@ -19,9 +20,57 @@ export class KuCoinBot {
         consecutiveLosses: 0,
         lastTradeResult: null,
     };
+    strategy = null;
+    marketData = [];
     constructor(config) {
         this.config = config;
         this.kucoinService = new KuCoinService();
+        this.initializeStrategy();
+    }
+    initializeStrategy() {
+        switch (this.config.strategy) {
+            case 'ema-ml':
+                this.strategy = new EmaMlStrategy({
+                    symbol: this.config.symbols[0],
+                    ...this.config.strategyConfig
+                });
+                break;
+            // Add other strategies here
+            default:
+                console.warn('Unknown strategy:', this.config.strategy);
+        }
+    }
+    async updateMarketData() {
+        try {
+            // Get OHLCV data for the symbol (simplified, in real implementation use proper timeframe)
+            const ticker = await this.kucoinService.getTicker(this.config.symbols[0]);
+            const orderBook = await this.kucoinService.getOrderBook(this.config.symbols[0], 20);
+            // Create OHLCV data point (simplified)
+            const dataPoint = {
+                timestamp: Date.now(),
+                open: ticker.last || 0,
+                high: ticker.last || 0,
+                low: ticker.last || 0,
+                close: ticker.last || 0,
+                volume: ticker.baseVolume || 0
+            };
+            this.marketData.push(dataPoint);
+            // Keep only last 100 data points
+            if (this.marketData.length > 100) {
+                this.marketData = this.marketData.slice(-100);
+            }
+        }
+        catch (error) {
+            console.error('Failed to update market data:', error);
+        }
+    }
+    calculatePositionSize() {
+        const balance = this.dailyStats.currentBalance;
+        const positionSize = balance * (this.config.positionSizePercent / 100);
+        const currentPrice = this.marketData[this.marketData.length - 1]?.close || 0;
+        if (currentPrice === 0)
+            return 0;
+        return positionSize / currentPrice;
     }
     async start() {
         if (this.isRunning)
@@ -53,8 +102,18 @@ export class KuCoinBot {
                     await this.stop();
                     break;
                 }
-                // Здесь будет логика стратегий и сигналов
-                // Пока заглушка
+                // Получение рыночных данных
+                await this.updateMarketData();
+                // Расчет сигнала стратегии
+                if (this.strategy && this.marketData.length > 0) {
+                    const signal = this.strategy.calculateSignal(this.marketData);
+                    if (signal === 'buy') {
+                        await this.executeTrade(this.config.symbols[0], 'buy', this.calculatePositionSize());
+                    }
+                    else if (signal === 'sell') {
+                        await this.executeTrade(this.config.symbols[0], 'sell', this.positions.length > 0 ? this.positions[0].amount : 0);
+                    }
+                }
                 await new Promise(resolve => setTimeout(resolve, 30000)); // 30 сек
             }
             catch (error) {

@@ -47,6 +47,9 @@
       "<rootDir>/src",
       "<rootDir>/../tests"
     ],
+    "moduleNameMapping": {
+      "^../backend/src/(.*)$": "<rootDir>/src/$1"
+    },
     "testMatch": [
       "**/__tests__/**/*.test.ts",
       "**/?(*.)+(spec|test).ts"
