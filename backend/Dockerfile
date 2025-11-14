@@ -1,5 +1,7 @@
 FROM node:18-alpine
 
+ARG TARGET=production
+
 RUN apk add --no-cache curl
 
 WORKDIR /app
@@ -9,10 +11,8 @@ RUN npm ci
 
 COPY . .
 
-RUN npm run build
-
-RUN npm ci --only=production
+RUN if [ "$TARGET" = "production" ]; then npm run build && npm ci --only=production; fi
 
 EXPOSE 8080
 
-CMD ["npm", "start"]
+CMD ["sh"]
