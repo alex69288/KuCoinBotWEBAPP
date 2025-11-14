@@ -1,1 +1,5 @@
+# Игнорировать node_modules
 node_modules/
+
+# Игнорировать .vscode
+.vscode/
