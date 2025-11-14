@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { kucoinService } from '../services/kucoin.service.js';
 import { addTradeJob } from '../queues/trading.queue.js';
+import i18n from './i18n.js';
 
 const router = Router();
 
@@ -10,7 +11,7 @@ router.get('/balance', async (req, res) => {
     const balance = await kucoinService.getBalance();
     res.json(balance);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch balance' });
+    res.status(500).json({ error: i18n.t('failedToFetchBalance') });
   }
 });
 
@@ -21,7 +22,7 @@ router.get('/ticker/:symbol', async (req, res) => {
     const ticker = await kucoinService.getTicker(symbol);
     res.json(ticker);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch ticker' });
+    res.status(500).json({ error: i18n.t('failedToFetchTicker') });
   }
 });
 
@@ -33,7 +34,7 @@ router.get('/orderbook/:symbol', async (req, res) => {
     const orderBook = await kucoinService.getOrderBook(symbol, limit);
     res.json(orderBook);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch order book' });
+    res.status(500).json({ error: i18n.t('failedToFetchOrderBook') });
   }
 });
 
@@ -54,10 +55,10 @@ router.post('/orders', async (req, res) => {
     res.json({
       jobId: job.id,
       status: 'queued',
-      message: 'Trade order queued for processing'
+      message: i18n.t('tradeOrderQueued')
     });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to queue order' });
+    res.status(500).json({ error: i18n.t('failedToQueueOrder') });
   }
 });
 
@@ -68,7 +69,7 @@ router.get('/orders/open', async (req, res) => {
     const orders = await kucoinService.getOpenOrders(symbol as string);
     res.json(orders);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch open orders' });
+    res.status(500).json({ error: i18n.t('failedToFetchOpenOrders') });
   }
 });
 
@@ -80,7 +81,7 @@ router.delete('/orders/:orderId', async (req, res) => {
     const result = await kucoinService.cancelOrder(orderId, symbol as string);
     res.json(result);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to cancel order' });
+    res.status(500).json({ error: i18n.t('failedToCancelOrder') });
   }
 });
 
@@ -91,7 +92,7 @@ router.get('/orders/history', async (req, res) => {
     const orders = await kucoinService.getOrderHistory(symbol as string, parseInt(limit as string) || 50);
     res.json(orders);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch order history' });
+    res.status(500).json({ error: i18n.t('failedToFetchOrderHistory') });
   }
 });
 
@@ -102,7 +103,7 @@ router.get('/trades', async (req, res) => {
     const trades = await kucoinService.getTrades(symbol as string, parseInt(limit as string) || 50);
     res.json(trades);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch trades' });
+    res.status(500).json({ error: i18n.t('failedToFetchTrades') });
   }
 });
 

@@ -1,0 +1,14 @@
+{
+  "error": "Error",
+  "success": "Success",
+  "failedToFetchBalance": "Failed to fetch balance",
+  "failedToFetchTicker": "Failed to fetch ticker",
+  "failedToFetchOrderBook": "Failed to fetch order book",
+  "failedToQueueOrder": "Failed to queue order",
+  "failedToFetchOpenOrders": "Failed to fetch open orders",
+  "failedToCancelOrder": "Failed to cancel order",
+  "failedToFetchOrderHistory": "Failed to fetch order history",
+  "failedToFetchTrades": "Failed to fetch trades",
+  "tradeOrderQueued": "Trade order queued for processing",
+  "orderCancelled": "Order cancelled"
+}

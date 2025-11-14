@@ -20,6 +20,8 @@
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "helmet": "^7.1.0",
+    "i18next": "^25.6.2",
+    "i18next-fs-backend": "^2.6.0",
     "ml-random-forest": "^2.1.0",
     "node-telegram-bot-api": "^0.66.0",
     "socket.io": "^4.7.4"

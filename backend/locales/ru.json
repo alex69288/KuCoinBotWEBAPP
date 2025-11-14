@@ -1,0 +1,14 @@
+{
+  "error": "Ошибка",
+  "success": "Успех",
+  "failedToFetchBalance": "Не удалось получить баланс",
+  "failedToFetchTicker": "Не удалось получить тикер",
+  "failedToFetchOrderBook": "Не удалось получить книгу ордеров",
+  "failedToQueueOrder": "Не удалось поставить ордер в очередь",
+  "failedToFetchOpenOrders": "Не удалось получить открытые ордеры",
+  "failedToCancelOrder": "Не удалось отменить ордер",
+  "failedToFetchOrderHistory": "Не удалось получить историю ордеров",
+  "failedToFetchTrades": "Не удалось получить сделки",
+  "tradeOrderQueued": "Ордер на торговлю поставлен в очередь",
+  "orderCancelled": "Ордер отменен"
+}
