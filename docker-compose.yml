@@ -21,6 +21,8 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=8080
+      - BACKEND_URL=http://localhost:8080
+      - FRONTEND_URL=http://localhost
       - REDIS_URL=redis://redis:6379
     env_file:
       - .env
