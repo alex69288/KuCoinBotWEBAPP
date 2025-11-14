@@ -89,89 +89,89 @@ async function initQueue() {
     // Try to import Bull and create Redis queue
     const Queue = (await import('bull')).default;
 
-  // Redis configuration - disable URL parsing in production due to Amvera issues
-  console.log(`🔧 Redis config: NODE_ENV=${process.env.NODE_ENV}, REDIS_URL=${process.env.REDIS_URL ? 'present' : 'not set'}`);
+    // Redis configuration - disable URL parsing in production due to Amvera issues
+    console.log(`🔧 Redis config: NODE_ENV=${process.env.NODE_ENV}, REDIS_URL=${process.env.REDIS_URL ? 'present' : 'not set'}`);
 
-  let redisConfig: any = {
-    host: '127.0.0.1',
-    port: 6379,
-  };
+    let redisConfig: any = {
+      host: '127.0.0.1',
+      port: 6379,
+    };
 
-  // In production, don't use REDIS_URL as it may point to HTTP endpoints
-  // Use only REDIS_PASSWORD for authentication
-  if (process.env.NODE_ENV !== 'production' && process.env.REDIS_URL) {
-    try {
-      const redisUrl = new URL(process.env.REDIS_URL);
-      redisConfig = {
-        host: redisUrl.hostname,
-        port: parseInt(redisUrl.port) || 6379,
-        password: process.env.REDIS_PASSWORD || undefined,
-      };
-      console.log('✅ Using Redis URL configuration (development only)');
-    } catch (error) {
-      console.warn('⚠️ Invalid REDIS_URL format, using localhost fallback');
+    // In production, don't use REDIS_URL as it may point to HTTP endpoints
+    // Use only REDIS_PASSWORD for authentication
+    if (process.env.NODE_ENV !== 'production' && process.env.REDIS_URL) {
+      try {
+        const redisUrl = new URL(process.env.REDIS_URL);
+        redisConfig = {
+          host: redisUrl.hostname,
+          port: parseInt(redisUrl.port) || 6379,
+          password: process.env.REDIS_PASSWORD || undefined,
+        };
+        console.log('✅ Using Redis URL configuration (development only)');
+      } catch (error) {
+        console.warn('⚠️ Invalid REDIS_URL format, using localhost fallback');
+        redisConfig.password = process.env.REDIS_PASSWORD || undefined;
+      }
+    } else {
+      console.log('ℹ️ Using localhost Redis (production) or in-memory fallback');
       redisConfig.password = process.env.REDIS_PASSWORD || undefined;
     }
-  } else {
-    console.log('ℹ️ Using localhost Redis (production) or in-memory fallback');
-    redisConfig.password = process.env.REDIS_PASSWORD || undefined;
-  }
 
-  console.log(`🔧 Final Redis config: ${JSON.stringify({ host: redisConfig.host, port: redisConfig.port, hasPassword: !!redisConfig.password })}`);
+    console.log(`🔧 Final Redis config: ${JSON.stringify({ host: redisConfig.host, port: redisConfig.port, hasPassword: !!redisConfig.password })}`);
 
-  // Remove password if undefined to avoid warnings
-  if (redisConfig.password === undefined) {
-    delete redisConfig.password;
-  }
+    // Remove password if undefined to avoid warnings
+    if (redisConfig.password === undefined) {
+      delete redisConfig.password;
+    }
 
-  tradingQueue = new Queue('trading', {
-    redis: redisConfig,
-    defaultJobOptions: {
-      removeOnComplete: 50,
-      removeOnFail: 50,
-    },
-  });
-
-  // Test Redis connection
-  try {
-    await tradingQueue.isReady();
-    console.log('✅ Redis queue initialized successfully');
-  } catch (error) {
-    console.error('❌ Redis connection failed:', error);
-    console.log('⚠️ Falling back to in-memory queue (jobs will not persist)');
-
-    // Create in-memory queue as fallback
     tradingQueue = new Queue('trading', {
+      redis: redisConfig,
       defaultJobOptions: {
         removeOnComplete: 50,
         removeOnFail: 50,
       },
     });
-  }
 
-  // Process trading jobs
-  tradingQueue.process(async (job: any) => {
-    const { symbol, type, side, amount, price, userId }: TradeJobData = job.data;
-
+    // Test Redis connection
     try {
-      console.log(`Processing trade for user ${userId}: ${side} ${amount} ${symbol}`);
-
-      const order = await kucoinService.createOrder(symbol, type, side, amount, price);
-
-      console.log(`Order created successfully: ${order.id}`);
-
-      return order;
+      await tradingQueue.isReady();
+      console.log('✅ Redis queue initialized successfully');
     } catch (error) {
-      console.error('Error processing trade job:', error);
-      throw error;
+      console.error('❌ Redis connection failed:', error);
+      console.log('⚠️ Falling back to in-memory queue (jobs will not persist)');
+
+      // Create in-memory queue as fallback
+      tradingQueue = new Queue('trading', {
+        defaultJobOptions: {
+          removeOnComplete: 50,
+          removeOnFail: 50,
+        },
+      });
     }
-  });
+
+    // Process trading jobs
+    tradingQueue.process(async (job: any) => {
+      const { symbol, type, side, amount, price, userId }: TradeJobData = job.data;
+
+      try {
+        console.log(`Processing trade for user ${userId}: ${side} ${amount} ${symbol}`);
+
+        const order = await kucoinService.createOrder(symbol, type, side, amount, price);
+
+        console.log(`Order created successfully: ${order.id}`);
+
+        return order;
+      } catch (error) {
+        console.error('Error processing trade job:', error);
+        throw error;
+      }
+    });
 
   } catch (error) {
-  console.warn('⚠️ Redis not available, using in-memory queue:', error instanceof Error ? error.message : String(error));
+    console.warn('⚠️ Redis not available, using in-memory queue:', error instanceof Error ? error.message : String(error));
 
-  // Fallback to in-memory queue
-  tradingQueue = new InMemoryTradingQueue();
+    // Fallback to in-memory queue
+    tradingQueue = new InMemoryTradingQueue();
   }
 }
 

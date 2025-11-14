@@ -164,7 +164,7 @@ export class KuCoinBot {
     try {
       // Get historical data for training (last 500 candles, 1h timeframe)
       const historicalData = await this.kucoinService.getHistoricalData(this.config.symbols[0], '1h', 500);
-      
+
       if (this.strategy && 'mlPredictor' in this.strategy) {
         (this.strategy as any).mlPredictor.train(historicalData);
       }

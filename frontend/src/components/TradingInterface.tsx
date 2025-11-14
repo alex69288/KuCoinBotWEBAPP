@@ -38,6 +38,20 @@ const TradingInterface: React.FC = () => {
     refetchInterval: 10000, // Update every 10 seconds
   });
 
+  // Fetch open orders
+  const { data: openOrdersData } = useQuery({
+    queryKey: ['openOrders', selectedSymbol],
+    queryFn: () => kucoinApi.getOpenOrders(selectedSymbol),
+    refetchInterval: 10000, // Update every 10 seconds
+  });
+
+  // Fetch trades
+  const { data: tradesData } = useQuery({
+    queryKey: ['trades', selectedSymbol],
+    queryFn: () => kucoinApi.getTrades(selectedSymbol),
+    refetchInterval: 15000, // Update every 15 seconds
+  });
+
   useEffect(() => {
     if (balanceData) {
       setBalance(balanceData);
@@ -63,6 +77,15 @@ const TradingInterface: React.FC = () => {
     }
   };
 
+  const handleCancelOrder = async (orderId: string, symbol: string) => {
+    try {
+      await kucoinApi.cancelOrder(orderId, symbol);
+      console.log('Order cancelled successfully');
+    } catch (error) {
+      console.error('Error cancelling order:', error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 p-4">
       <div className="max-w-7xl mx-auto">
@@ -75,15 +98,34 @@ const TradingInterface: React.FC = () => {
           <h2 className="text-xl font-semibold mb-4">Account Balance</h2>
           <button
             onClick={() => refetchBalance()}
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mb-4"
           >
             Load Balance
           </button>
           {balance && (
-            <div className="mt-4">
-              <pre className="bg-gray-100 p-4 rounded text-sm overflow-auto">
-                {JSON.stringify(balance, null, 2)}
-              </pre>
+            <div className="overflow-x-auto">
+              <table className="min-w-full table-auto">
+                <thead>
+                  <tr className="bg-gray-50">
+                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Currency</th>
+                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Available</th>
+                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">In Orders</th>
+                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Total</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {Object.entries(balance)
+                    .filter(([_, data]: [string, any]) => data.total > 0)
+                    .map(([currency, data]: [string, any]) => (
+                      <tr key={currency}>
+                        <td className="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900">{currency}</td>
+                        <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{data.free?.toFixed(8) || '0'}</td>
+                        <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{data.used?.toFixed(8) || '0'}</td>
+                        <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{data.total?.toFixed(8) || '0'}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
             </div>
           )}
         </div>
@@ -264,6 +306,54 @@ const TradingInterface: React.FC = () => {
               )}
             </div>
 
+            {/* Open Orders */}
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h2 className="text-xl font-semibold mb-4">Open Orders</h2>
+              {openOrdersData && openOrdersData.length > 0 ? (
+                <div className="overflow-x-auto">
+                  <table className="min-w-full table-auto">
+                    <thead>
+                      <tr className="bg-gray-50">
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Symbol</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Side</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Price</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {openOrdersData.slice(0, 10).map((order: any, index: number) => (
+                        <tr key={index}>
+                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{order.symbol}</td>
+                          <td className={`px-4 py-2 whitespace-nowrap text-sm ${order.side === 'buy' ? 'text-green-600' : 'text-red-600'}`}>
+                            {order.side?.toUpperCase()}
+                          </td>
+                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{order.type}</td>
+                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{order.amount}</td>
+                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">${order.price}</td>
+                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
+                            {new Date(order.timestamp || order.datetime).toLocaleString()}
+                          </td>
+                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
+                            <button
+                              onClick={() => handleCancelOrder(order.id, order.symbol)}
+                              className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 text-xs"
+                            >
+                              Cancel
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <p className="text-gray-500">No open orders</p>
+              )}
+            </div>
+
             {/* Order History */}
             <div className="bg-white rounded-lg shadow-md p-6">
               <h2 className="text-xl font-semibold mb-4">Order History</h2>
@@ -300,6 +390,45 @@ const TradingInterface: React.FC = () => {
                 </div>
               ) : (
                 <p className="text-gray-500">No order history available</p>
+              )}
+            </div>
+
+            {/* Trades */}
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h2 className="text-xl font-semibold mb-4">Recent Trades</h2>
+              {tradesData && tradesData.length > 0 ? (
+                <div className="overflow-x-auto">
+                  <table className="min-w-full table-auto">
+                    <thead>
+                      <tr className="bg-gray-50">
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Symbol</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Side</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Price</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Fee</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {tradesData.slice(0, 10).map((trade: any, index: number) => (
+                        <tr key={index}>
+                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{trade.symbol}</td>
+                          <td className={`px-4 py-2 whitespace-nowrap text-sm ${trade.side === 'buy' ? 'text-green-600' : 'text-red-600'}`}>
+                            {trade.side?.toUpperCase()}
+                          </td>
+                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{trade.amount}</td>
+                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">${trade.price}</td>
+                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{trade.fee?.cost} {trade.fee?.currency}</td>
+                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
+                            {new Date(trade.timestamp || trade.datetime).toLocaleString()}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <p className="text-gray-500">No recent trades</p>
               )}
             </div>
           </div>
