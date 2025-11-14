@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { kucoinService } from '../services/kucoin.service.js';
 import { addTradeJob } from '../queues/trading.queue.js';
-import i18n from './i18n.js';
+const i18n = require('./i18n');
 
 const router = Router();
 
