@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useTradingStore } from '../store/trading.store';
 import { kucoinApi } from '../api/kucoin.api';
+import { useTranslation } from 'react-i18next';
 
 const TradingInterface: React.FC = () => {
+  const { t } = useTranslation();
   const { selectedSymbol, setSelectedSymbol, balance, setBalance } = useTradingStore();
   const [orderType, setOrderType] = useState<'limit' | 'market'>('limit');
   const [orderSide, setOrderSide] = useState<'buy' | 'sell'>('buy');
@@ -90,27 +92,27 @@ const TradingInterface: React.FC = () => {
     <div className="min-h-screen bg-gray-100 p-4">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">
-          KuCoin Trading Bot
+          {t('welcome')}
         </h1>
 
         {/* Balance Section */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <h2 className="text-xl font-semibold mb-4">Account Balance</h2>
+          <h2 className="text-xl font-semibold mb-4">{t('accountBalance')}</h2>
           <button
             onClick={() => refetchBalance()}
             className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mb-4"
           >
-            Load Balance
+            {t('loadBalance')}
           </button>
           {balance && (
             <div className="overflow-x-auto">
               <table className="min-w-full table-auto">
                 <thead>
                   <tr className="bg-gray-50">
-                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Currency</th>
-                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Available</th>
-                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">In Orders</th>
-                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Total</th>
+                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('currency')}</th>
+                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('available')}</th>
+                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('inOrders')}</th>
+                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('total')}</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
@@ -134,12 +136,12 @@ const TradingInterface: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Order Form */}
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-semibold mb-4">Place Order</h2>
+            <h2 className="text-xl font-semibold mb-4">{t('placeOrder')}</h2>
 
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Symbol
+                  {t('symbol')}
                 </label>
                 <select
                   value={selectedSymbol}
@@ -154,7 +156,7 @@ const TradingInterface: React.FC = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Order Type
+                  {t('orderType')}
                 </label>
                 <div className="flex space-x-2">
                   <button
@@ -164,7 +166,7 @@ const TradingInterface: React.FC = () => {
                       : 'bg-gray-200 text-gray-700'
                       }`}
                   >
-                    Limit
+                    {t('limit')}
                   </button>
                   <button
                     onClick={() => setOrderType('market')}
@@ -173,14 +175,14 @@ const TradingInterface: React.FC = () => {
                       : 'bg-gray-200 text-gray-700'
                       }`}
                   >
-                    Market
+                    {t('market')}
                   </button>
                 </div>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Side
+                  {t('side')}
                 </label>
                 <div className="flex space-x-2">
                   <button
@@ -190,7 +192,7 @@ const TradingInterface: React.FC = () => {
                       : 'bg-gray-200 text-gray-700'
                       }`}
                   >
-                    Buy
+                    {t('buy')}
                   </button>
                   <button
                     onClick={() => setOrderSide('sell')}
@@ -199,35 +201,35 @@ const TradingInterface: React.FC = () => {
                       : 'bg-gray-200 text-gray-700'
                       }`}
                   >
-                    Sell
+                    {t('sell')}
                   </button>
                 </div>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Amount
+                  {t('amount')}
                 </label>
                 <input
                   type="number"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  placeholder="Enter amount"
+                  placeholder={t('enterAmount')}
                 />
               </div>
 
               {orderType === 'limit' && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Price
+                    {t('price')}
                   </label>
                   <input
                     type="number"
                     value={price}
                     onChange={(e) => setPrice(e.target.value)}
                     className="w-full border border-gray-300 rounded-md px-3 py-2"
-                    placeholder="Enter price"
+                    placeholder={t('enterPrice')}
                   />
                 </div>
               )}
@@ -240,7 +242,7 @@ const TradingInterface: React.FC = () => {
                   : 'bg-red-500 hover:bg-red-600 text-white'
                   } disabled:opacity-50 disabled:cursor-not-allowed`}
               >
-                {orderSide === 'buy' ? 'Buy' : 'Sell'} {selectedSymbol}
+                {orderSide === 'buy' ? t('buy') : t('sell')} {selectedSymbol}
               </button>
             </div>
           </div>
@@ -249,26 +251,26 @@ const TradingInterface: React.FC = () => {
           <div className="lg:col-span-2 space-y-6">
             {/* Ticker */}
             <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold mb-4">Market Data</h2>
+              <h2 className="text-xl font-semibold mb-4">{t('marketData')}</h2>
               {tickerData && (
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div>
-                    <p className="text-sm text-gray-600">Last Price</p>
+                    <p className="text-sm text-gray-600">{t('lastPrice')}</p>
                     <p className="text-lg font-semibold">${tickerData.last}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">24h Change</p>
+                    <p className="text-sm text-gray-600">{t('change24h')}</p>
                     <p className={`text-lg font-semibold ${tickerData.percentage > 0 ? 'text-green-600' : 'text-red-600'
                       }`}>
                       {tickerData.percentage}%
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">24h High</p>
+                    <p className="text-sm text-gray-600">{t('high24h')}</p>
                     <p className="text-lg font-semibold">${tickerData.high}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">24h Low</p>
+                    <p className="text-sm text-gray-600">{t('low24h')}</p>
                     <p className="text-lg font-semibold">${tickerData.low}</p>
                   </div>
                 </div>
@@ -277,11 +279,11 @@ const TradingInterface: React.FC = () => {
 
             {/* Order Book */}
             <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold mb-4">Order Book</h2>
+              <h2 className="text-xl font-semibold mb-4">{t('orderBook')}</h2>
               {orderBookData && (
                 <div className="grid grid-cols-2 gap-6">
                   <div>
-                    <h3 className="text-lg font-medium text-red-600 mb-2">Asks</h3>
+                    <h3 className="text-lg font-medium text-red-600 mb-2">{t('asks')}</h3>
                     <div className="space-y-1 max-h-64 overflow-y-auto">
                       {orderBookData.asks?.slice(0, 10).map((ask: any[], index: number) => (
                         <div key={index} className="flex justify-between text-sm">
@@ -292,7 +294,7 @@ const TradingInterface: React.FC = () => {
                     </div>
                   </div>
                   <div>
-                    <h3 className="text-lg font-medium text-green-600 mb-2">Bids</h3>
+                    <h3 className="text-lg font-medium text-green-600 mb-2">{t('bids')}</h3>
                     <div className="space-y-1 max-h-64 overflow-y-auto">
                       {orderBookData.bids?.slice(0, 10).map((bid: any[], index: number) => (
                         <div key={index} className="flex justify-between text-sm">
@@ -308,19 +310,19 @@ const TradingInterface: React.FC = () => {
 
             {/* Open Orders */}
             <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold mb-4">Open Orders</h2>
+              <h2 className="text-xl font-semibold mb-4">{t('openOrders')}</h2>
               {openOrdersData && openOrdersData.length > 0 ? (
                 <div className="overflow-x-auto">
                   <table className="min-w-full table-auto">
                     <thead>
                       <tr className="bg-gray-50">
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Symbol</th>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Side</th>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Price</th>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('symbol')}</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('side')}</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('orderType')}</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('amount')}</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('price')}</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('date')}</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('actions')}</th>
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
@@ -341,7 +343,7 @@ const TradingInterface: React.FC = () => {
                               onClick={() => handleCancelOrder(order.id, order.symbol)}
                               className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 text-xs"
                             >
-                              Cancel
+                              {t('cancel')}
                             </button>
                           </td>
                         </tr>
@@ -350,24 +352,24 @@ const TradingInterface: React.FC = () => {
                   </table>
                 </div>
               ) : (
-                <p className="text-gray-500">No open orders</p>
+                <p className="text-gray-500">{t('noOpenOrders')}</p>
               )}
             </div>
 
             {/* Order History */}
             <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold mb-4">Order History</h2>
+              <h2 className="text-xl font-semibold mb-4">{t('orderHistory')}</h2>
               {orderHistoryData && orderHistoryData.length > 0 ? (
                 <div className="overflow-x-auto">
                   <table className="min-w-full table-auto">
                     <thead>
                       <tr className="bg-gray-50">
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Symbol</th>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Side</th>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Price</th>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('symbol')}</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('side')}</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('amount')}</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('price')}</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('status')}</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('date')}</th>
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
@@ -389,24 +391,24 @@ const TradingInterface: React.FC = () => {
                   </table>
                 </div>
               ) : (
-                <p className="text-gray-500">No order history available</p>
+                <p className="text-gray-500">{t('noOrderHistory')}</p>
               )}
             </div>
 
             {/* Trades */}
             <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold mb-4">Recent Trades</h2>
+              <h2 className="text-xl font-semibold mb-4">{t('recentTrades')}</h2>
               {tradesData && tradesData.length > 0 ? (
                 <div className="overflow-x-auto">
                   <table className="min-w-full table-auto">
                     <thead>
                       <tr className="bg-gray-50">
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Symbol</th>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Side</th>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Price</th>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Fee</th>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('symbol')}</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('side')}</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('amount')}</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('price')}</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('fee')}</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('date')}</th>
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
@@ -428,7 +430,7 @@ const TradingInterface: React.FC = () => {
                   </table>
                 </div>
               ) : (
-                <p className="text-gray-500">No recent trades</p>
+                <p className="text-gray-500">{t('noRecentTrades')}</p>
               )}
             </div>
           </div>
