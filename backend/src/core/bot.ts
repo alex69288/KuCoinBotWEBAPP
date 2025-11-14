@@ -47,10 +47,22 @@ export class KuCoinBot {
   private strategy: BaseStrategy | null = null;
   private marketData: OHLCVData[] = [];
 
+  private static instance: KuCoinBot | null = null;
+
   constructor(config: BotConfig) {
     this.config = config;
     this.kucoinService = new KuCoinService();
     this.initializeStrategy();
+  }
+
+  static getInstance(config?: BotConfig): KuCoinBot {
+    if (!KuCoinBot.instance) {
+      if (!config) {
+        throw new Error('Bot config required for first initialization');
+      }
+      KuCoinBot.instance = new KuCoinBot(config);
+    }
+    return KuCoinBot.instance;
   }
 
   private initializeStrategy(): void {
@@ -233,6 +245,40 @@ export class KuCoinBot {
       stats: this.dailyStats,
       risks: this.riskManager,
     };
+  }
+
+  getConfig(): BotConfig {
+    return this.config;
+  }
+
+  getStats(): any {
+    return this.dailyStats;
+  }
+
+  async manualTrade(symbol: string, side: 'buy' | 'sell', amount: number, type: 'market' | 'limit' = 'market', price?: number): Promise<any> {
+    if (!this.isRunning && !this.config.demoMode) {
+      throw new Error('Bot is not running');
+    }
+
+    try {
+      const job = await addTradeJob({
+        symbol,
+        type,
+        side,
+        amount,
+        price,
+        userId: 'manual',
+      });
+
+      return {
+        jobId: job.id,
+        status: 'queued',
+        message: 'Trade queued successfully'
+      };
+    } catch (error) {
+      console.error('Failed to execute manual trade:', error);
+      throw error;
+    }
   }
 
   updateConfig(newConfig: Partial<BotConfig>): void {

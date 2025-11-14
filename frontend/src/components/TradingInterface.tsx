@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useTradingStore } from '../store/trading.store';
 import { kucoinApi } from '../api/kucoin.api';
+import { botApi } from '../api/bot.api';
 import { useTranslation } from 'react-i18next';
 
 const TradingInterface: React.FC = () => {
@@ -12,6 +13,10 @@ const TradingInterface: React.FC = () => {
   const [amount, setAmount] = useState('');
   const [price, setPrice] = useState('');
   const [lastStartTime, setLastStartTime] = useState<number | null>(null);
+
+  // Bot state
+  const [botEnabled, setBotEnabled] = useState(false);
+  const [selectedStrategy, setSelectedStrategy] = useState('ema-ml');
 
   // Fetch balance
   const { data: balanceData, refetch: refetchBalance } = useQuery({
@@ -55,11 +60,37 @@ const TradingInterface: React.FC = () => {
     refetchInterval: 15000, // Update every 15 seconds
   });
 
+  // Bot queries
+  const { data: botStatus } = useQuery({
+    queryKey: ['botStatus'],
+    queryFn: botApi.getStatus,
+    refetchInterval: 5000, // Update every 5 seconds
+  });
+
+  const { data: botStrategies } = useQuery({
+    queryKey: ['botStrategies'],
+    queryFn: botApi.getStrategies,
+  });
+
+  const { data: botStats } = useQuery({
+    queryKey: ['botStats'],
+    queryFn: botApi.getStats,
+    refetchInterval: 10000, // Update every 10 seconds
+  });
+
   useEffect(() => {
     if (balanceData) {
       setBalance(balanceData);
     }
   }, [balanceData, setBalance]);
+
+  // Sync bot status
+  useEffect(() => {
+    if (botStatus) {
+      setBotEnabled(botStatus.isRunning);
+      setSelectedStrategy(botStatus.config?.strategy || 'ema-ml');
+    }
+  }, [botStatus]);
 
   // Health check for auto-reload on backend restart
   useEffect(() => {
@@ -111,12 +142,127 @@ const TradingInterface: React.FC = () => {
     }
   };
 
+  const handleStartBot = async () => {
+    try {
+      await botApi.start();
+      setBotEnabled(true);
+      console.log('Bot started successfully');
+    } catch (error) {
+      console.error('Error starting bot:', error);
+    }
+  };
+
+  const handleStopBot = async () => {
+    try {
+      await botApi.stop();
+      setBotEnabled(false);
+      console.log('Bot stopped successfully');
+    } catch (error) {
+      console.error('Error stopping bot:', error);
+    }
+  };
+
+  const handleStrategyChange = async (strategy: string) => {
+    try {
+      await botApi.updateConfig({ strategy });
+      setSelectedStrategy(strategy);
+      console.log('Strategy updated successfully');
+    } catch (error) {
+      console.error('Error updating strategy:', error);
+    }
+  };
+
+  const handleManualTrade = async (side: 'buy' | 'sell', amount: number) => {
+    try {
+      await botApi.manualTrade({
+        symbol: selectedSymbol,
+        side,
+        amount,
+        type: 'market'
+      });
+      console.log('Manual trade executed successfully');
+      refetchBalance();
+    } catch (error) {
+      console.error('Error executing manual trade:', error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 p-4">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">
-          {t('welcome')}
+          KuCoin Trading Bot
         </h1>
+
+        {/* Bot Control Panel */}
+        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+          <h2 className="text-xl font-semibold mb-4">{t('botControl')}</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">{t('botStatus')}</label>
+              <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                botEnabled ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+              }`}>
+                {botEnabled ? t('running') : t('stopped')}
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">{t('strategy')}</label>
+              <select
+                value={selectedStrategy}
+                onChange={(e) => handleStrategyChange(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                {botStrategies?.map((strategy: any) => (
+                  <option key={strategy.id} value={strategy.id}>
+                    {strategy.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex items-end space-x-2">
+              {!botEnabled ? (
+                <button
+                  onClick={handleStartBot}
+                  className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+                >
+                  {t('startBot')}
+                </button>
+              ) : (
+                <button
+                  onClick={handleStopBot}
+                  className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+                >
+                  {t('stopBot')}
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Bot Statistics */}
+          {botStats && (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4 pt-4 border-t border-gray-200">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-blue-600">{botStats.totalTrades || 0}</div>
+                <div className="text-sm text-gray-600">{t('totalTrades')}</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-green-600">{botStats.winningTrades || 0}</div>
+                <div className="text-sm text-gray-600">{t('winningTrades')}</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-red-600">{botStats.losingTrades || 0}</div>
+                <div className="text-sm text-gray-600">{t('losingTrades')}</div>
+              </div>
+              <div className="text-center">
+                <div className={`text-2xl font-bold ${botStats.totalProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  ${botStats.totalProfit?.toFixed(2) || '0.00'}
+                </div>
+                <div className="text-sm text-gray-600">{t('totalPnL')}</div>
+              </div>
+            </div>
+          )}
+        </div>
 
         {/* Balance Section */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
@@ -268,6 +414,28 @@ const TradingInterface: React.FC = () => {
                 {orderSide === 'buy' ? t('buy') : t('sell')} {selectedSymbol}
               </button>
             </div>
+          </div>
+
+          {/* Manual Trading Panel */}
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h2 className="text-xl font-semibold mb-4">{t('manualTrading')}</h2>
+            <div className="grid grid-cols-2 gap-4">
+              <button
+                onClick={() => handleManualTrade('buy', 0.001)}
+                className="px-4 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 font-medium"
+              >
+                {t('buy')} 0.001 {selectedSymbol.split('/')[0]}
+              </button>
+              <button
+                onClick={() => handleManualTrade('sell', 0.001)}
+                className="px-4 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 font-medium"
+              >
+                {t('sell')} 0.001 {selectedSymbol.split('/')[0]}
+              </button>
+            </div>
+            <p className="text-sm text-gray-600 mt-2">
+              {t('quickTrade')}
+            </p>
           </div>
 
           {/* Market Data */}

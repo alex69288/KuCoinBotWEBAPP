@@ -2,6 +2,8 @@ FROM node:18-alpine
 
 ARG TARGET=production
 
+RUN apk add --no-cache curl
+
 WORKDIR /app
 
 COPY package*.json ./
