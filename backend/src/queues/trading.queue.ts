@@ -104,7 +104,7 @@ try {
       redisConfig = {
         host: redisUrl.hostname,
         port: parseInt(redisUrl.port) || 6379,
-        password: redisUrl.password || process.env.REDIS_PASSWORD || undefined,
+        password: process.env.REDIS_PASSWORD || undefined,
       };
       console.log('✅ Using Redis URL configuration (development only)');
     } catch (error) {
