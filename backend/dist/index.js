@@ -103,6 +103,42 @@ try {
         console.log('Health check requested');
         res.json({ status: 'OK', timestamp: new Date().toISOString() });
     });
+    // Root endpoint
+    app.get('/', (req, res) => {
+        res.json({
+            message: 'KuCoin Trading Bot API',
+            version: '0.0.2',
+            frontend: process.env.FRONTEND_URL || 'http://localhost',
+            docs: '/api/docs',
+            health: '/health',
+            api: {
+                kucoin: '/api/kucoin',
+                balance: '/api/kucoin/balance',
+                ticker: '/api/kucoin/ticker/:symbol',
+                orderbook: '/api/kucoin/orderbook/:symbol',
+                orders: '/api/kucoin/orders',
+                markets: '/api/kucoin/markets'
+            }
+        });
+    });
+    // API info endpoint
+    app.get('/api', (req, res) => {
+        res.json({
+            message: 'KuCoin Trading Bot API Endpoints',
+            version: '0.0.2',
+            endpoints: {
+                balance: 'GET /api/kucoin/balance',
+                ticker: 'GET /api/kucoin/ticker/:symbol',
+                orderbook: 'GET /api/kucoin/orderbook/:symbol',
+                createOrder: 'POST /api/kucoin/orders',
+                openOrders: 'GET /api/kucoin/orders/open',
+                cancelOrder: 'DELETE /api/kucoin/orders/:orderId',
+                orderHistory: 'GET /api/kucoin/orders/history',
+                trades: 'GET /api/kucoin/trades',
+                markets: 'GET /api/kucoin/markets'
+            }
+        });
+    });
     // Telegram bot commands
     bot.onText(/\/start/, (msg) => {
         const chatId = msg.chat.id;
