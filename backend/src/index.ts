@@ -231,6 +231,7 @@ try {
   }
 
   // Start server
+  console.log('Before server.listen');
   server.listen(PORT, () => {
     console.log(`🚀 Server is running on http://localhost:${PORT}`);
   }).on('error', (error: any) => {
