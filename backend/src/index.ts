@@ -12,6 +12,8 @@ import { KuCoinBot } from './core/bot';
 
 dotenv.config();
 
+console.log('Starting application...');
+
 const app = express();
 const server = createServer(app);
 const io = new Server(server, {
