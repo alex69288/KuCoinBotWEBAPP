@@ -144,9 +144,9 @@ try {
 
   server.listen({
     port: PORT,
-    host: isProduction ? '0.0.0.0' : '127.0.0.1'
+    host: '0.0.0.0'  // Listen on all interfaces for Docker compatibility
   }, () => {
-    console.log(`Server running on ${isProduction ? '0.0.0.0' : '127.0.0.1'}:${PORT}`);
+    console.log(`Server running on 0.0.0.0:${PORT}`);
   }).on('error', (error: any) => {
     console.error('Failed to start server:', error);
     if (error.code === 'EADDRINUSE') {
