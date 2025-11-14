@@ -118,6 +118,11 @@ try {
 
   console.log(`🔧 Final Redis config: ${JSON.stringify({ host: redisConfig.host, port: redisConfig.port, hasPassword: !!redisConfig.password })}`);
 
+  // Remove password if undefined to avoid warnings
+  if (redisConfig.password === undefined) {
+    delete redisConfig.password;
+  }
+
   tradingQueue = new Queue('trading', {
     redis: redisConfig,
     defaultJobOptions: {
