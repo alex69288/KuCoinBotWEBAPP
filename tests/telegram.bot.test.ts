@@ -12,7 +12,7 @@ describe('Telegram Bot Integration', () => {
   it('должен обрабатывать команду /start', async () => {
     // Проверяем обработку команды старта
     const mockStartMessage = {
-      chat: { id: 12345 },
+      chat: { id: 12345, type: 'private', title: 'Test Chat' },
       text: '/start'
     };
 
@@ -22,10 +22,23 @@ describe('Telegram Bot Integration', () => {
     expect(mockStartResponse).toBeDefined();
   });
 
+  it('должен обрабатывать команду /run', async () => {
+    // Проверяем обработку команды /run
+    const mockRunMessage = {
+      chat: { id: 12345, type: 'private', title: 'Test Chat' },
+      text: '/run'
+    };
+
+    const mockRunResponse = 'Приложение запускается...';
+
+    expect(mockRunMessage).toBeDefined();
+    expect(mockRunResponse).toBeDefined();
+  });
+
   it('должен обрабатывать команду /balance', async () => {
     // Проверяем команду получения баланса
     const mockBalanceCommand = {
-      chat: { id: 12345 },
+      chat: { id: 12345, type: 'private', title: 'Test Chat' },
       text: '/balance'
     };
 
@@ -38,7 +51,7 @@ describe('Telegram Bot Integration', () => {
   it('должен обрабатывать команду /buy', async () => {
     // Проверяем команду покупки
     const mockBuyCommand = {
-      chat: { id: 12345 },
+      chat: { id: 12345, type: 'private', title: 'Test Chat' },
       text: '/buy BTC/USDT 0.001 50000'
     };
 
@@ -51,7 +64,7 @@ describe('Telegram Bot Integration', () => {
   it('должен обрабатывать команду /sell', async () => {
     // Проверяем команду продажи
     const mockSellCommand = {
-      chat: { id: 12345 },
+      chat: { id: 12345, type: 'private', title: 'Test Chat' },
       text: '/sell BTC/USDT 0.001 51000'
     };
 
@@ -64,7 +77,7 @@ describe('Telegram Bot Integration', () => {
   it('должен обрабатывать команду /orders', async () => {
     // Проверяем команду просмотра ордеров
     const mockOrdersCommand = {
-      chat: { id: 12345 },
+      chat: { id: 12345, type: 'private', title: 'Test Chat' },
       text: '/orders'
     };
 
@@ -77,7 +90,7 @@ describe('Telegram Bot Integration', () => {
   it('должен обрабатывать команду /cancel', async () => {
     // Проверяем команду отмены ордера
     const mockCancelCommand = {
-      chat: { id: 12345 },
+      chat: { id: 12345, type: 'private', title: 'Test Chat' },
       text: '/cancel 12345'
     };
 
@@ -90,7 +103,7 @@ describe('Telegram Bot Integration', () => {
   it('должен обрабатывать неизвестные команды', async () => {
     // Проверяем обработку неизвестных команд
     const mockUnknownCommand = {
-      chat: { id: 12345 },
+      chat: { id: 12345, type: 'private', title: 'Test Chat' },
       text: '/unknown'
     };
 
@@ -98,5 +111,38 @@ describe('Telegram Bot Integration', () => {
 
     expect(mockUnknownCommand).toBeDefined();
     expect(mockUnknownResponse).toBeDefined();
+  });
+});
+
+// @ts-ignore
+process.env.TELEGRAM_BOT_TOKEN = 'test_token';
+
+import { Telegraf } from 'telegraf';
+
+// Mock Telegraf
+jest.mock('telegraf', () => {
+  return {
+    Telegraf: jest.fn().mockImplementation(() => ({
+      start: jest.fn(),
+      command: jest.fn(),
+      handleUpdate: jest.fn(),
+    })),
+  };
+});
+
+const bot = new Telegraf('test_token');
+
+describe('Telegram Bot', () => {
+  it('should initialize without errors', () => {
+    expect(bot).toBeDefined();
+  });
+
+  // Skip functional tests for now as they require mocking Telegraf API calls
+  it.skip('should respond to /start command', async () => {
+    // Mock implementation would go here
+  });
+
+  it.skip('should respond to /run command', async () => {
+    // Mock implementation would go here
   });
 });

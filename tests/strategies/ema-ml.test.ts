@@ -2,7 +2,7 @@ import { EmaMlStrategy } from '../../backend/src/strategies/ema-ml.strategy';
 import { OHLCVData } from '../../backend/src/strategies/base.strategy';
 
 describe('EmaMlStrategy', () => {
-  let strategy: EmaMlStrategy;
+  let strategy: any;
   const config = {
     symbol: 'BTC/USDT',
     fastPeriod: 12,
@@ -26,7 +26,7 @@ describe('EmaMlStrategy', () => {
   });
 
   test('should return hold with insufficient data', () => {
-    const data: OHLCVData[] = [
+    const data = [
       { timestamp: 1, open: 100, high: 100, low: 100, close: 100, volume: 100 }
     ];
     expect(strategy.calculateSignal(data)).toBe('hold');
@@ -34,7 +34,7 @@ describe('EmaMlStrategy', () => {
 
   test('should calculate signal with sufficient data', () => {
     // Create mock data with rising prices (should trigger buy)
-    const data: OHLCVData[] = [];
+    const data = [];
     for (let i = 0; i < 60; i++) {
       data.push({
         timestamp: i * 60000,

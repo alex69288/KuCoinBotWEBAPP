@@ -4,11 +4,34 @@ import { calculateRSI } from '../indicators/rsi';
 import { calculateMACD } from '../indicators/macd';
 import { calculateBollingerBands } from '../indicators/bollinger';
 import { OHLCVData } from '../strategies/base.strategy.js';
+import fs from 'fs';
+import path from 'path';
+
+const MODEL_CACHE_PATH = path.resolve(__dirname, '../../cache/random_forest_model.json');
 
 export class SimpleMLPredictor {
   private model: any = null;
 
+  saveModel(): void {
+    if (this.model && this.model.constructor.name === 'RandomForestClassifier') {
+      const modelData = this.model.toJSON();
+      fs.writeFileSync(MODEL_CACHE_PATH, JSON.stringify(modelData));
+      console.log('Model saved to cache');
+    }
+  }
+
+  loadModel(): void {
+    if (fs.existsSync(MODEL_CACHE_PATH)) {
+      const modelData = JSON.parse(fs.readFileSync(MODEL_CACHE_PATH, 'utf-8'));
+      this.model = RandomForestClassifier.load(modelData);
+      console.log('Model loaded from cache');
+    } else {
+      console.log('No cached model found');
+    }
+  }
+
   constructor() {
+    this.loadModel();
     // Initialize with simple rule-based prediction until trained
     this.model = {
       predict: (features: number[]) => {
@@ -112,7 +135,7 @@ export class SimpleMLPredictor {
 
     this.model = new RandomForestClassifier(options);
     this.model.train(trainingData, labels);
-
+    this.saveModel();
     console.log(`Trained Random Forest model with ${trainingData.length} samples`);
   }
 }

@@ -11,6 +11,7 @@ const TradingInterface: React.FC = () => {
   const [orderSide, setOrderSide] = useState<'buy' | 'sell'>('buy');
   const [amount, setAmount] = useState('');
   const [price, setPrice] = useState('');
+  const [lastStartTime, setLastStartTime] = useState<number | null>(null);
 
   // Fetch balance
   const { data: balanceData, refetch: refetchBalance } = useQuery({
@@ -59,6 +60,28 @@ const TradingInterface: React.FC = () => {
       setBalance(balanceData);
     }
   }, [balanceData, setBalance]);
+
+  // Health check for auto-reload on backend restart
+  useEffect(() => {
+    const checkHealth = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/health`);
+        const data = await response.json();
+        if (lastStartTime !== null && data.startTime !== lastStartTime) {
+          console.log('Backend restarted, reloading page...');
+          window.location.reload();
+        }
+        setLastStartTime(data.startTime);
+      } catch (error) {
+        console.error('Health check failed:', error);
+      }
+    };
+
+    const interval = setInterval(checkHealth, 5000); // Check every 5 seconds
+    checkHealth(); // Initial check
+
+    return () => clearInterval(interval);
+  }, [lastStartTime]);
 
   const handleCreateOrder = async () => {
     try {

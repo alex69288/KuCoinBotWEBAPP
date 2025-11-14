@@ -7,7 +7,23 @@ RUN apk add --no-cache curl
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm ci
+RUN npm ci --include=dev
+RUN npm install i18next
+
+RUN npm list i18next
+
+RUN npm list --depth=0
+
+RUN ls -la /app/node_modules && node -v && npm -v
+
+RUN npm install --force
+RUN npm rebuild
+
+RUN ls -la /app/node_modules/i18next
+
+RUN node -e "console.log(require('i18next').version)"
+RUN node -e "try{console.log('resolve:', require.resolve('i18next'))}catch(e){console.log('resolve error',e.message)}"
+RUN node -e "try{console.log(require('i18next/package.json'))}catch(e){console.log('package.json read error',e.message)}"
 
 COPY . .
 RUN if [ "$TARGET" = "production" ]; then npm run build && npm ci --only=production; fi

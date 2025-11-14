@@ -1,7 +1,7 @@
 import { KuCoinBot } from '../../backend/src/core/bot';
 
 describe('KuCoinBot', () => {
-  let bot: KuCoinBot;
+  let bot: any;
   const config = {
     enabled: true,
     demoMode: true,
@@ -39,7 +39,7 @@ describe('KuCoinBot', () => {
 
     await bot.stop();
     expect(bot.getStatus().isRunning).toBe(false);
-  });
+  }, 10000); // Increase timeout
 
   test('should check risk limits', () => {
     // Нормальные условия

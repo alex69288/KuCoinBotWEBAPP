@@ -6,7 +6,7 @@
       "ES2022"
     ],
     "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": "./", // Updated to include all files in the backend directory
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -18,7 +18,8 @@
     "sourceMap": true
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "tests/**/*" // Include tests directory
   ],
   "exclude": [
     "node_modules",

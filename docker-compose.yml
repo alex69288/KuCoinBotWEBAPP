@@ -33,6 +33,9 @@ services:
     volumes:
       - ./backend:/app
       - /app/node_modules
+    restart: always
+    stdin_open: true
+    tty: true
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8080/health" ]
       interval: 30s
@@ -53,6 +56,9 @@ services:
     volumes:
       - ./frontend:/app
       - /app/node_modules
+    restart: always
+    stdin_open: true
+    tty: true
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://backend:8080/health" ]
       interval: 30s
