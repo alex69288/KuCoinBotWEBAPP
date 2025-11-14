@@ -41,8 +41,8 @@ services:
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://127.0.0.1:8080/health" ]
       interval: 10s
-      timeout: 10s
-      retries: 6
+      timeout: 30s
+      retries: 10
 
   frontend:
     build:
