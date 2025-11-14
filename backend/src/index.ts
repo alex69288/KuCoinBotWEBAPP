@@ -91,7 +91,13 @@ try {
   }
 
   const botOptions = useWebhook ? {} : { polling: true };
-  const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN!, botOptions);
+  let bot: TelegramBot;
+  try {
+    bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN!, botOptions);
+  } catch (error) {
+    console.error('Failed to create Telegram bot:', error);
+    throw error;
+  }
 
   // Set webhook URL if using webhook
   if (useWebhook) {
