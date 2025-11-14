@@ -14,3 +14,4 @@ run:
   env:
     - NODE_ENV=production
     - PORT=8080
+    - BACKEND_URL=https://kucoinbot-backend-alex69288.amvera.io
