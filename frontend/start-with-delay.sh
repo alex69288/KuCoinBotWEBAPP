@@ -1,4 +1,4 @@
 #!/bin/sh
 # Задержка перед запуском frontend
 sleep 10
-npm run dev
+exec npm run dev
