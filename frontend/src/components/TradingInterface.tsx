@@ -17,6 +17,7 @@ const TradingInterface: React.FC = () => {
   // Bot state
   const [botEnabled, setBotEnabled] = useState(false);
   const [selectedStrategy, setSelectedStrategy] = useState('ema-ml');
+  const [strategyConfig, setStrategyConfig] = useState<any>({});
 
   // Fetch balance
   const { data: balanceData, refetch: refetchBalance } = useQuery({
@@ -60,6 +61,13 @@ const TradingInterface: React.FC = () => {
     refetchInterval: 15000, // Update every 15 seconds
   });
 
+  // Fetch bot config
+  const { data: botConfig } = useQuery({
+    queryKey: ['botConfig'],
+    queryFn: botApi.getConfig,
+    refetchInterval: 30000, // Update every 30 seconds
+  });
+
   // Bot queries
   const { data: botStatus } = useQuery({
     queryKey: ['botStatus'],
@@ -91,6 +99,13 @@ const TradingInterface: React.FC = () => {
       setSelectedStrategy(botStatus.config?.strategy || 'ema-ml');
     }
   }, [botStatus]);
+
+  // Sync strategy config
+  useEffect(() => {
+    if (botConfig?.strategyConfig) {
+      setStrategyConfig(botConfig.strategyConfig);
+    }
+  }, [botConfig]);
 
   // Health check for auto-reload on backend restart
   useEffect(() => {
@@ -169,6 +184,16 @@ const TradingInterface: React.FC = () => {
       console.log('Strategy updated successfully');
     } catch (error) {
       console.error('Error updating strategy:', error);
+    }
+  };
+
+  const handleConfigUpdate = async (newConfig: any) => {
+    try {
+      await botApi.updateConfig({ strategyConfig: newConfig });
+      setStrategyConfig(newConfig);
+      console.log('Config updated successfully');
+    } catch (error) {
+      console.error('Error updating config:', error);
     }
   };
 
@@ -261,6 +286,109 @@ const TradingInterface: React.FC = () => {
               </div>
             </div>
           )}
+        </div>
+
+        {/* Strategy Configuration */}
+        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+          <h2 className="text-xl font-semibold mb-4">{t('strategyConfig')}</h2>
+          {selectedStrategy === 'ema-ml' && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('fastPeriod')}</label>
+                <input
+                  type="number"
+                  value={strategyConfig.fastPeriod || 9}
+                  onChange={(e) => setStrategyConfig({ ...strategyConfig, fastPeriod: parseInt(e.target.value) })}
+                  className="w-full border border-gray-300 rounded-md px-3 py-2"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('slowPeriod')}</label>
+                <input
+                  type="number"
+                  value={strategyConfig.slowPeriod || 21}
+                  onChange={(e) => setStrategyConfig({ ...strategyConfig, slowPeriod: parseInt(e.target.value) })}
+                  className="w-full border border-gray-300 rounded-md px-3 py-2"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('emaThreshold')}</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  value={strategyConfig.emaThreshold || 0.1}
+                  onChange={(e) => setStrategyConfig({ ...strategyConfig, emaThreshold: parseFloat(e.target.value) })}
+                  className="w-full border border-gray-300 rounded-md px-3 py-2"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('mlBuyThreshold')}</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  value={strategyConfig.mlBuyThreshold || 0.6}
+                  onChange={(e) => setStrategyConfig({ ...strategyConfig, mlBuyThreshold: parseFloat(e.target.value) })}
+                  className="w-full border border-gray-300 rounded-md px-3 py-2"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('mlSellThreshold')}</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  value={strategyConfig.mlSellThreshold || 0.4}
+                  onChange={(e) => setStrategyConfig({ ...strategyConfig, mlSellThreshold: parseFloat(e.target.value) })}
+                  className="w-full border border-gray-300 rounded-md px-3 py-2"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('takeProfitPercent')}</label>
+                <input
+                  type="number"
+                  step="0.1"
+                  value={strategyConfig.takeProfitPercent || 2.0}
+                  onChange={(e) => setStrategyConfig({ ...strategyConfig, takeProfitPercent: parseFloat(e.target.value) })}
+                  className="w-full border border-gray-300 rounded-md px-3 py-2"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('stopLossPercent')}</label>
+                <input
+                  type="number"
+                  step="0.1"
+                  value={strategyConfig.stopLossPercent || 1.0}
+                  onChange={(e) => setStrategyConfig({ ...strategyConfig, stopLossPercent: parseFloat(e.target.value) })}
+                  className="w-full border border-gray-300 rounded-md px-3 py-2"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('minHoldTime')}</label>
+                <input
+                  type="number"
+                  value={strategyConfig.minHoldTime || 5}
+                  onChange={(e) => setStrategyConfig({ ...strategyConfig, minHoldTime: parseInt(e.target.value) })}
+                  className="w-full border border-gray-300 rounded-md px-3 py-2"
+                />
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={strategyConfig.trailingStop || false}
+                  onChange={(e) => setStrategyConfig({ ...strategyConfig, trailingStop: e.target.checked })}
+                  className="mr-2"
+                />
+                <label className="text-sm font-medium text-gray-700">{t('trailingStop')}</label>
+              </div>
+            </div>
+          )}
+          <div className="mt-4">
+            <button
+              onClick={() => handleConfigUpdate(strategyConfig)}
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              {t('saveConfig')}
+            </button>
+          </div>
         </div>
 
         {/* Balance Section */}
