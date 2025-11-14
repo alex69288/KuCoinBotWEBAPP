@@ -7,7 +7,7 @@ import { OHLCVData } from '../strategies/base.strategy.js';
 import fs from 'fs';
 import path from 'path';
 
-const MODEL_CACHE_PATH = path.resolve(process.cwd(), 'backend/cache/random_forest_model.json');
+const MODEL_CACHE_PATH = path.resolve(process.cwd(), 'cache/random_forest_model.json');
 
 export class SimpleMLPredictor {
   private model: any = null;
