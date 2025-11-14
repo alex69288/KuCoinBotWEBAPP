@@ -56,6 +56,9 @@ const resources = {
       totalPnL: 'Total P&L',
       manualTrading: 'Manual Trading',
       quickTrade: 'Quick manual trades using market orders',
+      emaMlStrategyDescription: 'Exponential Moving Averages with Machine Learning predictions',
+      macdRsiStrategyDescription: 'MACD and RSI indicators combination',
+      priceActionStrategyDescription: 'Support/resistance levels and candlestick patterns analysis',
     },
   },
   ru: {

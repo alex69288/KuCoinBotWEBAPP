@@ -10,5 +10,20 @@
   "failedToFetchOrderHistory": "Failed to fetch order history",
   "failedToFetchTrades": "Failed to fetch trades",
   "tradeOrderQueued": "Trade order queued for processing",
-  "orderCancelled": "Order cancelled"
+  "orderCancelled": "Order cancelled",
+  "priceActionStrategyDescription": "Support/resistance levels and candlestick patterns analysis",
+  "emaMlStrategyDescription": "Exponential Moving Averages with Machine Learning predictions",
+  "macdRsiStrategyDescription": "MACD and RSI indicators combination",
+  "failedToGetBotStatus": "Failed to get bot status",
+  "botStarted": "Bot started",
+  "failedToStartBot": "Failed to start bot",
+  "botStopped": "Bot stopped",
+  "failedToStopBot": "Failed to stop bot",
+  "failedToGetBotConfig": "Failed to get bot configuration",
+  "configUpdated": "Configuration updated",
+  "failedToUpdateConfig": "Failed to update configuration",
+  "failedToGetStrategies": "Failed to get strategies list",
+  "failedToGetStats": "Failed to get statistics",
+  "failedToGetMarketData": "Failed to get market data",
+  "failedToExecuteTrade": "Failed to execute trade"
 }

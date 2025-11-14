@@ -10,5 +10,20 @@
   "failedToFetchOrderHistory": "Не удалось получить историю ордеров",
   "failedToFetchTrades": "Не удалось получить сделки",
   "tradeOrderQueued": "Ордер на торговлю поставлен в очередь",
-  "orderCancelled": "Ордер отменен"
+  "orderCancelled": "Ордер отменен",
+  "priceActionStrategyDescription": "Анализ уровней поддержки/сопротивления и свечных паттернов",
+  "emaMlStrategyDescription": "Экспоненциальные скользящие средние с предсказаниями машинного обучения",
+  "macdRsiStrategyDescription": "Комбинация индикаторов MACD и RSI",
+  "failedToGetBotStatus": "Не удалось получить статус бота",
+  "botStarted": "Бот запущен",
+  "failedToStartBot": "Не удалось запустить бота",
+  "botStopped": "Бот остановлен",
+  "failedToStopBot": "Не удалось остановить бота",
+  "failedToGetBotConfig": "Не удалось получить конфигурацию бота",
+  "configUpdated": "Конфигурация обновлена",
+  "failedToUpdateConfig": "Не удалось обновить конфигурацию",
+  "failedToGetStrategies": "Не удалось получить список стратегий",
+  "failedToGetStats": "Не удалось получить статистику",
+  "failedToGetMarketData": "Не удалось получить рыночные данные",
+  "failedToExecuteTrade": "Не удалось выполнить сделку"
 }

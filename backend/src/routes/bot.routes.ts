@@ -83,6 +83,11 @@ router.get('/strategies', async (req, res) => {
         id: 'macd-rsi',
         name: 'MACD + RSI',
         description: i18n.t('macdRsiStrategyDescription')
+      },
+      {
+        id: 'price-action',
+        name: 'Price Action',
+        description: i18n.t('priceActionStrategyDescription')
       }
     ];
     res.json(strategies);

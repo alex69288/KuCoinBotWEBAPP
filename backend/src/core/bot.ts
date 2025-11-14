@@ -3,6 +3,7 @@ import { addTradeJob } from '../queues/trading.queue';
 import { BaseStrategy, OHLCVData } from '../strategies/base.strategy';
 import { EmaMlStrategy, EmaMlConfig } from '../strategies/ema-ml.strategy';
 import { MacdRsiStrategy, MacdRsiConfig } from '../strategies/macd-rsi.strategy';
+import { PriceActionStrategy, PriceActionConfig } from '../strategies/price-action.strategy';
 
 interface BotConfig {
   enabled: boolean;
@@ -75,6 +76,12 @@ export class KuCoinBot {
         break;
       case 'macd-rsi':
         this.strategy = new MacdRsiStrategy({
+          symbol: this.config.symbols[0],
+          ...this.config.strategyConfig
+        });
+        break;
+      case 'price-action':
+        this.strategy = new PriceActionStrategy({
           symbol: this.config.symbols[0],
           ...this.config.strategyConfig
         });
