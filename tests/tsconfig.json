@@ -10,8 +10,8 @@
     ]
   },
   "include": [
-    "../backend/src/tests/**/*.ts", // Include all test files in the new location
-    "../backend/src/tests/**/*.js"
+    "./**/*.ts", // Указаны все тестовые файлы в папке tests
+    "./**/*.js"
   ],
   "exclude": [
     "node_modules"

@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { useTradingStore } from '../store/trading.store';
+import { useTradingContext } from '../context/TradingContext';
 import { kucoinApi } from '../api/kucoin.api';
 import { botApi } from '../api/bot.api';
 import { useTranslation } from 'react-i18next';
 
 const TradingInterface: React.FC = () => {
   const { t } = useTranslation();
-  const { selectedSymbol, setSelectedSymbol, balance, setBalance } = useTradingStore();
+  const { selectedSymbol, setSelectedSymbol, balance, setBalance } = useTradingContext();
   const [orderType, setOrderType] = useState<'limit' | 'market'>('limit');
   const [orderSide, setOrderSide] = useState<'buy' | 'sell'>('buy');
   const [amount, setAmount] = useState('');
@@ -200,9 +200,8 @@ const TradingInterface: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">{t('botStatus')}</label>
-              <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                botEnabled ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-              }`}>
+              <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${botEnabled ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                }`}>
                 {botEnabled ? t('running') : t('stopped')}
               </div>
             </div>

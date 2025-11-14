@@ -114,14 +114,14 @@ export class PriceActionStrategy extends BaseStrategy {
     // Engulfing паттерн
     const prevBody = Math.abs(previous.close - previous.open);
     const isBullishEngulfing = current.close > current.open &&
-                              current.open < previous.close &&
-                              current.close > previous.open &&
-                              body > prevBody * 1.1;
+      current.open < previous.close &&
+      current.close > previous.open &&
+      body > prevBody * 1.1;
 
     const isBearishEngulfing = current.close < current.open &&
-                              current.open > previous.close &&
-                              current.close < previous.open &&
-                              body > prevBody * 1.1;
+      current.open > previous.close &&
+      current.close < previous.open &&
+      body > prevBody * 1.1;
 
     if (isBullishEngulfing) {
       return { pattern: 'bullish_engulfing', strength: 0.9 };
