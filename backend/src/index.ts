@@ -34,6 +34,15 @@ app.use(express.json());
 app.use('/api/kucoin', kucoinRoutes);
 app.use('/api/bot', botRoutes);
 
+// Healthcheck route
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'ok',
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Telegram Bot - use webhook if BACKEND_URL is HTTPS, polling otherwise
 const useWebhook = process.env.BACKEND_URL?.startsWith('https://') || false;
 const isProduction = process.env.NODE_ENV === 'production';
@@ -81,6 +90,7 @@ try {
     console.log('ℹ️ KuCoin Bot disabled');
   }
 
+  const botOptions = useWebhook ? {} : { polling: true };
   const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN!, botOptions);
 
   // Set webhook URL if using webhook
@@ -212,11 +222,9 @@ try {
     await new Promise(resolve => setTimeout(resolve, 5000));
   }
 
-  server.listen({
-    port: PORT,
-    host: '0.0.0.0'  // Listen on all interfaces for Docker compatibility
-  }, () => {
-    console.log(`Server running on 0.0.0.0:${PORT}`);
+  // Start server
+  server.listen(PORT, () => {
+    console.log(`🚀 Server is running on http://localhost:${PORT}`);
   }).on('error', (error: any) => {
     console.error('Failed to start server:', error);
     if (error.code === 'EADDRINUSE') {
