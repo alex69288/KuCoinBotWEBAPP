@@ -7,6 +7,7 @@ import { Server } from 'socket.io';
 import TelegramBot from 'node-telegram-bot-api';
 import dotenv from 'dotenv';
 import kucoinRoutes from './routes/kucoin.routes';
+import { KuCoinBot } from './core/bot';
 
 dotenv.config();
 
@@ -52,6 +53,31 @@ try {
   await import('./queues/trading.queue.js');
   console.log('✅ Trading queue initialized');
 
+  // Initialize KuCoin Bot
+  const botConfig = {
+    enabled: process.env.BOT_ENABLED !== 'false',
+    demoMode: process.env.DEMO_MODE === 'true',
+    maxDailyLoss: parseFloat(process.env.MAX_DAILY_LOSS || '5'),
+    maxConsecutiveLosses: parseInt(process.env.MAX_CONSECUTIVE_LOSSES || '3'),
+    positionSizePercent: parseFloat(process.env.POSITION_SIZE_PERCENT || '1'),
+    telegramToken: process.env.TELEGRAM_BOT_TOKEN!,
+    telegramChatId: process.env.TELEGRAM_CHAT_ID!,
+    symbols: (process.env.TRADING_SYMBOLS || 'BTC/USDT').split(','),
+    strategy: (process.env.TRADING_STRATEGY || 'ema-ml') as 'ema-ml',
+    strategyConfig: {
+      emaPeriod: parseInt(process.env.EMA_PERIOD || '20'),
+      mlThreshold: parseFloat(process.env.ML_THRESHOLD || '0.7'),
+    },
+  };
+
+  const kucoinBot = new KuCoinBot(botConfig);
+  if (botConfig.enabled) {
+    await kucoinBot.start();
+    console.log('✅ KuCoin Bot started');
+  } else {
+    console.log('ℹ️ KuCoin Bot disabled');
+  }
+
   const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN!, botOptions);
 
   // Set webhook URL if using webhook
@@ -81,8 +107,9 @@ try {
   }
 
   // Graceful shutdown
-  process.on('SIGTERM', () => {
+  process.on('SIGTERM', async () => {
     console.log('SIGTERM received, shutting down gracefully');
+    if (kucoinBot) await kucoinBot.stop();
     bot.stopPolling();
     server.close(() => {
       console.log('Server closed');
@@ -90,8 +117,9 @@ try {
     });
   });
 
-  process.on('SIGINT', () => {
+  process.on('SIGINT', async () => {
     console.log('SIGINT received, shutting down gracefully');
+    if (kucoinBot) await kucoinBot.stop();
     bot.stopPolling();
     server.close(() => {
       console.log('Server closed');
