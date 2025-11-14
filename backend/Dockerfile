@@ -15,4 +15,4 @@ RUN if [ "$TARGET" = "production" ]; then npm run build && npm ci --only=product
 
 EXPOSE 8080
 
-CMD ["sh"]
+CMD ["sh", "-c", "if [ \"$TARGET\" = \"production\" ]; then npm start; else npm run dev; fi"]
