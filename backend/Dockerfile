@@ -6,6 +6,8 @@ RUN apk add --no-cache curl
 
 WORKDIR /app
 
+RUN mkdir -p /app/cache
+
 COPY package*.json ./
 RUN npm ci --include=dev
 RUN npm install i18next

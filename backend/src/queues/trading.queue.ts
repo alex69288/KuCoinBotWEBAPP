@@ -138,15 +138,7 @@ async function initQueue() {
       console.log('✅ Redis queue initialized successfully');
     } catch (error) {
       console.error('❌ Redis connection failed:', error);
-      console.log('⚠️ Falling back to in-memory queue (jobs will not persist)');
-
-      // Create in-memory queue as fallback
-      tradingQueue = new Queue('trading', {
-        defaultJobOptions: {
-          removeOnComplete: 50,
-          removeOnFail: 50,
-        },
-      });
+      throw error; // Re-throw to trigger fallback to in-memory
     }
 
     // Process trading jobs
