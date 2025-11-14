@@ -30,6 +30,7 @@ services:
     volumes:
       - ./backend:/app
       - /app/node_modules
+    command: npm run dev
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8080/health" ]
       interval: 30s
@@ -37,14 +38,19 @@ services:
       retries: 3
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      target: dev
     ports:
-      - "80:80"
+      - "3000:3000"
     environment:
       - VITE_API_URL=http://localhost:8080/api
     depends_on:
       backend:
         condition: service_healthy
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://backend:8080/health" ]
       interval: 30s
