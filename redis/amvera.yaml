@@ -5,7 +5,7 @@ meta:
     version: latest
 
 build:
-  context: redis
+  context: .
   dockerfile: Dockerfile
 
 run:
