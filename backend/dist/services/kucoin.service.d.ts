@@ -5,6 +5,7 @@ export declare class KuCoinService {
     getTicker(symbol: string): Promise<any>;
     getOrderBook(symbol: string, limit?: number): Promise<any>;
     createOrder(symbol: string, type: 'limit' | 'market', side: 'buy' | 'sell', amount: number, price?: number): Promise<any>;
+    getHistoricalData(symbol: string, timeframe?: string, limit?: number): Promise<any[]>;
     getOpenOrders(symbol?: string): Promise<any[]>;
     cancelOrder(orderId: string, symbol?: string): Promise<any>;
     getOrderHistory(symbol?: string, limit?: number): Promise<any[]>;

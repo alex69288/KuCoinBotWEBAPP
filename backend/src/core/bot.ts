@@ -1,7 +1,7 @@
-import { KuCoinService } from '../services/kucoin.service.js';
-import { addTradeJob } from '../queues/trading.queue.js';
-import { BaseStrategy, OHLCVData } from '../strategies/base.strategy.js';
-import { EmaMlStrategy, EmaMlConfig } from '../strategies/ema-ml.strategy.js';
+import { KuCoinService } from '../services/kucoin.service';
+import { addTradeJob } from '../queues/trading.queue';
+import { BaseStrategy, OHLCVData } from '../strategies/base.strategy';
+import { EmaMlStrategy, EmaMlConfig } from '../strategies/ema-ml.strategy';
 
 interface BotConfig {
   enabled: boolean;
@@ -117,6 +117,9 @@ export class KuCoinBot {
       console.error('Failed to initialize balance:', error);
     }
 
+    // Train ML model with historical data
+    await this.trainMLModel();
+
     // Основной цикл (пока заглушка, будет расширен стратегиями)
     this.runMainLoop();
   }
@@ -154,6 +157,19 @@ export class KuCoinBot {
       } catch (error) {
         console.error('Error in main loop:', error);
       }
+    }
+  }
+
+  private async trainMLModel(): Promise<void> {
+    try {
+      // Get historical data for training (last 500 candles, 1h timeframe)
+      const historicalData = await this.kucoinService.getHistoricalData(this.config.symbols[0], '1h', 500);
+      
+      if (this.strategy && 'mlPredictor' in this.strategy) {
+        (this.strategy as any).mlPredictor.train(historicalData);
+      }
+    } catch (error) {
+      console.error('Failed to train ML model:', error);
     }
   }
 

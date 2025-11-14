@@ -1,4 +1,4 @@
-import { calculateEMA } from './ema.js';
+import { calculateEMA } from './ema';
 
 export interface MACDResult {
   macd: number[];

@@ -1,4 +1,4 @@
-import { calculateEMA } from './ema.js';
+import { calculateEMA } from './ema';
 export function calculateMACD(prices, fastPeriod = 12, slowPeriod = 26, signalPeriod = 9) {
     if (prices.length < slowPeriod)
         return { macd: [], signal: [], histogram: [] };

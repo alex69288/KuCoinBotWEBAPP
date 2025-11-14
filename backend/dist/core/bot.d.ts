@@ -26,6 +26,7 @@ export declare class KuCoinBot {
     start(): Promise<void>;
     stop(): Promise<void>;
     private runMainLoop;
+    private trainMLModel;
     private checkRiskLimits;
     executeTrade(symbol: string, side: 'buy' | 'sell', amount: number, price?: number): Promise<void>;
     getStatus(): any;

@@ -1,4 +1,4 @@
-import { KuCoinBot } from '../backend/src/core/bot';
+import { KuCoinBot } from '../../backend/src/core/bot';
 
 describe('KuCoinBot', () => {
   let bot: KuCoinBot;
@@ -11,6 +11,18 @@ describe('KuCoinBot', () => {
     telegramToken: 'test_token',
     telegramChatId: 'test_chat',
     symbols: ['BTC/USDT'],
+    strategy: 'ema-ml' as const,
+    strategyConfig: {
+      fastPeriod: 12,
+      slowPeriod: 26,
+      emaThreshold: 0.5,
+      mlBuyThreshold: 0.6,
+      mlSellThreshold: 0.4,
+      takeProfitPercent: 2,
+      stopLossPercent: 1,
+      trailingStop: false,
+      minHoldTime: 60
+    }
   };
 
   beforeEach(() => {

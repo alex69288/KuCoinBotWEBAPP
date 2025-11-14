@@ -1,4 +1,4 @@
-const { KuCoinService } = require('../backend/src/services/kucoin.service');
+const { KuCoinService } = require('../../backend/src/services/kucoin.service');
 
 describe('KuCoin Service Tests', () => {
   let kucoinService;

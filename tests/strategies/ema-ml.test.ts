@@ -1,5 +1,5 @@
-import { EmaMlStrategy } from '../backend/src/strategies/ema-ml.strategy';
-import { OHLCVData } from '../backend/src/strategies/base.strategy';
+import { EmaMlStrategy } from '../../backend/src/strategies/ema-ml.strategy';
+import { OHLCVData } from '../../backend/src/strategies/base.strategy';
 
 describe('EmaMlStrategy', () => {
   let strategy: EmaMlStrategy;

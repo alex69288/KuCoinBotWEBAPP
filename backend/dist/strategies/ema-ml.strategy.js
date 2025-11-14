@@ -1,6 +1,6 @@
-import { BaseStrategy } from './base.strategy.js';
-import { calculateEMA } from '../indicators/ema.js';
-import { SimpleMLPredictor } from '../ml/predictor.js';
+import { BaseStrategy } from './base.strategy';
+import { calculateEMA } from '../indicators/ema';
+import { SimpleMLPredictor } from '../ml/predictor';
 export class EmaMlStrategy extends BaseStrategy {
     mlPredictor;
     lastSignal = 'hold';

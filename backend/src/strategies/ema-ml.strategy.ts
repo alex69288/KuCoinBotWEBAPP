@@ -1,6 +1,6 @@
-import { BaseStrategy, OHLCVData, StrategyConfig, Signal } from './base.strategy.js';
-import { calculateEMA } from '../indicators/ema.js';
-import { SimpleMLPredictor } from '../ml/predictor.js';
+import { BaseStrategy, OHLCVData, StrategyConfig, Signal } from './base.strategy';
+import { calculateEMA } from '../indicators/ema';
+import { SimpleMLPredictor } from '../ml/predictor';
 
 export interface EmaMlConfig extends StrategyConfig {
   fastPeriod: number;

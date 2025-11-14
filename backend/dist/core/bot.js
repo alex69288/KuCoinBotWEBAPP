@@ -1,6 +1,6 @@
-import { KuCoinService } from '../services/kucoin.service.js';
-import { addTradeJob } from '../queues/trading.queue.js';
-import { EmaMlStrategy } from '../strategies/ema-ml.strategy.js';
+import { KuCoinService } from '../services/kucoin.service';
+import { addTradeJob } from '../queues/trading.queue';
+import { EmaMlStrategy } from '../strategies/ema-ml.strategy';
 export class KuCoinBot {
     kucoinService;
     config;
@@ -86,6 +86,8 @@ export class KuCoinBot {
         catch (error) {
             console.error('Failed to initialize balance:', error);
         }
+        // Train ML model with historical data
+        await this.trainMLModel();
         // Основной цикл (пока заглушка, будет расширен стратегиями)
         this.runMainLoop();
     }
@@ -119,6 +121,18 @@ export class KuCoinBot {
             catch (error) {
                 console.error('Error in main loop:', error);
             }
+        }
+    }
+    async trainMLModel() {
+        try {
+            // Get historical data for training (last 500 candles, 1h timeframe)
+            const historicalData = await this.kucoinService.getHistoricalData(this.config.symbols[0], '1h', 500);
+            if (this.strategy && 'mlPredictor' in this.strategy) {
+                this.strategy.mlPredictor.train(historicalData);
+            }
+        }
+        catch (error) {
+            console.error('Failed to train ML model:', error);
         }
     }
     checkRiskLimits() {

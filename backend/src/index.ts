@@ -6,7 +6,7 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import TelegramBot from 'node-telegram-bot-api';
 import dotenv from 'dotenv';
-import kucoinRoutes from './routes/kucoin.routes.js';
+import kucoinRoutes from './routes/kucoin.routes';
 
 dotenv.config();
 

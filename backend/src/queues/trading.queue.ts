@@ -1,4 +1,4 @@
-import { kucoinService } from '../services/kucoin.service.js';
+import { kucoinService } from '../services/kucoin.service';
 
 interface TradeJobData {
   symbol: string;
@@ -84,9 +84,10 @@ class InMemoryTradingQueue {
 // Try to use Redis Bull queue, fallback to in-memory if Redis unavailable
 let tradingQueue: any;
 
-try {
-  // Try to import Bull and create Redis queue
-  const Queue = (await import('bull')).default;
+async function initQueue() {
+  try {
+    // Try to import Bull and create Redis queue
+    const Queue = (await import('bull')).default;
 
   // Redis configuration - disable URL parsing in production due to Amvera issues
   console.log(`🔧 Redis config: NODE_ENV=${process.env.NODE_ENV}, REDIS_URL=${process.env.REDIS_URL ? 'present' : 'not set'}`);
@@ -166,12 +167,16 @@ try {
     }
   });
 
-} catch (error) {
+  } catch (error) {
   console.warn('⚠️ Redis not available, using in-memory queue:', error instanceof Error ? error.message : String(error));
 
   // Fallback to in-memory queue
   tradingQueue = new InMemoryTradingQueue();
+  }
 }
+
+// Initialize queue
+initQueue();
 
 // Add job to queue
 export const addTradeJob = (data: TradeJobData) => {

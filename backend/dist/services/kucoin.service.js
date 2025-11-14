@@ -46,6 +46,23 @@ export class KuCoinService {
             throw error;
         }
     }
+    async getHistoricalData(symbol, timeframe = '1h', limit = 100) {
+        try {
+            const ohlcv = await this.exchange.fetchOHLCV(symbol, timeframe, undefined, limit);
+            return ohlcv.map((candle) => ({
+                timestamp: candle[0],
+                open: candle[1],
+                high: candle[2],
+                low: candle[3],
+                close: candle[4],
+                volume: candle[5]
+            }));
+        }
+        catch (error) {
+            console.error('Error fetching historical data:', error);
+            throw error;
+        }
+    }
     async getOpenOrders(symbol) {
         try {
             return await this.exchange.fetchOpenOrders(symbol);

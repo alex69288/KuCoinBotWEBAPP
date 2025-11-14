@@ -1,1 +1,0 @@
-// Empty config - using package.json

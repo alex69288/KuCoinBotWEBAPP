@@ -1,4 +1,4 @@
-import { BaseStrategy, OHLCVData, StrategyConfig, Signal } from './base.strategy.js';
+import { BaseStrategy, OHLCVData, StrategyConfig, Signal } from './base.strategy';
 export interface EmaMlConfig extends StrategyConfig {
     fastPeriod: number;
     slowPeriod: number;
