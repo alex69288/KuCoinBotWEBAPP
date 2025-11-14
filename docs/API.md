@@ -13,6 +13,72 @@ API использует переменные окружения для ауте
 - `KUCOIN_API_SECRET`
 - `KUCOIN_API_PASSPHRASE`
 
+## Информационные endpoints
+
+### Получение информации об API
+
+**GET** `/`
+
+Получить основную информацию о API и доступных endpoints.
+
+**Ответ:**
+```json
+{
+  "message": "KuCoin Trading Bot API",
+  "version": "0.0.3",
+  "frontend": "http://localhost",
+  "docs": "/api/docs",
+  "health": "/health",
+  "api": {
+    "kucoin": "/api/kucoin",
+    "balance": "/api/kucoin/balance",
+    "ticker": "/api/kucoin/ticker/:symbol",
+    "orderbook": "/api/kucoin/orderbook/:symbol",
+    "orders": "/api/kucoin/orders",
+    "markets": "/api/kucoin/markets"
+  }
+}
+```
+
+### Получение списка всех endpoints
+
+**GET** `/api`
+
+Получить подробный список всех доступных API endpoints.
+
+**Ответ:**
+```json
+{
+  "message": "KuCoin Trading Bot API Endpoints",
+  "version": "0.0.3",
+  "endpoints": {
+    "balance": "GET /api/kucoin/balance",
+    "ticker": "GET /api/kucoin/ticker/:symbol",
+    "orderbook": "GET /api/kucoin/orderbook/:symbol",
+    "createOrder": "POST /api/kucoin/orders",
+    "openOrders": "GET /api/kucoin/orders/open",
+    "cancelOrder": "DELETE /api/kucoin/orders/:orderId",
+    "orderHistory": "GET /api/kucoin/orders/history",
+    "trades": "GET /api/kucoin/trades",
+    "markets": "GET /api/kucoin/markets"
+  }
+}
+```
+
+### Health check
+
+**GET** `/health`
+
+Проверить статус сервера.
+
+**Ответ:**
+```json
+{
+  "status": "OK",
+  "timestamp": "2025-11-14T13:17:21.000Z"
+}
+```
+
 ## Endpoints
 
 ### Получение баланса

@@ -107,7 +107,7 @@ try {
     app.get('/', (req, res) => {
         res.json({
             message: 'KuCoin Trading Bot API',
-            version: '0.0.2',
+            version: '0.0.3',
             frontend: process.env.FRONTEND_URL || 'http://localhost',
             docs: '/api/docs',
             health: '/health',
@@ -125,7 +125,7 @@ try {
     app.get('/api', (req, res) => {
         res.json({
             message: 'KuCoin Trading Bot API Endpoints',
-            version: '0.0.2',
+            version: '0.0.3',
             endpoints: {
                 balance: 'GET /api/kucoin/balance',
                 ticker: 'GET /api/kucoin/ticker/:symbol',
