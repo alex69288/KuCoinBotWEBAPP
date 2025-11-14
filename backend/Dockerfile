@@ -14,4 +14,4 @@ RUN if [ "$TARGET" = "production" ]; then npm run build && npm ci --only=product
 
 EXPOSE 8080
 
-CMD ["sh", "-c", "if [ \"$TARGET\" = \"production\" ]; then npm start; else npx tsx watch src/index.ts; fi"]
+CMD ["./node_modules/.bin/tsx", "watch", "src/index.ts"]
