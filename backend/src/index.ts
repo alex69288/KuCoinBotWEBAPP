@@ -1,8 +1,3 @@
-// Hot-reload test comment 3
-// Hot-reload test comment 2
-// Hot-reload test comment
-console.log('Hot-reload test - server starting... v2');
-import './test';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -17,7 +12,6 @@ import { KuCoinBot } from './core/bot';
 dotenv.config();
 
 const app = express();
-console.log('Express app created - hot-reload test');
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
