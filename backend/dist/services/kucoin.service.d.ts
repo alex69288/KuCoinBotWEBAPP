@@ -7,6 +7,8 @@ export declare class KuCoinService {
     createOrder(symbol: string, type: 'limit' | 'market', side: 'buy' | 'sell', amount: number, price?: number): Promise<any>;
     getOpenOrders(symbol?: string): Promise<any[]>;
     cancelOrder(orderId: string, symbol?: string): Promise<any>;
+    getOrderHistory(symbol?: string, limit?: number): Promise<any[]>;
+    getTrades(symbol?: string, limit?: number): Promise<any[]>;
     getMarkets(): Promise<any[]>;
 }
 export declare const kucoinService: KuCoinService;

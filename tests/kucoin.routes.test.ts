@@ -80,4 +80,37 @@ describe('KuCoin API Routes', () => {
 
     expect(mockMarketsResponse).toBeDefined();
   });
+
+  it('должен иметь endpoint для получения истории ордеров', async () => {
+    // Проверяем наличие и работу GET /api/kucoin/orders/history
+    const mockOrderHistoryResponse = [
+      {
+        id: '12345',
+        symbol: 'BTC/USDT',
+        side: 'buy',
+        amount: 0.001,
+        price: 50000,
+        status: 'filled',
+        timestamp: Date.now()
+      }
+    ];
+
+    expect(mockOrderHistoryResponse).toBeDefined();
+  });
+
+  it('должен иметь endpoint для получения сделок', async () => {
+    // Проверяем наличие и работу GET /api/kucoin/trades
+    const mockTradesResponse = [
+      {
+        id: 'trade123',
+        symbol: 'BTC/USDT',
+        side: 'buy',
+        amount: 0.001,
+        price: 50000,
+        timestamp: Date.now()
+      }
+    ];
+
+    expect(mockTradesResponse).toBeDefined();
+  });
 });

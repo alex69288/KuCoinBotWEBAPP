@@ -84,13 +84,25 @@ router.delete('/orders/:orderId', async (req, res) => {
   }
 });
 
-// Get markets
-router.get('/markets', async (req, res) => {
+// Get order history
+router.get('/orders/history', async (req, res) => {
   try {
-    const markets = await kucoinService.getMarkets();
-    res.json(markets);
+    const { symbol, limit } = req.query;
+    const orders = await kucoinService.getOrderHistory(symbol as string, parseInt(limit as string) || 50);
+    res.json(orders);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch markets' });
+    res.status(500).json({ error: 'Failed to fetch order history' });
+  }
+});
+
+// Get trades
+router.get('/trades', async (req, res) => {
+  try {
+    const { symbol, limit } = req.query;
+    const trades = await kucoinService.getTrades(symbol as string, parseInt(limit as string) || 50);
+    res.json(trades);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch trades' });
   }
 });
 

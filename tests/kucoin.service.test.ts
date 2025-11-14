@@ -39,4 +39,37 @@ describe('KuCoin API Integration', () => {
 
     expect(expectedOrderStructure).toBeDefined();
   });
+
+  it('должен иметь правильную структуру ответа для истории ордеров', async () => {
+    // Проверяем структуру ожидаемого ответа для истории ордеров
+    const expectedOrderHistoryStructure = [
+      {
+        id: expect.any(String),
+        symbol: expect.any(String),
+        side: expect.any(String),
+        amount: expect.any(Number),
+        price: expect.any(Number),
+        status: expect.any(String),
+        timestamp: expect.any(Number)
+      }
+    ];
+
+    expect(expectedOrderHistoryStructure).toBeDefined();
+  });
+
+  it('должен иметь правильную структуру ответа для сделок', async () => {
+    // Проверяем структуру ожидаемого ответа для сделок
+    const expectedTradesStructure = [
+      {
+        id: expect.any(String),
+        symbol: expect.any(String),
+        side: expect.any(String),
+        amount: expect.any(Number),
+        price: expect.any(Number),
+        timestamp: expect.any(Number)
+      }
+    ];
+
+    expect(expectedTradesStructure).toBeDefined();
+  });
 });

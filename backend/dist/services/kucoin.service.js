@@ -64,6 +64,24 @@ export class KuCoinService {
             throw error;
         }
     }
+    async getOrderHistory(symbol, limit = 50) {
+        try {
+            return await this.exchange.fetchClosedOrders(symbol, undefined, limit);
+        }
+        catch (error) {
+            console.error('Error fetching order history:', error);
+            throw error;
+        }
+    }
+    async getTrades(symbol, limit = 50) {
+        try {
+            return await this.exchange.fetchMyTrades(symbol, undefined, limit);
+        }
+        catch (error) {
+            console.error('Error fetching trades:', error);
+            throw error;
+        }
+    }
     async getMarkets() {
         try {
             return await this.exchange.loadMarkets();

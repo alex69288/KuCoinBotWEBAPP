@@ -77,7 +77,7 @@ try {
             redisConfig = {
                 host: redisUrl.hostname,
                 port: parseInt(redisUrl.port) || 6379,
-                password: redisUrl.password || process.env.REDIS_PASSWORD || undefined,
+                password: process.env.REDIS_PASSWORD || undefined,
             };
             console.log('✅ Using Redis URL configuration (development only)');
         }
@@ -91,6 +91,10 @@ try {
         redisConfig.password = process.env.REDIS_PASSWORD || undefined;
     }
     console.log(`🔧 Final Redis config: ${JSON.stringify({ host: redisConfig.host, port: redisConfig.port, hasPassword: !!redisConfig.password })}`);
+    // Remove password if undefined to avoid warnings
+    if (redisConfig.password === undefined) {
+        delete redisConfig.password;
+    }
     tradingQueue = new Queue('trading', {
         redis: redisConfig,
         defaultJobOptions: {

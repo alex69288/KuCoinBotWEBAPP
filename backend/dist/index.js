@@ -24,26 +24,27 @@ app.use(compression());
 app.use(express.json());
 // Routes
 app.use('/api/kucoin', kucoinRoutes);
-// Telegram Bot - use webhook in production, polling in development
+// Telegram Bot - use webhook if BACKEND_URL is HTTPS, polling otherwise
+const useWebhook = process.env.BACKEND_URL?.startsWith('https://') || false;
 const isProduction = process.env.NODE_ENV === 'production';
 console.log(`🔧 Environment: NODE_ENV=${process.env.NODE_ENV}, isProduction=${isProduction}`);
 console.log(`🔧 URLs: FRONTEND_URL=${process.env.FRONTEND_URL}, BACKEND_URL=${process.env.BACKEND_URL}`);
 console.log(`🔧 Bot Token: ${process.env.TELEGRAM_BOT_TOKEN ? 'present' : 'missing'}`);
-const botOptions = isProduction
+const botOptions = useWebhook
     ? {
         webHook: {
             port: parseInt(process.env.PORT || '5000')
         }
     }
     : { polling: true };
-console.log(`🤖 Telegram bot mode: ${isProduction ? 'webhook' : 'polling'}`);
+console.log(`🤖 Telegram bot mode: ${useWebhook ? 'webhook' : 'polling'}`);
 try {
     // Import and initialize trading queue
     await import('./queues/trading.queue.js');
     console.log('✅ Trading queue initialized');
     const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, botOptions);
-    // Set webhook URL in production
-    if (isProduction) {
+    // Set webhook URL if using webhook
+    if (useWebhook) {
         try {
             // Use BACKEND_URL for webhook, fallback to constructed URL
             const backendUrl = (process.env.BACKEND_URL || `https://kucoinbot-backend-alex69288.amvera.io`).replace(/\/$/, ''); // Remove trailing slash
@@ -99,6 +100,7 @@ try {
     });
     // Basic routes
     app.get('/health', (req, res) => {
+        console.log('Health check requested');
         res.json({ status: 'OK', timestamp: new Date().toISOString() });
     });
     // Telegram bot commands
@@ -117,15 +119,15 @@ try {
         });
     });
     // Add delay before starting server to allow previous instance to shut down
-    if (isProduction) {
+    if (useWebhook) {
         console.log('⏳ Waiting 5 seconds before starting server...');
         await new Promise(resolve => setTimeout(resolve, 5000));
     }
     server.listen({
         port: PORT,
-        host: isProduction ? '0.0.0.0' : '127.0.0.1'
+        host: '0.0.0.0' // Listen on all interfaces for Docker compatibility
     }, () => {
-        console.log(`Server running on ${isProduction ? '0.0.0.0' : '127.0.0.1'}:${PORT}`);
+        console.log(`Server running on 0.0.0.0:${PORT}`);
     }).on('error', (error) => {
         console.error('Failed to start server:', error);
         if (error.code === 'EADDRINUSE') {
