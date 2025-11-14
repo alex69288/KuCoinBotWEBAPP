@@ -30,13 +30,14 @@ app.use(express.json());
 // Routes
 app.use('/api/kucoin', kucoinRoutes);
 
-// Telegram Bot - use webhook in production, polling in development
+// Telegram Bot - use webhook if BACKEND_URL is HTTPS, polling otherwise
+const useWebhook = process.env.BACKEND_URL?.startsWith('https://') || false;
 const isProduction = process.env.NODE_ENV === 'production';
 console.log(`🔧 Environment: NODE_ENV=${process.env.NODE_ENV}, isProduction=${isProduction}`);
 console.log(`🔧 URLs: FRONTEND_URL=${process.env.FRONTEND_URL}, BACKEND_URL=${process.env.BACKEND_URL}`);
 console.log(`🔧 Bot Token: ${process.env.TELEGRAM_BOT_TOKEN ? 'present' : 'missing'}`);
 
-const botOptions = isProduction
+const botOptions = useWebhook
   ? {
     webHook: {
       port: parseInt(process.env.PORT || '5000')
@@ -44,7 +45,7 @@ const botOptions = isProduction
   }
   : { polling: true };
 
-console.log(`🤖 Telegram bot mode: ${isProduction ? 'webhook' : 'polling'}`);
+console.log(`🤖 Telegram bot mode: ${useWebhook ? 'webhook' : 'polling'}`);
 
 try {
   // Import and initialize trading queue
@@ -53,8 +54,8 @@ try {
 
   const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN!, botOptions);
 
-  // Set webhook URL in production
-  if (isProduction) {
+  // Set webhook URL if using webhook
+  if (useWebhook) {
     try {
       // Use BACKEND_URL for webhook, fallback to constructed URL
       const backendUrl = (process.env.BACKEND_URL || `https://kucoinbot-backend-alex69288.amvera.io`).replace(/\/$/, ''); // Remove trailing slash
@@ -137,7 +138,7 @@ try {
   });
 
   // Add delay before starting server to allow previous instance to shut down
-  if (isProduction) {
+  if (useWebhook) {
     console.log('⏳ Waiting 5 seconds before starting server...');
     await new Promise(resolve => setTimeout(resolve, 5000));
   }
