@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTradingContext } from '../context/TradingContext';
 import { kucoinApi } from '../api/kucoin.api';
 import { botApi } from '../api/bot.api';
 import { useTranslation } from 'react-i18next';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
 
 interface DemoTrade {
   symbol: string;
@@ -15,9 +17,25 @@ interface DemoTrade {
 
 const TradingInterface: React.FC = () => {
   const { t } = useTranslation();
-  const { selectedSymbol, setSelectedSymbol, balance, setBalance } = useTradingContext();
+  const { selectedSymbol, balance, setBalance } = useTradingContext();
   const [lastStartTime, setLastStartTime] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState('home');
+  const swiperRef = useRef<any>(null);
+
+  const tabs = ['home', 'status', 'account', 'history', 'settings'];
+
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    const index = tabs.indexOf(tab);
+    if (swiperRef.current && swiperRef.current.swiper) {
+      swiperRef.current.swiper.slideTo(index);
+    }
+  };
+
+  const handleSlideChange = (swiper: any) => {
+    const index = swiper.activeIndex;
+    setActiveTab(tabs[index]);
+  };
 
   // Bot state
   const [botEnabled, setBotEnabled] = useState(false);
@@ -34,14 +52,14 @@ const TradingInterface: React.FC = () => {
   });
 
   // Fetch ticker
-  const { data: tickerData } = useQuery({
+  useQuery({
     queryKey: ['ticker', selectedSymbol],
     queryFn: () => kucoinApi.getTicker(selectedSymbol),
     refetchInterval: 5000, // Update every 5 seconds
   });
 
   // Fetch order book
-  const { data: orderBookData } = useQuery({
+  useQuery({
     queryKey: ['orderbook', selectedSymbol],
     queryFn: () => kucoinApi.getOrderBook(selectedSymbol),
     refetchInterval: 2000, // Update every 2 seconds
@@ -55,7 +73,7 @@ const TradingInterface: React.FC = () => {
   });
 
   // Fetch open orders
-  const { data: openOrdersData } = useQuery({
+  useQuery({
     queryKey: ['openOrders', selectedSymbol],
     queryFn: () => kucoinApi.getOpenOrders(selectedSymbol),
     refetchInterval: 10000, // Update every 10 seconds
@@ -153,7 +171,10 @@ const TradingInterface: React.FC = () => {
   useEffect(() => {
     const checkHealth = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/health`);
+        // Use a runtime-friendly API URL resolution to support tests (avoid import.meta in tests)
+        const apiBase = (typeof window !== 'undefined' && (window as any).VITE_API_URL) || process.env?.VITE_API_URL || '';
+        const url = apiBase ? `${apiBase}/health` : '/health';
+        const response = await fetch(url);
         const data = await response.json();
         if (lastStartTime !== null && data.startTime !== lastStartTime) {
           console.log('Backend restarted, reloading page...');
@@ -212,38 +233,42 @@ const TradingInterface: React.FC = () => {
     }
   };
 
-  const handleCancelOrder = async (orderId: string, symbol: string) => {
-    try {
-      await kucoinApi.cancelOrder(orderId, symbol);
-      queryClient.invalidateQueries({ queryKey: ['openOrders'] });
-      alert(t('orderCancelled'));
-    } catch (error) {
-      console.error(error);
-      alert(t('failedToCancelOrder'));
-    }
-  };
+  // order cancellation handled from order list actions if needed
 
   // Ensure demoTrades is always an array
   const safeDemoTrades = Array.isArray(demoTrades) ? demoTrades : [];
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4">
+    // Добавляем возможность вертикального скролла страницы, если контент выходит за высоту экрана
+    <div data-testid="page-container" className="min-h-screen bg-gray-100 p-4 overflow-y-auto">
       <div className="max-w-7xl mx-auto">
 
         {/* Tabs */}
-        <div className="flex space-x-4 mb-6 border-b border-gray-200">
-          <button onClick={() => setActiveTab('home')} className={`py-2 px-4 ${activeTab === 'home' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500'}`}>{t('home')}</button>
-          <button onClick={() => setActiveTab('status')} className={`py-2 px-4 ${activeTab === 'status' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500'}`}>{t('statusTab')}</button>
-          <button onClick={() => setActiveTab('account')} className={`py-2 px-4 ${activeTab === 'account' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500'}`}>{t('account')}</button>
-          <button onClick={() => setActiveTab('history')} className={`py-2 px-4 ${activeTab === 'history' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500'}`}>{t('history')}</button>
-          <button onClick={() => setActiveTab('settings')} className={`py-2 px-4 ${activeTab === 'settings' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500'}`}>{t('settings')}</button>
+        {/*
+          Добавляем горизонтальный скролл для верхних вкладок (когда экран недостаточно широк)
+          - overflow-x-auto — включит скролл только при необходимости
+          - whitespace-nowrap — предотвратит перенос кнопок на новую строку
+        */}
+        <div className="overflow-x-auto -mx-4 px-4" data-testid="top-tabs-wrapper">
+          <div className="flex space-x-4 mb-6 border-b border-gray-200 whitespace-nowrap" data-testid="top-tabs">
+            <button onClick={() => handleTabChange('home')} className={`py-2 px-4 ${activeTab === 'home' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500'}`}>{t('home')}</button>
+            <button onClick={() => handleTabChange('status')} className={`py-2 px-4 ${activeTab === 'status' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500'}`}>{t('statusTab')}</button>
+            <button onClick={() => handleTabChange('account')} className={`py-2 px-4 ${activeTab === 'account' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500'}`}>{t('account')}</button>
+            <button onClick={() => handleTabChange('history')} className={`py-2 px-4 ${activeTab === 'history' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500'}`}>{t('history')}</button>
+            <button onClick={() => handleTabChange('settings')} className={`py-2 px-4 ${activeTab === 'settings' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500'}`}>{t('settings')}</button>
+          </div>
         </div>
 
         {/* Tab Content */}
-        {activeTab === 'home' && (
-          <>
-            {/* Market Update */}
-            {marketUpdate && (
+        <Swiper
+          ref={swiperRef}
+          onSlideChange={handleSlideChange}
+          className="mySwiper"
+          initialSlide={tabs.indexOf(activeTab)}
+        >
+          <SwiperSlide>
+            <div>
+              {marketUpdate && (
               <div className="bg-white rounded-lg shadow-md p-6 mb-6">
                 <h2 className="text-xl font-semibold mb-4">{t('marketUpdate')}</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -347,14 +372,13 @@ const TradingInterface: React.FC = () => {
                 </div>
               </div>
             )}
-          </>
-        )}
 
-        {activeTab === 'status' && (
-          <>
-            {/* Bot Control Panel */}
-            <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-              <h2 className="text-xl font-semibold mb-4">{t('botControl')}</h2>
+            </div>
+          </SwiperSlide>
+          <SwiperSlide>
+            <div>
+              <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h2 className="text-xl font-semibold mb-4">{t('botControl')}</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">{t('botStatus')}</label>
@@ -396,14 +420,13 @@ const TradingInterface: React.FC = () => {
                 </div>
               </div>
             </div>
-          </>
-        )}
 
-        {activeTab === 'account' && (
-          <>
-            {/* Balance Section */}
-            <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-              <h2 className="text-xl font-semibold mb-4">{t('accountBalance')}</h2>
+            </div>
+          </SwiperSlide>
+          <SwiperSlide>
+            <div>
+              <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h2 className="text-xl font-semibold mb-4">{t('accountBalance')}</h2>
               <button
                 onClick={() => refetchBalance()}
                 className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mb-4"
@@ -437,14 +460,13 @@ const TradingInterface: React.FC = () => {
                 </div>
               )}
             </div>
-          </>
-        )}
 
-        {activeTab === 'history' && (
-          <>
-            {/* Order History */}
-            <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-              <h2 className="text-xl font-semibold mb-4">{t('orderHistory')}</h2>
+            </div>
+          </SwiperSlide >
+          <SwiperSlide>
+            <div>
+              <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h2 className="text-xl font-semibold mb-4">{t('orderHistory')}</h2>
               {orderHistoryData && orderHistoryData.length > 0 ? (
                 <div className="overflow-x-auto">
                   <table className="min-w-full table-auto">
@@ -519,12 +541,11 @@ const TradingInterface: React.FC = () => {
                 <p className="text-gray-500">{t('noRecentTrades')}</p>
               )}
             </div>
-          </>
-        )}
 
-        {activeTab === 'settings' && (
-          <>
-            {/* Strategy Configuration */}
+          </div>
+
+          </SwiperSlide>
+          <SwiperSlide>
             <div className="bg-white rounded-lg shadow-md p-6 mb-6">
               <h2 className="text-xl font-semibold mb-4">{t('strategyConfig')}</h2>
               {selectedStrategy === 'ema-ml' && (
@@ -665,11 +686,12 @@ const TradingInterface: React.FC = () => {
                 ))}
               </ul>
             </div>
-          </>
-        )}
 
-      </div>
-    </div>
+          </SwiperSlide >
+        </Swiper >
+
+      </div >
+    </div >
   );
 };
 

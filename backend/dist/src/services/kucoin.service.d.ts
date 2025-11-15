@@ -1,6 +1,7 @@
 export declare class KuCoinService {
     private exchange;
     private hasCredentials;
+    private id;
     constructor();
     getBalance(): Promise<any>;
     getTicker(symbol: string): Promise<any>;

@@ -2,7 +2,7 @@
   "extends": "../backend/tsconfig.json",
   "compilerOptions": {
     "target": "ES2022",
-    "module": "ES2022",
+    "module": "esnext",
     "lib": [
       "ES2022",
       "DOM",
@@ -16,7 +16,8 @@
       "jest",
       "node",
       "@types/node",
-      "@testing-library/jest-dom"
+      "@testing-library/jest-dom",
+      "vite/client"
     ]
   },
   "include": [

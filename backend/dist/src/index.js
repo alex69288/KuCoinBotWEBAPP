@@ -6,10 +6,21 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import TelegramBot from 'node-telegram-bot-api';
 import dotenv from 'dotenv';
-import kucoinRoutes from './routes/kucoin.routes';
-import botRoutesFactory from './routes/bot.routes';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+// NOTE: routes import after dotenv.config to avoid creating services before env loaded
 import { KuCoinBot } from './core/bot';
-dotenv.config();
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+// Resolve .env priority: prefer backend/.env then fallback to project root .env
+const backendEnvPath = path.join(__dirname, '..', '.env');
+const rootEnvPath = path.join(__dirname, '..', '..', '.env');
+const envPath = fs.existsSync(backendEnvPath) ? backendEnvPath : rootEnvPath;
+console.log('Loading .env from:', envPath);
+console.log('File exists:', fs.existsSync(envPath));
+const result = dotenv.config({ path: envPath });
+console.log('dotenv result:', result);
+console.log('KUCOIN_API_KEY:', process.env.KUCOIN_API_KEY);
 console.log('Starting application...');
 const app = express();
 const server = createServer(app);
@@ -54,6 +65,9 @@ console.log(`🤖 Telegram bot mode: ${useWebhook ? 'webhook' : 'polling'}`);
 try {
     // Import and initialize trading queue
     await import('./queues/trading.queue.js');
+    // Import routes after dotenv is configured so services read env vars properly
+    const kucoinRoutes = (await import('./routes/kucoin.routes.js')).default;
+    const botRoutesFactory = (await import('./routes/bot.routes.js')).default;
     console.log('✅ Trading queue initialized');
     // Initialize KuCoin Bot
     const botConfig = {

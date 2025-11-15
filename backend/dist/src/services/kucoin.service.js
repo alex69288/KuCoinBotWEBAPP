@@ -2,7 +2,10 @@ import ccxt from 'ccxt';
 export class KuCoinService {
     exchange;
     hasCredentials;
+    id;
     constructor() {
+        this.id = Math.random();
+        console.log('Creating KuCoinService instance', this.id);
         const apiKey = process.env.KUCOIN_API_KEY;
         const secret = process.env.KUCOIN_API_SECRET;
         const password = process.env.KUCOIN_API_PASSPHRASE;
@@ -87,7 +90,7 @@ export class KuCoinService {
         }
     }
     async getOpenOrders(symbol) {
-        console.log('getOpenOrders: hasCredentials =', this.hasCredentials);
+        console.log('getOpenOrders: id =', this.id, 'hasCredentials =', this.hasCredentials);
         if (!this.hasCredentials) {
             console.warn('No KuCoin credentials provided, returning empty orders');
             return [];
@@ -151,8 +154,14 @@ export class KuCoinService {
 export const kucoinService = (() => {
     let instance = null;
     return () => {
+        console.log('kucoinService called, instance exists:', !!instance);
         if (!instance) {
+            console.log('Creating new instance');
             instance = new KuCoinService();
+        }
+        else {
+            // id is a private property; log with a cast to any to avoid TS error
+            console.log('Returning existing instance', instance.id);
         }
         return instance;
     };
