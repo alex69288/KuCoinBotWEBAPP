@@ -86,3 +86,8 @@
   height: auto !important;
   display: block;
 }
+
+.mySwiper .swiper-wrapper {
+  transition: height 0.3s ease;
+  overflow: visible;
+}
