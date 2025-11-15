@@ -105,16 +105,20 @@ try {
   }
 
   const botOptions = useWebhook ? {} : { polling: true };
-  let bot: TelegramBot;
-  try {
-    bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN!, botOptions);
-  } catch (error) {
-    console.error('Failed to create Telegram bot:', error);
-    throw error;
+  let bot: TelegramBot | undefined;
+  if (process.env.TELEGRAM_BOT_TOKEN) {
+    try {
+      bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, botOptions);
+    } catch (error) {
+      console.error('Failed to create Telegram bot:', error);
+      throw error;
+    }
+  } else {
+    console.log('ℹ️ Telegram bot disabled (no token)');
   }
 
   // Set webhook URL if using webhook
-  if (useWebhook) {
+  if (useWebhook && bot) {
     try {
       // Use BACKEND_URL for webhook, fallback to constructed URL
       const backendUrl = (process.env.BACKEND_URL || `https://kucoinbot-backend-alex69288.amvera.io`).replace(/\/$/, ''); // Remove trailing slash
@@ -143,7 +147,7 @@ try {
   process.on('SIGTERM', async () => {
     console.log('SIGTERM received, shutting down gracefully');
     if (kucoinBot) await kucoinBot.stop();
-    bot.stopPolling();
+    if (bot) bot.stopPolling();
     server.close(() => {
       console.log('Server closed');
       process.exit(0);
@@ -153,7 +157,7 @@ try {
   process.on('SIGINT', async () => {
     console.log('SIGINT received, shutting down gracefully');
     if (kucoinBot) await kucoinBot.stop();
-    bot.stopPolling();
+    if (bot) bot.stopPolling();
     server.close(() => {
       console.log('Server closed');
       process.exit(0);
@@ -220,27 +224,28 @@ try {
   });
 
   // Telegram bot commands
-  bot.onText(/\/start/, (msg) => {
-    const chatId = msg.chat.id;
-    const frontendUrl = process.env.FRONTEND_URL || 'https://kucoinbot-frontend-alex69288.amvera.io';
+  if (bot) {
+    bot.onText(/\/start/, (msg) => {
+      const chatId = msg.chat.id;
+      const frontendUrl = process.env.FRONTEND_URL || 'https://kucoinbot-frontend-alex69288.amvera.io';
 
-    bot.sendMessage(chatId, 'Welcome to KuCoin Trading Bot! Click below to open the web app.', {
-      reply_markup: {
-        inline_keyboard: [[
-          {
-            text: 'Open Trading Bot',
-            web_app: { url: `${frontendUrl}/?chat_id=${chatId}` }
-          }
-        ]]
-      }
+      bot.sendMessage(chatId, 'Welcome to KuCoin Trading Bot! Click below to open the web app.', {
+        reply_markup: {
+          inline_keyboard: [[
+            {
+              text: 'Open Trading Bot',
+              web_app: { url: `${frontendUrl}/?chat_id=${chatId}` }
+            }
+          ]]
+        }
+      });
     });
-  });
 
-  bot.onText(/\/market/, async (msg) => {
-    const chatId = msg.chat.id;
-    try {
-      const update = await kucoinBot.getMarketUpdate();
-      const message = `📈 ОБНОВЛЕНИЕ РЫНКА
+    bot.onText(/\/market/, async (msg) => {
+      const chatId = msg.chat.id;
+      try {
+        const update = await kucoinBot.getMarketUpdate();
+        const message = `📈 ОБНОВЛЕНИЕ РЫНКА
 💱 Пара: ₿ Bitcoin (${update.symbol})
 💰 Цена: ${update.price.toFixed(2)} USDT
 📊 24ч: ${update.change24h.toFixed(2)}%
@@ -256,11 +261,12 @@ ${update.openPositionsCount > 0 ? `💼 ПОЗИЦИЯ ОТКРЫТА (РЕЖИ�
 🎯 До Take Profit: ${update.toTPPercent.toFixed(1)}%
 🎯 Цель TP: ${update.config?.strategyConfig?.takeProfitPercent || 2}%
 🛡️ Комиссии: ${update.config?.strategyConfig?.commissionPercent || 0.2}% (${(Math.abs(update.currentProfit) * ((update.config?.strategyConfig?.commissionPercent || 0.2) / 100)).toFixed(4)} USDT)` : '💼 ПОЗИЦИЙ НЕТ'}`;
-      bot.sendMessage(chatId, message);
-    } catch (error) {
-      bot.sendMessage(chatId, `Ошибка получения обновления рынка: ${error.message}`);
-    }
-  });
+        bot.sendMessage(chatId, message);
+      } catch (error) {
+        bot.sendMessage(chatId, `Ошибка получения обновления рынка: ${error.message}`);
+      }
+    });
+  }
 
   // Add delay before starting server to allow previous instance to shut down
   if (useWebhook) {
