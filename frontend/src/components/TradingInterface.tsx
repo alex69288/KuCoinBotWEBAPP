@@ -4,6 +4,7 @@ import { useTradingContext } from '../context/TradingContext';
 import { kucoinApi } from '../api/kucoin.api';
 import { botApi } from '../api/bot.api';
 import { useTranslation } from 'react-i18next';
+import OpenPositionsModal from './OpenPositionsModal';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 
@@ -41,6 +42,7 @@ const TradingInterface: React.FC = () => {
   const [botEnabled, setBotEnabled] = useState(false);
   const [selectedStrategy, setSelectedStrategy] = useState('ema-ml');
   const [strategyConfig, setStrategyConfig] = useState<any>({});
+  const [showPositionsModal, setShowPositionsModal] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -298,6 +300,9 @@ const TradingInterface: React.FC = () => {
                       <div className={`text-lg font-bold ${marketUpdate.change24h >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                         {marketUpdate.change24h ? `${marketUpdate.change24h.toFixed(2)}%` : 'N/A'}
                       </div>
+                      {marketUpdate.change24hAmount !== undefined && (
+                        <div className="text-sm text-gray-600">{marketUpdate.change24hAmount ? `${marketUpdate.change24hAmount.toFixed(2)} USDT` : '0.00 USDT'}</div>
+                      )}
                     </div>
 
                     {/* EMA Card */}
@@ -339,14 +344,30 @@ const TradingInterface: React.FC = () => {
                         <span className="text-2xl mr-2">💼</span>
                         <span className="text-sm font-medium text-gray-700">{t('positions')}</span>
                       </div>
-                      <div className="text-lg font-bold text-gray-900">
-                        {marketUpdate.openPositionsCount || 0} {t('open')}
+                      <div className="flex items-center justify-between">
+                        <div className="text-lg font-bold text-gray-900">
+                          {marketUpdate.openPositionsCount || 0} {t('open')}
+                        </div>
+                        <div>
+                          <button
+                            onClick={() => setShowPositionsModal(true)}
+                            className="text-sm px-2 py-1 bg-blue-50 text-blue-700 rounded"
+                          >
+                            {t('viewOpenPositions')}
+                          </button>
+                        </div>
                       </div>
                       {marketUpdate.openPositionsCount > 0 && (
                         <div className="text-sm text-gray-600">
                           {t('profit')}: {marketUpdate.profitPercent ? marketUpdate.profitPercent.toFixed(2) : '0.00'}%
                         </div>
                       )}
+                        <OpenPositionsModal
+                          open={showPositionsModal}
+                          onClose={() => setShowPositionsModal(false)}
+                          positions={marketUpdate.positionsList || []}
+                          currentPrice={marketUpdate.price}
+                        />
                     </div>
                   </div>
                 </div>

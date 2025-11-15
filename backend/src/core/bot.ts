@@ -451,7 +451,9 @@ export class KuCoinBot {
     const symbol = this.config.symbols[0];
     const ticker = await this.kucoinService.getTicker(symbol);
     const price = ticker.last;
-    const change24h = ticker.percentage * 100;
+    // ccxt `ticker.percentage` already returns percent value (e.g. 0.2 for 0.2%) so
+    // don't multiply by 100 - it leads to values like 20.00 instead of 0.20.
+    const change24h = typeof ticker.percentage === 'number' ? ticker.percentage : 0;
 
     // EMA
     const closes = this.marketData.map(d => d.close);
@@ -489,10 +491,28 @@ export class KuCoinBot {
     const profitPercent = positions.length > 0 ? ((price - entryPrice) / entryPrice) * 100 : 0;
     const toTPPercent = positions.length > 0 ? ((tpPrice - price) / price) * 100 : 0;
 
+    // Map positions to include runtime profit/percent per position
+    const positionsList = positions.map(p => {
+      const profit = (price - p.entryPrice) * p.amount;
+      const profitPercentSingle = p.entryPrice ? ((price - p.entryPrice) / p.entryPrice) * 100 : 0;
+      return {
+        symbol: p.symbol,
+        side: p.side,
+        amount: p.amount,
+        entryPrice: p.entryPrice,
+        timestamp: p.timestamp,
+        profit,
+        profitPercent: profitPercentSingle
+      };
+    });
+
+    const change24hAmount = (price && change24h) ? price * (change24h / 100) : 0;
+
     return {
       symbol,
       price,
       change24h,
+      change24hAmount,
       emaDirection,
       emaPercent,
       signal,
@@ -508,6 +528,8 @@ export class KuCoinBot {
       currentProfit,
       profitPercent,
       toTPPercent
+      ,
+      positionsList
     };
   }
 }

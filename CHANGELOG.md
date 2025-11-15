@@ -26,8 +26,11 @@
 - Убраны дублированные заголовки "KuCoin Trading Bot" из интерфейса TradingInterface.tsx
 
 ## [v0.0.11] - 2025-11-15
-- Исправлено дублирование ключа 'status' в файле переводов i18n.ts: переименован ключ для вкладки статуса в 'statusTab'
 
+## [v0.0.22] - 2025-11-15
+- UI: Fixed 24h change percent rounding and added equivalent USDT value on Market Update panel
+- ML: Fix RandomForest predictor output range (0..1) to avoid inflated percent display in ML card
+- UI: Added "View positions" button and modal showing detailed open positions
 ## [v0.0.10] - 2025-11-15
 - Исправлена синтаксическая ошибка в graceful shutdown handlers
 - Добавлена задержка 5 секунд перед запуском сервера для предотвращения конфликтов Telegram polling

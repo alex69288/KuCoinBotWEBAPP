@@ -38,7 +38,7 @@ bot.command('market', async (ctx) => {
     const message = `📈 ОБНОВЛЕНИЕ РЫНКА
 💱 Пара: ₿ Bitcoin (${update.symbol})
 💰 Цена: ${update.price.toFixed(2)} USDT
-📊 24ч: ${update.change24h.toFixed(2)}%
+📊 24ч: ${update.change24h.toFixed(2)}% (${update.change24hAmount?.toFixed(2) || '0.00'} USDT)
 📈 EMA: ${update.emaDirection === 'ВВЕРХ' ? '🟢' : '🔴'} ${update.emaDirection} (${update.emaPercent.toFixed(2)}%)
 🎯 Сигнал: ${update.signal === 'buy' ? '🟢 ПОКУПКА' : update.signal === 'sell' ? '🔴 ПРОДАЖА' : '⚪️ ОЖИДАНИЕ'}
 🤖 ML: ${update.mlConfidence > 0.6 ? '🟢' : update.mlConfidence < 0.4 ? '🔴' : '⚪️'} ${update.mlText} (${update.mlPercent}%)
