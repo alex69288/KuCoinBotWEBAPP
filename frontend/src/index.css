@@ -90,11 +90,9 @@ body,
    autoHeight is used, but provide CSS fallback to prevent large empty space. */
 
 .mySwiper {
-  /* limit swiper to screen minus tabs height so slides can scroll inside */
-  min-height: calc(100vh - var(--tabs-height, 64px)) !important;
-  max-height: calc(100vh - var(--tabs-height, 64px));
+  /* allow swiper to size naturally; do not force min/max heights here */
   overflow-y: auto;
-  /* slides will handle internal scroll */
+  /* slides will handle internal scroll if needed */
 }
 
 .mySwiper .swiper-slide {
