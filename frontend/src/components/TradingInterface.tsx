@@ -275,6 +275,7 @@ const TradingInterface: React.FC = () => {
           ref={swiperRef}
           onSlideChange={handleSlideChange}
           className="mySwiper"
+          autoHeight={true}
           initialSlide={tabs.indexOf(activeTab)}
         >
           <SwiperSlide>

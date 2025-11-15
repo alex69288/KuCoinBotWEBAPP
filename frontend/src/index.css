@@ -27,8 +27,10 @@
   /* Firefox */
   /* Bring the border 24px up visually by pulling the element up and adding top padding so tabs don't move visually.
      This keeps the sticky behavior while moving the bottom border (border-b) 24px higher. */
-  margin-top: -24px;
-  padding-top: 24px;
+  /* Use pseudo element for the border, more predictable than layout shift with negative margins */
+  position: relative;
+  /* keep the class for tests but hide actual border; we draw the visual border using ::after */
+  border-bottom-color: transparent !important;
   /* Hide any visible scrollbar track background and prevent an ugly gray bar when scrolling horizontally */
   overflow-y: hidden;
 }
@@ -44,4 +46,16 @@
 
 [data-testid="top-tabs-wrapper"]::-webkit-scrollbar-thumb {
   background: transparent;
+}
+
+[data-testid="top-tabs-wrapper"]::after {
+  /* Draw the border visually 24px above the element's bottom */
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: rgb(229 231 235);
+  bottom: 24px;
+  pointer-events: none;
 }

@@ -5,7 +5,7 @@ import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { TradingProvider } from '../../frontend/src/context/TradingContext';
 import TradingInterface from '../../frontend/src/components/TradingInterface';
-import '../../frontend/src/i18n';
+import i18n from '../../frontend/src/i18n';
 import { botApi } from '../../frontend/src/api/bot.api';
 
 describe('Open Positions modal', () => {
@@ -16,6 +16,8 @@ describe('Open Positions modal', () => {
           retry: false,
           refetchOnWindowFocus: false,
           refetchOnMount: false,
+          // disable automatic queries in tests to avoid network calls
+          enabled: false,
         }
       }
     });
@@ -43,6 +45,9 @@ describe('Open Positions modal', () => {
     // mock global fetch used in health check
     (global as any).fetch = jest.fn().mockResolvedValue({ json: async () => ({ startTime: 0 }) });
 
+    // Force Russian translations for consistency in UI snapshot and labels
+    i18n.changeLanguage('ru');
+
     render(
       <QueryClientProvider client={queryClient}>
         <TradingProvider>
@@ -50,6 +55,9 @@ describe('Open Positions modal', () => {
         </TradingProvider>
       </QueryClientProvider>
     );
+
+    // Populate market update manually to avoid auto network queries in test env
+    queryClient.setQueryData(['marketUpdate'], mockUpdate);
 
     // Wait for the market card to appear
     await waitFor(() => expect(screen.getByText(/24ч/i)).toBeInTheDocument());
