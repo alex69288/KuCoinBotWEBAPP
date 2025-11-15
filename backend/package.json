@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "bull": "^4.12.2",
-    "ccxt": "^4.2.78",
+    "ccxt": "^4.5.19",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
@@ -24,6 +24,7 @@
     "i18next-fs-backend": "^2.6.0",
     "ml-random-forest": "^2.1.0",
     "node-telegram-bot-api": "^0.66.0",
+    "protobufjs": "^7.5.4",
     "socket.io": "^4.7.4",
     "ts-node": "^10.9.2"
   },
