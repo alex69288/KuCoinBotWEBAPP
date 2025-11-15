@@ -12,7 +12,7 @@ FRONTEND_PID=$!
 
 echo "Both servers are starting..."
 echo "Backend: http://localhost:5000"
-echo "Frontend: http://localhost:3000"
+echo "Frontend: http://localhost:3001"
 echo "Press Ctrl+C to stop all servers"
 
 # Wait for Ctrl+C
