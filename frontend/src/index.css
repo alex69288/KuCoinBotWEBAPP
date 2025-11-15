@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Ensure page scrolling */
+html, body {
+  overflow-y: auto;
+  height: auto;
+  min-height: 100vh;
+}
+
 /* Custom helpers for layout spacing and scrollbars */
 /* Add 24px margin to blocks that explicitly opt in via .page-block */
 .page-block {
@@ -81,17 +88,17 @@
 
 .mySwiper {
   /* limit swiper to screen minus tabs height so slides can scroll inside */
-  height: calc(100vh - var(--tabs-height, 64px)) !important;
+  min-height: calc(100vh - var(--tabs-height, 64px)) !important;
   max-height: calc(100vh - var(--tabs-height, 64px));
   overflow-y: auto;
   /* slides will handle internal scroll */
 }
 
 .mySwiper .swiper-slide {
-  height: 100% !important;
+  min-height: 100% !important;
   /* fill available height */
   display: block;
-  overflow: hidden !important;
+  overflow-y: auto !important;
   /* inner container will scroll */
 }
 
