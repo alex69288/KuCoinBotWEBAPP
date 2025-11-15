@@ -2,12 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Ensure page scrolling */
+/* Disable root/page scrolling — inner containers will handle scroll */
 html,
 body,
 #root {
-  overflow-y: auto;
-  height: auto;
+  overflow: hidden;
+  height: 100%;
   min-height: 100vh;
 }
 
@@ -190,9 +190,6 @@ body,
 #root,
 [data-testid="page-container"] {
   height: 100%;
-  /* overflow: hidden !important; */
-  /* Disabled to allow page scroll */
-  /* overscroll-behavior: none; */
-  /* Disabled */
-  /* Stop touch/scroll from propagating to parent */
+  overflow: hidden !important;
+  overscroll-behavior: none;
 }
