@@ -98,27 +98,23 @@ const TradingInterface: React.FC = () => {
   });
 
   // Mutations
-  const toggleDemoMode = useMutation<void, Error, { enabled: boolean }>(
-    async ({ enabled }) => {
+  const toggleDemoMode = useMutation({
+    mutationFn: async ({ enabled }: { enabled: boolean }) => {
       await axios.post('/api/demo-mode', { enabled });
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['demoTrades'] });
-      },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['demoTrades'] });
     }
-  );
+  });
 
-  const clearDemoTrades = useMutation<void, Error>(
-    async () => {
+  const clearDemoTrades = useMutation({
+    mutationFn: async () => {
       await axios.delete('/api/demo-trades');
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['demoTrades'] });
-      },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['demoTrades'] });
     }
-  );
+  });
 
   useEffect(() => {
     if (balanceData) {
