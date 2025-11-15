@@ -38,6 +38,40 @@ const TradingInterface: React.FC = () => {
     setActiveTab(tabs[index]);
   };
 
+  // Set CSS variable for top tabs height so slides can compute their max-height
+  useEffect(() => {
+    const setTabsHeightVar = () => {
+      const topTabs = document.querySelector('[data-testid="top-tabs-wrapper"]');
+      const topTabsHeight = topTabs ? (topTabs as HTMLElement).offsetHeight : 0;
+      document.documentElement.style.setProperty('--tabs-height', `${topTabsHeight}px`);
+
+      // Request Swiper to recalculate sizes if available
+      if (swiperRef.current && swiperRef.current.swiper) {
+        try {
+          swiperRef.current.swiper.update();
+        } catch (e) {
+          // ignore errors in tests
+        }
+      }
+    };
+
+    setTabsHeightVar();
+    window.addEventListener('resize', setTabsHeightVar);
+
+    // also observe tab wrapper changes
+    const topTabs = document.querySelector('[data-testid="top-tabs-wrapper"]');
+    let observer: MutationObserver | undefined;
+    if (topTabs) {
+      observer = new MutationObserver(setTabsHeightVar);
+      observer.observe(topTabs, { childList: true, subtree: true });
+    }
+
+    return () => {
+      window.removeEventListener('resize', setTabsHeightVar);
+      if (observer) observer.disconnect();
+    };
+  }, [swiperRef]);
+
   // Bot state
   const [botEnabled, setBotEnabled] = useState(false);
   const [selectedStrategy, setSelectedStrategy] = useState('ema-ml');

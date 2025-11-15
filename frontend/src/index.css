@@ -92,6 +92,15 @@
   overflow: visible;
 }
 
+/* Make slides scroll internally if content exceeds the viewport height.
+   Calculate max height based on the top tabs height via CSS variable --tabs-height. */
+.mySwiper .swiper-slide > div {
+  overflow-y: auto;
+  max-height: calc(100vh - var(--tabs-height, 64px)); /* fallback 64px */
+  overscroll-behavior: contain; /* keep scroll inside slide */
+  -webkit-overflow-scrolling: touch; /* smooth on iOS */
+}
+
 /* Ensure the Swiper container and slides adapt to content */
 .mySwiper {
   height: auto; /* Automatic height based on content */
