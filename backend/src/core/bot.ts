@@ -105,33 +105,6 @@ export class KuCoinBot {
     }
   }
 
-  private async updateMarketData(): Promise<void> {
-    try {
-      // Get OHLCV data for the symbol (simplified, in real implementation use proper timeframe)
-      const ticker = await this.kucoinService.getTicker(this.config.symbols[0]);
-      const orderBook = await this.kucoinService.getOrderBook(this.config.symbols[0], 20);
-
-      // Create OHLCV data point (simplified)
-      const dataPoint: OHLCVData = {
-        timestamp: Date.now(),
-        open: ticker.last || 0,
-        high: ticker.last || 0,
-        low: ticker.last || 0,
-        close: ticker.last || 0,
-        volume: ticker.baseVolume || 0
-      };
-
-      this.marketData.push(dataPoint);
-
-      // Keep only last 100 data points
-      if (this.marketData.length > 100) {
-        this.marketData = this.marketData.slice(-100);
-      }
-    } catch (error) {
-      console.error('Failed to update market data:', error);
-    }
-  }
-
   private calculatePositionSize(): number {
     const balance = this.dailyStats.currentBalance;
     const positionSize = balance * (this.config.positionSizePercent / 100);
@@ -295,6 +268,8 @@ export class KuCoinBot {
     console.log(`Trade recorded: ${trade.side} ${trade.amount} ${trade.symbol} profit: ${trade.profit}`);
   }
 
+  private mainLoopInterval: NodeJS.Timeout | null = null;
+
   async start(): Promise<void> {
     if (this.isRunning) return;
     this.isRunning = true;
@@ -319,42 +294,54 @@ export class KuCoinBot {
     await this.trainMLModel();
 
     // Основной цикл (пока заглушка, будет расширен стратегиями)
-    this.runMainLoop();
+    this.mainLoopInterval = setInterval(() => this.runMainLoopIteration(), 30000);
   }
 
   async stop(): Promise<void> {
     this.isRunning = false;
+    if (this.mainLoopInterval) {
+      clearInterval(this.mainLoopInterval);
+      this.mainLoopInterval = null;
+    }
     console.log('🤖 KuCoin Bot stopped');
   }
 
-  private async runMainLoop(): Promise<void> {
-    while (this.isRunning) {
-      try {
-        // Проверка рисков
-        if (!this.checkRiskLimits()) {
-          console.log('Risk limits exceeded, stopping trading');
-          await this.stop();
-          break;
-        }
-
-        // Получение рыночных данных
-        await this.updateMarketData();
-
-        // Расчет сигнала стратегии
-        if (this.strategy && this.marketData.length > 0) {
-          const signal = this.strategy.calculateSignal(this.marketData);
-
-          if (signal === 'buy') {
-            await this.executeTrade(this.config.symbols[0], 'buy', this.calculatePositionSize());
-          } else if (signal === 'sell') {
-            await this.executeTrade(this.config.symbols[0], 'sell', this.positions.length > 0 ? this.positions[0].amount : 0);
-          }
-        }
-
-        await new Promise(resolve => setTimeout(resolve, 30000)); // 30 сек
-      } catch (error) {
-        console.error('Error in main loop:', error);
+  private async runMainLoopIteration(): Promise<void> {
+    try {
+      // Проверка рисков
+      if (!this.checkRiskLimits()) {
+        console.log('Risk limits exceeded, stopping trading');
+        await this.stop();
+        return;
       }
+
+      // Получение рыночных данных
+      await this.updateMarketData();
+
+      // Расчет сигнала стратегии
+      if (this.strategy && this.marketData.length > 0) {
+        const signal = this.strategy.calculateSignal(this.marketData);
+
+        if (signal === 'buy') {
+          await this.executeTrade(this.config.symbols[0], 'buy', this.calculatePositionSize());
+        } else if (signal === 'sell') {
+          await this.executeTrade(this.config.symbols[0], 'sell', this.positions.length > 0 ? this.positions[0].amount : 0);
+        }
+      }
+    } catch (error) {
+      console.error('Error in main loop:', error);
+    }
+  }
+
+  private async updateMarketData(): Promise<void> {
+    try {
+      const symbol = this.config.symbols[0];
+      const historicalData = await this.kucoinService.getHistoricalData(symbol, '1h', 100);
+      this.marketData = historicalData;
+    } catch (error) {
+      console.error('Failed to update market data:', error);
+      // Continue with empty data
+      this.marketData = [];
     }
   }
 

@@ -1,16 +1,29 @@
 import ccxt from 'ccxt';
 export class KuCoinService {
     exchange;
+    hasCredentials;
     constructor() {
+        const apiKey = process.env.KUCOIN_API_KEY;
+        const secret = process.env.KUCOIN_API_SECRET;
+        const password = process.env.KUCOIN_API_PASSPHRASE;
+        this.hasCredentials = !!(apiKey && secret && password);
+        console.log('Initializing KuCoin with the following credentials:');
+        console.log('apiKey:', apiKey);
+        console.log('secret:', secret);
+        console.log('password:', password);
         this.exchange = new ccxt.kucoin({
-            apiKey: process.env.KUCOIN_API_KEY,
-            secret: process.env.KUCOIN_API_SECRET,
-            password: process.env.KUCOIN_API_PASSPHRASE,
-            // KuCoin doesn't support sandbox mode
-            // sandbox: !process.env.KUCOIN_API_KEY,
+            apiKey: apiKey || undefined,
+            secret: secret || undefined,
+            password: password || undefined,
         });
+        console.log('KuCoin exchange initialized:', this.exchange ? 'Success' : 'Failed');
+        console.log('Credentials available:', this.hasCredentials ? 'Yes' : 'No');
     }
     async getBalance() {
+        if (!this.hasCredentials) {
+            console.warn('No KuCoin credentials provided, returning empty balance');
+            return {};
+        }
         try {
             return await this.exchange.fetchBalance();
         }
@@ -38,6 +51,9 @@ export class KuCoinService {
         }
     }
     async createOrder(symbol, type, side, amount, price) {
+        if (!this.hasCredentials) {
+            throw new Error('KuCoin credentials are required to create orders');
+        }
         try {
             return await this.exchange.createOrder(symbol, type, side, amount, price);
         }
@@ -51,7 +67,10 @@ export class KuCoinService {
     }
     async getHistoricalData(symbol, timeframe = '1h', limit = 100) {
         try {
-            const ohlcv = await this.exchange.fetchOHLCV(symbol, timeframe, undefined, limit);
+            // Add timeout to prevent hanging
+            const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Request timeout')), 10000));
+            const fetchPromise = this.exchange.fetchOHLCV(symbol, timeframe, undefined, limit);
+            const ohlcv = await Promise.race([fetchPromise, timeoutPromise]);
             return ohlcv.map((candle) => ({
                 timestamp: candle[0],
                 open: candle[1],
@@ -63,10 +82,15 @@ export class KuCoinService {
         }
         catch (error) {
             console.error('Error fetching historical data:', error);
-            throw error;
+            // Return empty array to continue without data
+            return [];
         }
     }
     async getOpenOrders(symbol) {
+        if (!this.hasCredentials) {
+            console.warn('No KuCoin credentials provided, returning empty orders');
+            return [];
+        }
         try {
             return await this.exchange.fetchOpenOrders(symbol);
         }
@@ -76,6 +100,9 @@ export class KuCoinService {
         }
     }
     async cancelOrder(orderId, symbol) {
+        if (!this.hasCredentials) {
+            throw new Error('KuCoin credentials are required to cancel orders');
+        }
         try {
             return await this.exchange.cancelOrder(orderId, symbol);
         }
@@ -85,6 +112,10 @@ export class KuCoinService {
         }
     }
     async getOrderHistory(symbol, limit = 50) {
+        if (!this.hasCredentials) {
+            console.warn('No KuCoin credentials provided, returning empty order history');
+            return [];
+        }
         try {
             return await this.exchange.fetchClosedOrders(symbol, undefined, limit);
         }
@@ -94,6 +125,10 @@ export class KuCoinService {
         }
     }
     async getTrades(symbol, limit = 50) {
+        if (!this.hasCredentials) {
+            console.warn('No KuCoin credentials provided, returning empty trades');
+            return [];
+        }
         try {
             return await this.exchange.fetchMyTrades(symbol, undefined, limit);
         }

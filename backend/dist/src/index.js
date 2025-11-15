@@ -15,7 +15,7 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: process.env.FRONTEND_URL || "http://localhost:3001",
+        origin: process.env.FRONTEND_URL || "http://localhost:3000",
         methods: ["GET", "POST"]
     }
 });
@@ -23,7 +23,10 @@ const startTime = Date.now();
 const PORT = parseInt(process.env.PORT || '8080', 10);
 // Middleware
 app.use(helmet());
-app.use(cors());
+app.use(cors({
+    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    credentials: true,
+}));
 app.use(compression());
 app.use(express.json());
 // Healthcheck route
@@ -92,15 +95,20 @@ try {
     }
     const botOptions = useWebhook ? {} : { polling: true };
     let bot;
-    try {
-        bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, botOptions);
+    if (process.env.TELEGRAM_BOT_TOKEN && isProduction) { // Only create bot in production to avoid conflicts
+        try {
+            bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, botOptions);
+        }
+        catch (error) {
+            console.error('Failed to create Telegram bot:', error);
+            throw error;
+        }
     }
-    catch (error) {
-        console.error('Failed to create Telegram bot:', error);
-        throw error;
+    else {
+        console.log('ℹ️ Telegram bot disabled (no token or not production)');
     }
     // Set webhook URL if using webhook
-    if (useWebhook) {
+    if (useWebhook && bot) {
         try {
             // Use BACKEND_URL for webhook, fallback to constructed URL
             const backendUrl = (process.env.BACKEND_URL || `https://kucoinbot-backend-alex69288.amvera.io`).replace(/\/$/, ''); // Remove trailing slash
@@ -130,7 +138,8 @@ try {
         console.log('SIGTERM received, shutting down gracefully');
         if (kucoinBot)
             await kucoinBot.stop();
-        bot.stopPolling();
+        if (bot)
+            bot.stopPolling();
         server.close(() => {
             console.log('Server closed');
             process.exit(0);
@@ -140,7 +149,8 @@ try {
         console.log('SIGINT received, shutting down gracefully');
         if (kucoinBot)
             await kucoinBot.stop();
-        bot.stopPolling();
+        if (bot)
+            bot.stopPolling();
         server.close(() => {
             console.log('Server closed');
             process.exit(0);
@@ -155,7 +165,9 @@ try {
     });
     // Telegram webhook endpoint
     app.post(`/bot${process.env.TELEGRAM_BOT_TOKEN}`, (req, res) => {
-        bot.processUpdate(req.body);
+        if (bot) {
+            bot.processUpdate(req.body);
+        }
         res.sendStatus(200);
     });
     // Basic routes
@@ -200,25 +212,51 @@ try {
         });
     });
     // Telegram bot commands
-    bot.onText(/\/start/, (msg) => {
-        const chatId = msg.chat.id;
-        const frontendUrl = process.env.FRONTEND_URL || 'https://kucoinbot-frontend-alex69288.amvera.io';
-        bot.sendMessage(chatId, 'Welcome to KuCoin Trading Bot! Click below to open the web app.', {
-            reply_markup: {
-                inline_keyboard: [[
-                        {
-                            text: 'Open Trading Bot',
-                            web_app: { url: `${frontendUrl}/?chat_id=${chatId}` }
-                        }
-                    ]]
+    if (bot) {
+        bot.onText(/\/start/, (msg) => {
+            const chatId = msg.chat.id;
+            const frontendUrl = process.env.FRONTEND_URL || 'https://kucoinbot-frontend-alex69288.amvera.io';
+            bot.sendMessage(chatId, 'Welcome to KuCoin Trading Bot! Click below to open the web app.', {
+                reply_markup: {
+                    inline_keyboard: [[
+                            {
+                                text: 'Open Trading Bot',
+                                web_app: { url: `${frontendUrl}/?chat_id=${chatId}` }
+                            }
+                        ]]
+                }
+            });
+        });
+        bot.onText(/\/market/, async (msg) => {
+            const chatId = msg.chat.id;
+            try {
+                const update = await kucoinBot.getMarketUpdate();
+                const message = `📈 ОБНОВЛЕНИЕ РЫНКА
+💱 Пара: ₿ Bitcoin (${update.symbol})
+💰 Цена: ${update.price.toFixed(2)} USDT
+📊 24ч: ${update.change24h.toFixed(2)}%
+📈 EMA: ${update.emaDirection === 'ВВЕРХ' ? '🟢' : '🔴'} ${update.emaDirection} (${update.emaPercent.toFixed(2)}%)
+🎯 Сигнал: ${update.signal === 'buy' ? '🟢 ПОКУПКА' : update.signal === 'sell' ? '🔴 ПРОДАЖА' : '⚪️ ОЖИДАНИЕ'}
+🤖 ML: ${update.mlConfidence > 0.6 ? '🟢' : update.mlConfidence < 0.4 ? '🔴' : '⚪️'} ${update.mlText} (${update.mlPercent}%)
+
+${update.openPositionsCount > 0 ? `💼 ПОЗИЦИЯ ОТКРЫТА (РЕЖИМ %)
+📊 Количество открытых позиций: ${update.openPositionsCount}
+💰 Размер ставки: ${update.stakeSize.toFixed(2)} USDT
+🎯 Цена входа (TP): ${update.entryPrice.toFixed(2)} USDT
+📈 Текущая прибыль: ${update.profitPercent.toFixed(2)}% (${update.currentProfit.toFixed(4)} USDT)
+🎯 До Take Profit: ${update.toTPPercent.toFixed(1)}%
+🎯 Цель TP: ${update.config?.strategyConfig?.takeProfitPercent || 2}%
+🛡️ Комиссии: ${update.config?.strategyConfig?.commissionPercent || 0.2}% (${(Math.abs(update.currentProfit) * ((update.config?.strategyConfig?.commissionPercent || 0.2) / 100)).toFixed(4)} USDT)` : '💼 ПОЗИЦИЙ НЕТ'}`;
+                bot.sendMessage(chatId, message);
+            }
+            catch (error) {
+                bot.sendMessage(chatId, `Ошибка получения обновления рынка: ${error.message}`);
             }
         });
-    });
-    // Add delay before starting server to allow previous instance to shut down
-    if (useWebhook) {
-        console.log('⏳ Waiting 5 seconds before starting server...');
-        await new Promise(resolve => setTimeout(resolve, 5000));
     }
+    // Add delay before starting server to allow previous instance to shut down
+    console.log('⏳ Waiting 5 seconds before starting server...');
+    await new Promise(resolve => setTimeout(resolve, 5000));
     // Start server
     console.log('Before server.listen');
     server.listen(PORT, () => {

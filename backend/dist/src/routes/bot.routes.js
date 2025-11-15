@@ -195,6 +195,16 @@ export default (bot) => {
         bot.clearDemoTrades();
         res.json({ message: 'Demo trades cleared' });
     });
+    // Get market update message
+    router.get('/market-update', async (req, res) => {
+        try {
+            const update = await bot.getMarketUpdate();
+            res.json(update);
+        }
+        catch (error) {
+            res.status(500).json({ error: 'failedToGetMarketUpdate' });
+        }
+    });
     return router;
 };
 //# sourceMappingURL=bot.routes.js.map

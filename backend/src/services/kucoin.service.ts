@@ -2,18 +2,35 @@ import ccxt from 'ccxt';
 
 export class KuCoinService {
   private exchange: any;
+  private hasCredentials: boolean;
 
   constructor() {
+    const apiKey = process.env.KUCOIN_API_KEY;
+    const secret = process.env.KUCOIN_API_SECRET;
+    const password = process.env.KUCOIN_API_PASSPHRASE;
+
+    this.hasCredentials = !!(apiKey && secret && password);
+
+    console.log('Initializing KuCoin with the following credentials:');
+    console.log('apiKey:', apiKey);
+    console.log('secret:', secret);
+    console.log('password:', password);
+
     this.exchange = new ccxt.kucoin({
-      apiKey: process.env.KUCOIN_API_KEY,
-      secret: process.env.KUCOIN_API_SECRET,
-      password: process.env.KUCOIN_API_PASSPHRASE,
-      // KuCoin doesn't support sandbox mode
-      // sandbox: !process.env.KUCOIN_API_KEY,
+      apiKey: apiKey || undefined,
+      secret: secret || undefined,
+      password: password || undefined,
     });
+
+    console.log('KuCoin exchange initialized:', this.exchange ? 'Success' : 'Failed');
+    console.log('Credentials available:', this.hasCredentials ? 'Yes' : 'No');
   }
 
   async getBalance(): Promise<any> {
+    if (!this.hasCredentials) {
+      console.warn('No KuCoin credentials provided, returning empty balance');
+      return {};
+    }
     try {
       return await this.exchange.fetchBalance();
     } catch (error) {
@@ -41,6 +58,9 @@ export class KuCoinService {
   }
 
   async createOrder(symbol: string, type: 'limit' | 'market', side: 'buy' | 'sell', amount: number, price?: number): Promise<any> {
+    if (!this.hasCredentials) {
+      throw new Error('KuCoin credentials are required to create orders');
+    }
     try {
       return await this.exchange.createOrder(symbol, type, side, amount, price);
     } catch (error) {
@@ -77,6 +97,10 @@ export class KuCoinService {
   }
 
   async getOpenOrders(symbol?: string): Promise<any[]> {
+    if (!this.hasCredentials) {
+      console.warn('No KuCoin credentials provided, returning empty orders');
+      return [];
+    }
     try {
       return await this.exchange.fetchOpenOrders(symbol);
     } catch (error) {
@@ -86,6 +110,9 @@ export class KuCoinService {
   }
 
   async cancelOrder(orderId: string, symbol?: string): Promise<any> {
+    if (!this.hasCredentials) {
+      throw new Error('KuCoin credentials are required to cancel orders');
+    }
     try {
       return await this.exchange.cancelOrder(orderId, symbol);
     } catch (error) {
@@ -95,6 +122,10 @@ export class KuCoinService {
   }
 
   async getOrderHistory(symbol?: string, limit: number = 50): Promise<any[]> {
+    if (!this.hasCredentials) {
+      console.warn('No KuCoin credentials provided, returning empty order history');
+      return [];
+    }
     try {
       return await this.exchange.fetchClosedOrders(symbol, undefined, limit);
     } catch (error) {
@@ -104,6 +135,10 @@ export class KuCoinService {
   }
 
   async getTrades(symbol?: string, limit: number = 50): Promise<any[]> {
+    if (!this.hasCredentials) {
+      console.warn('No KuCoin credentials provided, returning empty trades');
+      return [];
+    }
     try {
       return await this.exchange.fetchMyTrades(symbol, undefined, limit);
     } catch (error) {

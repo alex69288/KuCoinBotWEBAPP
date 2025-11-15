@@ -28,7 +28,10 @@ const PORT = parseInt(process.env.PORT || '8080', 10);
 
 // Middleware
 app.use(helmet());
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  credentials: true,
+}));
 app.use(compression());
 app.use(express.json());
 
@@ -175,7 +178,9 @@ try {
 
   // Telegram webhook endpoint
   app.post(`/bot${process.env.TELEGRAM_BOT_TOKEN}`, (req, res) => {
-    bot.processUpdate(req.body);
+    if (bot) {
+      bot.processUpdate(req.body);
+    }
     res.sendStatus(200);
   });
 
@@ -263,7 +268,7 @@ ${update.openPositionsCount > 0 ? `💼 ПОЗИЦИЯ ОТКРЫТА (РЕЖИ�
 🛡️ Комиссии: ${update.config?.strategyConfig?.commissionPercent || 0.2}% (${(Math.abs(update.currentProfit) * ((update.config?.strategyConfig?.commissionPercent || 0.2) / 100)).toFixed(4)} USDT)` : '💼 ПОЗИЦИЙ НЕТ'}`;
         bot.sendMessage(chatId, message);
       } catch (error) {
-        bot.sendMessage(chatId, `Ошибка получения обновления рынка: ${error.message}`);
+        bot.sendMessage(chatId, `Ошибка получения обновления рынка: ${(error as Error).message}`);
       }
     });
   }

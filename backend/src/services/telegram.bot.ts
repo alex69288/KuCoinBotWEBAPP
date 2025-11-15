@@ -53,7 +53,7 @@ ${update.openPositionsCount > 0 ? `💼 ПОЗИЦИЯ ОТКРЫТА (РЕЖИ�
 🛡️ Комиссии: ${update.config?.strategyConfig?.commissionPercent || 0.2}% (${(Math.abs(update.currentProfit) * ((update.config?.strategyConfig?.commissionPercent || 0.2) / 100)).toFixed(4)} USDT)` : '💼 ПОЗИЦИЙ НЕТ'}`;
     ctx.reply(message);
   } catch (error) {
-    ctx.reply(`Ошибка получения обновления рынка: ${error.message}`);
+    ctx.reply(`Ошибка получения обновления рынка: ${(error as Error).message}`);
   }
 });
 

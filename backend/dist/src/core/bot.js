@@ -3,6 +3,7 @@ import { EmaMlStrategy } from '../strategies/ema-ml.strategy';
 import { MacdRsiStrategy } from '../strategies/macd-rsi.strategy';
 import { PriceActionStrategy } from '../strategies/price-action.strategy';
 import { BollingerBandsStrategy } from '../strategies/bollinger.strategy';
+import { calculateEMA } from '../indicators/ema';
 import * as Metrics from '../metrics';
 export class KuCoinBot {
     kucoinService;
@@ -58,30 +59,6 @@ export class KuCoinBot {
                 break;
             default:
                 console.warn('Unknown strategy:', strategy);
-        }
-    }
-    async updateMarketData() {
-        try {
-            // Get OHLCV data for the symbol (simplified, in real implementation use proper timeframe)
-            const ticker = await this.kucoinService.getTicker(this.config.symbols[0]);
-            const orderBook = await this.kucoinService.getOrderBook(this.config.symbols[0], 20);
-            // Create OHLCV data point (simplified)
-            const dataPoint = {
-                timestamp: Date.now(),
-                open: ticker.last || 0,
-                high: ticker.last || 0,
-                low: ticker.last || 0,
-                close: ticker.last || 0,
-                volume: ticker.baseVolume || 0
-            };
-            this.marketData.push(dataPoint);
-            // Keep only last 100 data points
-            if (this.marketData.length > 100) {
-                this.marketData = this.marketData.slice(-100);
-            }
-        }
-        catch (error) {
-            console.error('Failed to update market data:', error);
         }
     }
     calculatePositionSize() {
@@ -238,6 +215,7 @@ export class KuCoinBot {
         }
         console.log(`Trade recorded: ${trade.side} ${trade.amount} ${trade.symbol} profit: ${trade.profit}`);
     }
+    mainLoopInterval = null;
     async start() {
         if (this.isRunning)
             return;
@@ -262,41 +240,58 @@ export class KuCoinBot {
         // Train ML model with historical data
         await this.trainMLModel();
         // Основной цикл (пока заглушка, будет расширен стратегиями)
-        this.runMainLoop();
+        this.mainLoopInterval = setInterval(() => this.runMainLoopIteration(), 30000);
     }
     async stop() {
         this.isRunning = false;
+        if (this.mainLoopInterval) {
+            clearInterval(this.mainLoopInterval);
+            this.mainLoopInterval = null;
+        }
         console.log('🤖 KuCoin Bot stopped');
     }
-    async runMainLoop() {
-        while (this.isRunning) {
-            try {
-                // Проверка рисков
-                if (!this.checkRiskLimits()) {
-                    console.log('Risk limits exceeded, stopping trading');
-                    await this.stop();
-                    break;
-                }
-                // Получение рыночных данных
-                await this.updateMarketData();
-                // Расчет сигнала стратегии
-                if (this.strategy && this.marketData.length > 0) {
-                    const signal = this.strategy.calculateSignal(this.marketData);
-                    if (signal === 'buy') {
-                        await this.executeTrade(this.config.symbols[0], 'buy', this.calculatePositionSize());
-                    }
-                    else if (signal === 'sell') {
-                        await this.executeTrade(this.config.symbols[0], 'sell', this.positions.length > 0 ? this.positions[0].amount : 0);
-                    }
-                }
-                await new Promise(resolve => setTimeout(resolve, 30000)); // 30 сек
+    async runMainLoopIteration() {
+        try {
+            // Проверка рисков
+            if (!this.checkRiskLimits()) {
+                console.log('Risk limits exceeded, stopping trading');
+                await this.stop();
+                return;
             }
-            catch (error) {
-                console.error('Error in main loop:', error);
+            // Получение рыночных данных
+            await this.updateMarketData();
+            // Расчет сигнала стратегии
+            if (this.strategy && this.marketData.length > 0) {
+                const signal = this.strategy.calculateSignal(this.marketData);
+                if (signal === 'buy') {
+                    await this.executeTrade(this.config.symbols[0], 'buy', this.calculatePositionSize());
+                }
+                else if (signal === 'sell') {
+                    await this.executeTrade(this.config.symbols[0], 'sell', this.positions.length > 0 ? this.positions[0].amount : 0);
+                }
             }
+        }
+        catch (error) {
+            console.error('Error in main loop:', error);
+        }
+    }
+    async updateMarketData() {
+        try {
+            const symbol = this.config.symbols[0];
+            const historicalData = await this.kucoinService.getHistoricalData(symbol, '1h', 100);
+            this.marketData = historicalData;
+        }
+        catch (error) {
+            console.error('Failed to update market data:', error);
+            // Continue with empty data
+            this.marketData = [];
         }
     }
     async trainMLModel() {
+        if (process.env.NODE_ENV !== 'production') {
+            console.log('Skipping ML training in development mode');
+            return;
+        }
         try {
             // Get historical data for training (last 500 candles, 1h timeframe)
             const historicalData = await this.kucoinService.getHistoricalData(this.config.symbols[0], '1h', 500);
@@ -306,6 +301,7 @@ export class KuCoinBot {
         }
         catch (error) {
             console.error('Failed to train ML model:', error);
+            console.log('Continuing without ML training');
         }
     }
     calculateTradeProfit() {
@@ -380,6 +376,64 @@ export class KuCoinBot {
     }
     clearDemoTrades() {
         this.demoTrades = [];
+    }
+    async getMarketUpdate() {
+        const symbol = this.config.symbols[0];
+        const ticker = await this.kucoinService.getTicker(symbol);
+        const price = ticker.last;
+        const change24h = ticker.percentage * 100;
+        // EMA
+        const closes = this.marketData.map(d => d.close);
+        const emaFast = calculateEMA(closes, 12);
+        const emaSlow = calculateEMA(closes, 26);
+        let emaDirection = 'ОЖИДАНИЕ';
+        let emaPercent = 0;
+        if (emaFast.length > 0 && emaSlow.length > 0) {
+            const fast = emaFast[emaFast.length - 1];
+            const slow = emaSlow[emaSlow.length - 1];
+            emaPercent = ((fast - slow) / slow) * 100;
+            emaDirection = fast > slow ? 'ВВЕРХ' : 'ВНИЗ';
+        }
+        // Signal
+        const signal = this.strategy ? this.strategy.calculateSignal(this.marketData) : 'hold';
+        const signalText = signal === 'buy' ? 'ПОКУПКА' : signal === 'sell' ? 'ПРОДАЖА' : 'ОЖИДАНИЕ';
+        // ML
+        let mlConfidence = 0.5;
+        if (this.strategy && 'mlPredictor' in this.strategy) {
+            mlConfidence = this.strategy.mlPredictor.predict(this.marketData);
+        }
+        const mlPercent = (mlConfidence * 100).toFixed(1);
+        const mlText = mlConfidence > 0.6 ? 'ВВЕРХ' : mlConfidence < 0.4 ? 'ВНИЗ' : 'НЕЙТРАЛЬНО';
+        // Positions
+        const positions = this.positions.filter(p => p.symbol === symbol);
+        const openPositionsCount = positions.length;
+        const positionSize = this.calculatePositionSize();
+        const stakeSize = positionSize * price;
+        const entryPrice = positions[0]?.entryPrice || 0;
+        const tpPrice = entryPrice * (1 + (this.config.strategyConfig.takeProfitPercent || 2) / 100);
+        const currentProfit = positions.length > 0 ? (price - entryPrice) * positionSize : 0;
+        const profitPercent = positions.length > 0 ? ((price - entryPrice) / entryPrice) * 100 : 0;
+        const toTPPercent = positions.length > 0 ? ((tpPrice - price) / price) * 100 : 0;
+        return {
+            symbol,
+            price,
+            change24h,
+            emaDirection,
+            emaPercent,
+            signal,
+            signalText,
+            mlConfidence,
+            mlPercent,
+            mlText,
+            openPositionsCount,
+            positionSize,
+            stakeSize,
+            entryPrice,
+            tpPrice,
+            currentProfit,
+            profitPercent,
+            toTPPercent
+        };
     }
 }
 //# sourceMappingURL=bot.js.map
