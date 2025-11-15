@@ -85,9 +85,9 @@
 .mySwiper .swiper-slide {
   height: auto !important;
   display: block;
+  overflow: visible !important;
 }
 
 .mySwiper .swiper-wrapper {
-  transition: height 0.3s ease;
   overflow: visible;
 }
