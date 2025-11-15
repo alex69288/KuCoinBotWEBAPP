@@ -91,3 +91,73 @@
 .mySwiper .swiper-wrapper {
   overflow: visible;
 }
+
+/* Ensure the Swiper container and slides adapt to content */
+.mySwiper {
+  height: auto; /* Automatic height based on content */
+  min-height: 100%; /* Minimum height to avoid clipping */
+  overflow: visible; /* Ensure content is not clipped */
+}
+
+/* Revert changes to tab content and parent container styles */
+.tab-content {
+  height: auto; /* Automatic height to fit content */
+  min-height: 100vh; /* Minimum height to cover the viewport */
+  overflow: visible; /* Prevent clipping of overflowing content */
+}
+
+/* Ensure parent container does not restrict height */
+.parent-container {
+  height: auto;
+  overflow: visible;
+}
+
+/* Fix menu and container behavior during scroll */
+.menu {
+  position: sticky; /* Fix menu at the top during scroll */
+  top: 0;
+  z-index: 1000; /* Ensure menu stays above other elements */
+}
+
+.container {
+  position: relative; /* Ensure container stays in place */
+  overflow: hidden; /* Prevent content from overflowing */
+}
+
+.gray-container {
+  height: 100vh; /* Full screen height */
+  overflow: auto; /* Enable scrolling inside the container */
+  background-color: #f0f0f0; /* Gray background */
+}
+
+/* Fix the main container and ensure proper scrolling behavior */
+/* Remove special fixed layout that prevented normal page layout and caused scrolling issues.
+   We'll rely on disabling body scroll and enabling the menu scroll only. */
+.main-container {
+  position: static !important;
+  width: 100%;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+.tab-content {
+  height: auto !important;
+  overflow: hidden !important; /* Prevent tab content from scrolling the page */
+}
+
+/* Ensure only the menu scrolls, disable page scroll */
+/* Disable page scroll and allow scrolling only inside the menu. */
+body {
+  overflow: hidden !important; /* Disable scrolling on the entire page */
+}
+
+.menu {
+  position: fixed; /* Fix the menu at the top */
+  top: 0;
+  left: 0;
+  width: 100%; /* Full width */
+  height: 100vh; /* Full viewport height so it can scroll independently */
+  overflow-y: auto; /* Enable vertical scrolling inside the menu */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  z-index: 1000; /* Ensure menu stays above other elements */
+}
