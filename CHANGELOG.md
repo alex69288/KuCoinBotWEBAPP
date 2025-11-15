@@ -1,7 +1,7 @@
 # Changelog
 
-## [v0.0.26] - 2025-11-16
-- Убрано overflow: visible из класса .mySwiper, так как оно ломало скролл
+## [v0.0.27] - 2025-11-16
+- Исправлена проблема с вертикальной прокруткой страниц: заменены overflow: hidden на overflow-y: auto в CSS для классов .mySwiper, .container и [data-testid="top-tabs-wrapper"]
 
 ## [v0.0.25] - 2025-11-16
 - Добавлено overflow: visible к классу .mySwiper для предотвращения обрезания контента при переходах между вкладками

@@ -33,7 +33,7 @@
   /* keep the class for tests but hide actual border; we draw the visual border using ::after */
   border-bottom-color: transparent !important;
   /* Hide any visible scrollbar track background and prevent an ugly gray bar when scrolling horizontally */
-  overflow-y: hidden;
+  overflow-y: auto;
 }
 
 [data-testid="top-tabs-wrapper"]::-webkit-scrollbar {
@@ -83,13 +83,16 @@
   /* limit swiper to screen minus tabs height so slides can scroll inside */
   height: calc(100vh - var(--tabs-height, 64px)) !important;
   max-height: calc(100vh - var(--tabs-height, 64px));
-  overflow: hidden; /* slides will handle internal scroll */
+  overflow-y: auto;
+  /* slides will handle internal scroll */
 }
 
 .mySwiper .swiper-slide {
-  height: 100% !important; /* fill available height */
+  height: 100% !important;
+  /* fill available height */
   display: block;
-  overflow: hidden !important; /* inner container will scroll */
+  overflow: hidden !important;
+  /* inner container will scroll */
 }
 
 .mySwiper .swiper-wrapper {
@@ -98,22 +101,28 @@
 
 /* Make slides scroll internally if content exceeds the viewport height.
    Calculate max height based on the top tabs height via CSS variable --tabs-height. */
-.mySwiper .swiper-slide > div {
+.mySwiper .swiper-slide>div {
   overflow-y: auto;
   height: 100%;
   max-height: calc(100vh - var(--tabs-height, 64px));
-  overscroll-behavior: contain; /* keep scroll inside slide */
-  -webkit-overflow-scrolling: touch; /* smooth on iOS */
-  touch-action: pan-y; /* allow vertical pan gestures */
+  overscroll-behavior: contain;
+  /* keep scroll inside slide */
+  -webkit-overflow-scrolling: touch;
+  /* smooth on iOS */
+  touch-action: pan-y;
+  /* allow vertical pan gestures */
 }
 
 /* removed: Swiper auto-height – we use fixed viewport-based height for internal scrolling */
 
 /* Revert changes to tab content and parent container styles */
 .tab-content {
-  height: auto; /* Automatic height to fit content */
-  min-height: 0; /* avoid forcing full viewport height */
-  overflow: visible; /* Prevent clipping of overflowing content */
+  height: auto;
+  /* Automatic height to fit content */
+  min-height: 0;
+  /* avoid forcing full viewport height */
+  overflow: visible;
+  /* Prevent clipping of overflowing content */
 }
 
 /* Ensure parent container does not restrict height */
@@ -124,20 +133,27 @@
 
 /* Fix menu and container behavior during scroll */
 .menu {
-  position: sticky; /* Fix menu at the top during scroll */
+  position: sticky;
+  /* Fix menu at the top during scroll */
   top: 0;
-  z-index: 1000; /* Ensure menu stays above other elements */
+  z-index: 1000;
+  /* Ensure menu stays above other elements */
 }
 
 .container {
-  position: relative; /* Ensure container stays in place */
-  overflow: hidden; /* Prevent content from overflowing */
+  position: relative;
+  /* Ensure container stays in place */
+  overflow-y: auto;
+  /* Prevent content from overflowing */
 }
 
 .gray-container {
-  height: 100vh; /* Full screen height */
-  overflow: auto; /* Enable scrolling inside the container */
-  background-color: #f0f0f0; /* Gray background */
+  height: 100vh;
+  /* Full screen height */
+  overflow: auto;
+  /* Enable scrolling inside the container */
+  background-color: #f0f0f0;
+  /* Gray background */
 }
 
 /* Fix the main container and ensure proper scrolling behavior */
@@ -152,29 +168,42 @@
 
 .tab-content {
   height: auto !important;
-  overflow: hidden !important; /* Prevent tab content from scrolling the page */
+  overflow: hidden !important;
+  /* Prevent tab content from scrolling the page */
 }
 
 /* Ensure only the menu scrolls, disable page scroll */
 /* Disable page scroll and allow scrolling only inside the menu. */
 /* Prevent page from scrolling and avoid scroll chain/overscroll */
-html, body, #root, [data-testid="page-container"] {
+html,
+body,
+#root,
+[data-testid="page-container"] {
   height: 100%;
-  overflow: hidden !important; /* Disable scrolling on the entire page */
-  overscroll-behavior: none; /* Stop touch/scroll from propagating to parent */
+  overflow: hidden !important;
+  /* Disable scrolling on the entire page */
+  overscroll-behavior: none;
+  /* Stop touch/scroll from propagating to parent */
 }
 
 .menu,
 .top-tabs-wrapper,
 .top-tabs-outer,
 .gray-container {
-  position: fixed; /* Fix the menu at the top */
+  position: fixed;
+  /* Fix the menu at the top */
   top: 0;
   left: 0;
-  width: 100%; /* Full width */
-  height: 100vh; /* Full viewport height so it can scroll independently */
-  overflow-y: auto; /* Enable vertical scrolling inside the menu */
-  overscroll-behavior: contain; /* Keep scroll inside menu, avoid parent scroll */
-  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-  z-index: 1000; /* Ensure menu stays above other elements */
+  width: 100%;
+  /* Full width */
+  height: 100vh;
+  /* Full viewport height so it can scroll independently */
+  overflow-y: auto;
+  /* Enable vertical scrolling inside the menu */
+  overscroll-behavior: contain;
+  /* Keep scroll inside menu, avoid parent scroll */
+  -webkit-overflow-scrolling: touch;
+  /* Smooth scrolling on iOS */
+  z-index: 1000;
+  /* Ensure menu stays above other elements */
 }
