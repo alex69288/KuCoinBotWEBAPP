@@ -12,10 +12,10 @@
   /* Keep side spacing controlled by container for very narrow layouts; margins prevent touching edges */
 }
 
-/* Ensure page container height fills the screen */
+/* Ensure page container height grows with content but has minimum screen height */
 [data-testid="page-container"] {
-  /* Make page container always fill the screen height */
-  height: 100vh;
+  /* Make page container have minimum screen height, but grow with content if larger */
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
