@@ -7,7 +7,7 @@ import { Server } from 'socket.io';
 import TelegramBot from 'node-telegram-bot-api';
 import dotenv from 'dotenv';
 import kucoinRoutes from './routes/kucoin.routes';
-import botRoutes from './routes/bot.routes';
+import botRoutesFactory from './routes/bot.routes';
 import { KuCoinBot } from './core/bot';
 dotenv.config();
 console.log('Starting application...');
@@ -26,9 +26,6 @@ app.use(helmet());
 app.use(cors());
 app.use(compression());
 app.use(express.json());
-// Routes
-app.use('/api/kucoin', kucoinRoutes);
-app.use('/api/bot', botRoutes);
 // Healthcheck route
 app.get('/health', (req, res) => {
     res.status(200).json({
@@ -82,6 +79,9 @@ try {
         },
     };
     const kucoinBot = KuCoinBot.getInstance(botConfig);
+    // Routes
+    app.use('/api/kucoin', kucoinRoutes);
+    app.use('/api/bot', botRoutesFactory(kucoinBot));
     if (botConfig.enabled) {
         await kucoinBot.start();
         console.log('✅ KuCoin Bot started');

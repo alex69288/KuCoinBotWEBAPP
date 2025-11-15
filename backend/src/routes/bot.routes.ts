@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import { KuCoinBot } from '../core/bot.js';
 
-const router = Router();
-const bot = KuCoinBot.getInstance();
+export default (bot: KuCoinBot) => {
+  const router = Router();
 
 // Get bot status
 router.get('/status', async (req, res) => {
@@ -152,4 +152,5 @@ router.delete('/demo-trades', (req, res) => {
   res.json({ message: 'Demo trades cleared' });
 });
 
-export default router;
+  return router;
+};

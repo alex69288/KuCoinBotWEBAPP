@@ -37,6 +37,7 @@ export declare class KuCoinBot {
     private strategy;
     private marketData;
     private static instance;
+    private demoTrades;
     constructor(config: BotConfig);
     static getInstance(config?: BotConfig): KuCoinBot;
     private initializeStrategy;
@@ -44,8 +45,16 @@ export declare class KuCoinBot {
     private calculatePositionSize;
     private checkRiskLimits;
     private calculateVolatility;
-    private executeTrade;
     private simulateTrade;
+    getDemoTrades(): Array<{
+        symbol: string;
+        side: 'buy' | 'sell';
+        amount: number;
+        price: number;
+        timestamp: number;
+    }>;
+    clearDemoTrades(): void;
+    private executeTrade;
     private recordTrade;
     start(): Promise<void>;
     stop(): Promise<void>;
@@ -58,6 +67,7 @@ export declare class KuCoinBot {
     getStats(): any;
     manualTrade(symbol: string, side: 'buy' | 'sell', amount: number, type?: 'market' | 'limit', price?: number): Promise<any>;
     updateConfig(newConfig: Partial<BotConfig>): void;
+    setDemoMode(enabled: boolean): void;
 }
 export {};
 //# sourceMappingURL=bot.d.ts.map
