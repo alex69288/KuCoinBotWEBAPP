@@ -34,7 +34,7 @@ export class MacdRsiStrategy extends BaseStrategy {
         // Check take profit / stop loss first
         if (this.lastSignal === 'buy' && this.entryPrice > 0) {
             const profitPercent = (currentPrice - this.entryPrice) / this.entryPrice * 100;
-            if (profitPercent >= config.takeProfitPercent) {
+            if (profitPercent >= config.takeProfitPercent + 2 * config.commissionPercent) {
                 this.lastSignal = 'hold';
                 this.entryPrice = 0;
                 return 'sell';
@@ -45,15 +45,12 @@ export class MacdRsiStrategy extends BaseStrategy {
                 return 'sell';
             }
         }
-        // Generate buy/sell signals
+        // Generate buy signal only
         let buySignal = false;
-        let sellSignal = false;
         // RSI signals
         const rsiOversold = currentRSI <= config.rsiOversold;
-        const rsiOverbought = currentRSI >= config.rsiOverbought;
         // MACD signals
         const macdBullish = currentMACD > currentSignal; // MACD above signal line
-        const macdBearish = currentMACD < currentSignal; // MACD below signal line
         const histogramPositive = currentHistogram > 0;
         const histogramGrowing = currentHistogram > prevHistogram;
         if (config.useMacdCrossover) {
@@ -61,34 +58,22 @@ export class MacdRsiStrategy extends BaseStrategy {
             if (macdBullish && histogramPositive) {
                 buySignal = true;
             }
-            if (macdBearish && !histogramPositive) {
-                sellSignal = true;
-            }
         }
         else {
             // MACD histogram strategy
             if (histogramGrowing && histogramPositive) {
                 buySignal = true;
             }
-            if (!histogramGrowing && !histogramPositive) {
-                sellSignal = true;
-            }
         }
         // Apply RSI filter if enabled
         if (config.useRsiFilter) {
             buySignal = buySignal && rsiOversold;
-            sellSignal = sellSignal && rsiOverbought;
         }
         // Generate final signal
         if (buySignal && this.lastSignal !== 'buy') {
             this.lastSignal = 'buy';
             this.entryPrice = currentPrice;
             return 'buy';
-        }
-        if (sellSignal && this.lastSignal === 'buy') {
-            this.lastSignal = 'hold';
-            this.entryPrice = 0;
-            return 'sell';
         }
         return 'hold';
     }

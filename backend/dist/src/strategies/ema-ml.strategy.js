@@ -1,6 +1,6 @@
 import { BaseStrategy } from './base.strategy';
 import { calculateEMA } from '../indicators/ema';
-import { RandomForestPredictor } from '../ml/random_forest.js';
+import { RandomForestPredictor } from '../ml/random_forest';
 export class EmaMlStrategy extends BaseStrategy {
     mlPredictor;
     trailingStopPrice = null; // For Trailing Stop
@@ -31,7 +31,7 @@ export class EmaMlStrategy extends BaseStrategy {
         if (this.lastSignal === 'buy' && this.entryPrice > 0) {
             const profitPercent = (currentPrice - this.entryPrice) / this.entryPrice * 100;
             // Take profit
-            if (profitPercent >= this.config.takeProfitPercent) {
+            if (profitPercent >= this.config.takeProfitPercent + 2 * this.config.commissionPercent) {
                 this.resetPosition();
                 return 'sell';
             }
@@ -65,13 +65,6 @@ export class EmaMlStrategy extends BaseStrategy {
             this.entryTime = currentTime;
             this.trailingStopPrice = null; // Reset trailing stop
             return 'buy';
-        }
-        // Sell signal (if in position and conditions changed)
-        if (this.lastSignal === 'buy' &&
-            (emaDiff < -this.config.emaThreshold ||
-                mlConfidence < this.config.mlSellThreshold)) {
-            this.resetPosition();
-            return 'sell';
         }
         return 'hold';
     }

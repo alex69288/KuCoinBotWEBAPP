@@ -7,6 +7,7 @@ export interface EmaMlConfig extends StrategyConfig {
     mlSellThreshold: number;
     takeProfitPercent: number;
     stopLossPercent: number;
+    commissionPercent: number;
     trailingStop: boolean;
     minHoldTime: number;
 }

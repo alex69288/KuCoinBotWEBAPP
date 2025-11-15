@@ -9,6 +9,7 @@ export class KuCoinBot {
     config;
     isRunning = false;
     positions = [];
+    demoTrades = [];
     dailyStats = {
         startBalance: 0,
         currentBalance: 0,
@@ -26,7 +27,6 @@ export class KuCoinBot {
     strategy = null;
     marketData = [];
     static instance = null;
-    demoTrades = [];
     constructor(config) {
         this.config = config;
         this.kucoinService = new KuCoinService();
@@ -124,7 +124,8 @@ export class KuCoinBot {
     }
     simulateTrade(symbol, side, amount, price) {
         const timestamp = Date.now();
-        this.demoTrades.push({ symbol, side, amount, price, timestamp });
+        const id = `demo-${timestamp}-${Math.random().toString(36).substr(2, 9)}`;
+        this.demoTrades.push({ id, symbol, side, amount, profit: 0, timestamp });
         console.log(`Simulated trade: ${side} ${amount} ${symbol} at ${price}`);
         if (side === 'buy') {
             // Добавить позицию
@@ -156,13 +157,6 @@ export class KuCoinBot {
                 console.log(`No open position found for ${symbol} to sell`);
             }
         }
-    }
-    getDemoTrades() {
-        return this.demoTrades;
-    }
-    clearDemoTrades() {
-        this.demoTrades = [];
-        console.log('Demo trades cleared.');
     }
     async executeTrade(symbol, side, amount) {
         const currentPrice = this.marketData[this.marketData.length - 1]?.close || 0;
@@ -223,7 +217,7 @@ export class KuCoinBot {
             side,
             amount,
             profit,
-            timestamp: new Date()
+            timestamp: Date.now()
         };
         // Обновление статистики
         this.dailyStats.totalTrades++;
@@ -380,6 +374,12 @@ export class KuCoinBot {
     setDemoMode(enabled) {
         this.config.demoMode = enabled;
         console.log(`Demo mode ${enabled ? 'enabled' : 'disabled'}`);
+    }
+    getDemoTrades() {
+        return this.demoTrades;
+    }
+    clearDemoTrades() {
+        this.demoTrades = [];
     }
 }
 //# sourceMappingURL=bot.js.map

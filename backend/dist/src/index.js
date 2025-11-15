@@ -15,7 +15,7 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: process.env.FRONTEND_URL || "http://localhost:3000",
+        origin: process.env.FRONTEND_URL || "http://localhost:3001",
         methods: ["GET", "POST"]
     }
 });
@@ -27,7 +27,7 @@ app.use(cors());
 app.use(compression());
 app.use(express.json());
 // Healthcheck route
-app.get('/health', (req, res) => {
+app.get('/api/health', (req, res) => {
     res.status(200).json({
         status: 'ok',
         uptime: process.uptime(),
@@ -74,6 +74,7 @@ try {
             mlSellThreshold: parseFloat(process.env.ML_SELL_THRESHOLD || '0.4'),
             takeProfitPercent: parseFloat(process.env.TAKE_PROFIT_PERCENT || '2'),
             stopLossPercent: parseFloat(process.env.STOP_LOSS_PERCENT || '1'),
+            commissionPercent: parseFloat(process.env.COMMISSION_PERCENT || '0.1'),
             trailingStop: process.env.TRAILING_STOP === 'true',
             minHoldTime: parseInt(process.env.MIN_HOLD_TIME || '60')
         },

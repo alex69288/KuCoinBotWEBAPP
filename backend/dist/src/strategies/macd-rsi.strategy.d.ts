@@ -8,6 +8,7 @@ export interface MacdRsiConfig extends StrategyConfig {
     macdSignal: number;
     takeProfitPercent: number;
     stopLossPercent: number;
+    commissionPercent: number;
     useMacdCrossover: boolean;
     useRsiFilter: boolean;
 }

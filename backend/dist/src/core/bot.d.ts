@@ -25,19 +25,19 @@ export interface Trade {
     side: 'buy' | 'sell';
     amount: number;
     profit: number;
-    timestamp: Date;
+    timestamp: number;
 }
 export declare class KuCoinBot {
     private kucoinService;
     private config;
     private isRunning;
     private positions;
+    private demoTrades;
     private dailyStats;
     private riskManager;
     private strategy;
     private marketData;
     private static instance;
-    private demoTrades;
     constructor(config: BotConfig);
     static getInstance(config?: BotConfig): KuCoinBot;
     private initializeStrategy;
@@ -46,14 +46,6 @@ export declare class KuCoinBot {
     private checkRiskLimits;
     private calculateVolatility;
     private simulateTrade;
-    getDemoTrades(): Array<{
-        symbol: string;
-        side: 'buy' | 'sell';
-        amount: number;
-        price: number;
-        timestamp: number;
-    }>;
-    clearDemoTrades(): void;
     private executeTrade;
     private recordTrade;
     start(): Promise<void>;
@@ -68,6 +60,8 @@ export declare class KuCoinBot {
     manualTrade(symbol: string, side: 'buy' | 'sell', amount: number, type?: 'market' | 'limit', price?: number): Promise<any>;
     updateConfig(newConfig: Partial<BotConfig>): void;
     setDemoMode(enabled: boolean): void;
+    getDemoTrades(): Trade[];
+    clearDemoTrades(): void;
 }
 export {};
 //# sourceMappingURL=bot.d.ts.map

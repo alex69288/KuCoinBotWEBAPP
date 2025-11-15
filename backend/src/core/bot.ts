@@ -455,7 +455,7 @@ export class KuCoinBot {
     this.demoTrades = [];
   }
 
-  public async getMarketUpdateMessage(): Promise<string> {
+  public async getMarketUpdate(): Promise<any> {
     const symbol = this.config.symbols[0];
     const ticker = await this.kucoinService.getTicker(symbol);
     const price = ticker.last;
@@ -477,7 +477,6 @@ export class KuCoinBot {
     // Signal
     const signal = this.strategy ? this.strategy.calculateSignal(this.marketData) : 'hold';
     const signalText = signal === 'buy' ? 'ПОКУПКА' : signal === 'sell' ? 'ПРОДАЖА' : 'ОЖИДАНИЕ';
-    const signalEmoji = signal === 'buy' ? '🟢' : signal === 'sell' ? '🔴' : '⚪️';
 
     // ML
     let mlConfidence = 0.5;
@@ -486,7 +485,6 @@ export class KuCoinBot {
     }
     const mlPercent = (mlConfidence * 100).toFixed(1);
     const mlText = mlConfidence > 0.6 ? 'ВВЕРХ' : mlConfidence < 0.4 ? 'ВНИЗ' : 'НЕЙТРАЛЬНО';
-    const mlEmoji = mlConfidence > 0.6 ? '🟢' : mlConfidence < 0.4 ? '🔴' : '⚪️';
 
     // Positions
     const positions = this.positions.filter(p => p.symbol === symbol);
@@ -498,27 +496,26 @@ export class KuCoinBot {
     const currentProfit = positions.length > 0 ? (price - entryPrice) * positionSize : 0;
     const profitPercent = positions.length > 0 ? ((price - entryPrice) / entryPrice) * 100 : 0;
     const toTPPercent = positions.length > 0 ? ((tpPrice - price) / price) * 100 : 0;
-    const tpTarget = this.config.strategyConfig.takeProfitPercent || 2;
-    const commissionPercent = this.config.strategyConfig.commissionPercent || 0.2;
-    const commissionAmount = Math.abs(currentProfit) * (commissionPercent / 100);
 
-    const message = `📈 ОБНОВЛЕНИЕ РЫНКА
-💱 Пара: ₿ Bitcoin (${symbol})
-💰 Цена: ${price.toFixed(2)} USDT
-📊 24ч: ${change24h.toFixed(2)}%
-📈 EMA: ${emaDirection === 'ВВЕРХ' ? '🟢' : '🔴'} ${emaDirection} (${emaPercent.toFixed(2)}%)
-🎯 Сигнал: ${signalEmoji} ${signalText}
-🤖 ML: ${mlEmoji} ${mlText} (${mlPercent}%)
-
-${positions.length > 0 ? `💼 ПОЗИЦИЯ ОТКРЫТА (РЕЖИМ %)
-📊 Количество открытых позиций: ${openPositionsCount}
-💰 Размер ставки: ${stakeSize.toFixed(2)} USDT
-🎯 Цена входа (TP): ${entryPrice.toFixed(2)} USDT
-📈 Текущая прибыль: ${profitPercent.toFixed(2)}% (${currentProfit.toFixed(4)} USDT)
-🎯 До Take Profit: ${toTPPercent.toFixed(1)}%
-🎯 Цель TP: ${tpTarget}%
-🛡️ Комиссии: ${commissionPercent}% (${commissionAmount.toFixed(4)} USDT)` : '💼 ПОЗИЦИЙ НЕТ'}`;
-
-    return message;
+    return {
+      symbol,
+      price,
+      change24h,
+      emaDirection,
+      emaPercent,
+      signal,
+      signalText,
+      mlConfidence,
+      mlPercent,
+      mlText,
+      openPositionsCount,
+      positionSize,
+      stakeSize,
+      entryPrice,
+      tpPrice,
+      currentProfit,
+      profitPercent,
+      toTPPercent
+    };
   }
 }

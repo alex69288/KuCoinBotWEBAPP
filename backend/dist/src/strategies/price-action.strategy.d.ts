@@ -7,6 +7,7 @@ export interface PriceActionConfig extends StrategyConfig {
     useCandlestickPatterns: boolean;
     takeProfitPercent: number;
     stopLossPercent: number;
+    commissionPercent: number;
 }
 export declare class PriceActionStrategy extends BaseStrategy {
     private supportLevels;

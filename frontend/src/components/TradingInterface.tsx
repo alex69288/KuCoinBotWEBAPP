@@ -293,8 +293,79 @@ const TradingInterface: React.FC = () => {
         {/* Market Update */}
         {marketUpdate && (
           <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-            <h2 className="text-xl font-semibold mb-4">📈 Обновление рынка</h2>
-            <pre className="whitespace-pre-wrap text-sm">{marketUpdate.message}</pre>
+            <h2 className="text-xl font-semibold mb-4">{t('marketUpdate')}</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* Price Card */}
+              <div className="bg-gray-50 rounded-lg p-4">
+                <div className="flex items-center mb-2">
+                  <span className="text-2xl mr-2">💰</span>
+                  <span className="text-sm font-medium text-gray-700">{t('price')}</span>
+                </div>
+                <div className="text-lg font-bold text-gray-900">
+                  {marketUpdate.price ? `${marketUpdate.price.toFixed(2)} USDT` : 'N/A'}
+                </div>
+              </div>
+
+              {/* 24h Change Card */}
+              <div className="bg-gray-50 rounded-lg p-4">
+                <div className="flex items-center mb-2">
+                  <span className="text-2xl mr-2">📊</span>
+                  <span className="text-sm font-medium text-gray-700">24ч</span>
+                </div>
+                <div className={`text-lg font-bold ${marketUpdate.change24h >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  {marketUpdate.change24h ? `${marketUpdate.change24h.toFixed(2)}%` : 'N/A'}
+                </div>
+              </div>
+
+              {/* EMA Card */}
+              <div className="bg-gray-50 rounded-lg p-4">
+                <div className="flex items-center mb-2">
+                  <span className="text-2xl mr-2">📈</span>
+                  <span className="text-sm font-medium text-gray-700">EMA</span>
+                </div>
+                <div className={`text-lg font-bold ${marketUpdate.emaDirection === 'ВВЕРХ' ? 'text-green-600' : 'text-red-600'}`}>
+                  {marketUpdate.emaDirection} ({marketUpdate.emaPercent ? marketUpdate.emaPercent.toFixed(2) : '0.00'}%)
+                </div>
+              </div>
+
+              {/* Signal Card */}
+              <div className="bg-gray-50 rounded-lg p-4">
+                <div className="flex items-center mb-2">
+                  <span className="text-2xl mr-2">🎯</span>
+                  <span className="text-sm font-medium text-gray-700">{t('signal')}</span>
+                </div>
+                <div className={`text-lg font-bold ${marketUpdate.signal === 'buy' ? 'text-green-600' : marketUpdate.signal === 'sell' ? 'text-red-600' : 'text-gray-600'}`}>
+                  {marketUpdate.signalText}
+                </div>
+              </div>
+
+              {/* ML Card */}
+              <div className="bg-gray-50 rounded-lg p-4">
+                <div className="flex items-center mb-2">
+                  <span className="text-2xl mr-2">🤖</span>
+                  <span className="text-sm font-medium text-gray-700">ML</span>
+                </div>
+                <div className={`text-lg font-bold ${marketUpdate.mlConfidence > 0.6 ? 'text-green-600' : marketUpdate.mlConfidence < 0.4 ? 'text-red-600' : 'text-gray-600'}`}>
+                  {marketUpdate.mlText} ({marketUpdate.mlPercent}%)
+                </div>
+              </div>
+
+              {/* Positions Card */}
+              <div className="bg-gray-50 rounded-lg p-4">
+                <div className="flex items-center mb-2">
+                  <span className="text-2xl mr-2">💼</span>
+                  <span className="text-sm font-medium text-gray-700">{t('positions')}</span>
+                </div>
+                <div className="text-lg font-bold text-gray-900">
+                  {marketUpdate.openPositionsCount || 0} {t('open')}
+                </div>
+                {marketUpdate.openPositionsCount > 0 && (
+                  <div className="text-sm text-gray-600">
+                    {t('profit')}: {marketUpdate.profitPercent ? marketUpdate.profitPercent.toFixed(2) : '0.00'}%
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         )}
 

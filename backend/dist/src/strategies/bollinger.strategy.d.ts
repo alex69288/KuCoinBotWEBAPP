@@ -4,6 +4,7 @@ export interface BollingerBandsConfig extends StrategyConfig {
     multiplier: number;
     takeProfitPercent: number;
     stopLossPercent: number;
+    commissionPercent: number;
 }
 export declare class BollingerBandsStrategy extends BaseStrategy {
     private lastSignal;

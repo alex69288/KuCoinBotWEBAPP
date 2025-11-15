@@ -1,16 +1,37 @@
 # KuCoin Trading Bot WebApp
 
-A Telegram Web App for trading on KuCoin cryptocurrency exchange with real-time market data and AI-powered features.
+A Telegram Web App for automated trading on KuCoin cryptocurrency exchange with AI-powered strategies and real-time market monitoring.
 
 ## Features
 
 - 📱 Telegram Web App interface
 - 📊 Real-time market data (tickers, order books)
 - 💰 Balance management
-- 📈 Trading order placement (limit/market, buy/sell)
+- 🤖 Automated trading with AI strategies (EMA+ML, MACD+RSI, Bollinger Bands, Price Action)
+- ⚙️ Strategy configuration with risk management
+- 📈 Real-time trading statistics and analytics
 - 🔄 Asynchronous order processing with Bull queues
 - 🤖 AI integration via Model Context Protocol (MCP)
 - ⚡ WebSocket real-time updates
+
+## Tech Stack
+
+### Backend
+- **Node.js 20+** with TypeScript
+- **Express** - Web framework
+- **Socket.io** - Real-time communication
+- **ccxt** - KuCoin API integration
+- **node-telegram-bot-api** - Telegram bot
+- **Bull** - Job queues
+- **PM2** - Process management
+
+### Frontend
+- **React 18** with TypeScript
+- **Vite** - Build tool
+- **Tailwind CSS** - Styling
+- **Zustand** - State management
+- **React Query** - API state management
+- **Recharts** - Data visualization
 
 ## Tech Stack
 

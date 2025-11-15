@@ -25,7 +25,7 @@ FROM node:18-alpine AS dev
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm ci
+RUN npm ci --include=dev
 
 COPY . .
 

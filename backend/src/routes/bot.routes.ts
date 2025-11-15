@@ -211,8 +211,8 @@ export default (bot: KuCoinBot) => {
   // Get market update message
   router.get('/market-update', async (req, res) => {
     try {
-      const message = await bot.getMarketUpdateMessage();
-      res.json({ message });
+      const update = await bot.getMarketUpdate();
+      res.json(update);
     } catch (error) {
       res.status(500).json({ error: 'failedToGetMarketUpdate' });
     }

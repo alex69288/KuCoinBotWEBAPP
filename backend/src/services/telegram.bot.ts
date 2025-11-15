@@ -34,7 +34,23 @@ bot.command('run', (ctx) => {
 bot.command('market', async (ctx) => {
   try {
     const botInstance = KuCoinBot.getInstance();
-    const message = await botInstance.getMarketUpdateMessage();
+    const update = await botInstance.getMarketUpdate();
+    const message = `📈 ОБНОВЛЕНИЕ РЫНКА
+💱 Пара: ₿ Bitcoin (${update.symbol})
+💰 Цена: ${update.price.toFixed(2)} USDT
+📊 24ч: ${update.change24h.toFixed(2)}%
+📈 EMA: ${update.emaDirection === 'ВВЕРХ' ? '🟢' : '🔴'} ${update.emaDirection} (${update.emaPercent.toFixed(2)}%)
+🎯 Сигнал: ${update.signal === 'buy' ? '🟢 ПОКУПКА' : update.signal === 'sell' ? '🔴 ПРОДАЖА' : '⚪️ ОЖИДАНИЕ'}
+🤖 ML: ${update.mlConfidence > 0.6 ? '🟢' : update.mlConfidence < 0.4 ? '🔴' : '⚪️'} ${update.mlText} (${update.mlPercent}%)
+
+${update.openPositionsCount > 0 ? `💼 ПОЗИЦИЯ ОТКРЫТА (РЕЖИМ %)
+📊 Количество открытых позиций: ${update.openPositionsCount}
+💰 Размер ставки: ${update.stakeSize.toFixed(2)} USDT
+🎯 Цена входа (TP): ${update.entryPrice.toFixed(2)} USDT
+📈 Текущая прибыль: ${update.profitPercent.toFixed(2)}% (${update.currentProfit.toFixed(4)} USDT)
+🎯 До Take Profit: ${update.toTPPercent.toFixed(1)}%
+🎯 Цель TP: ${update.config?.strategyConfig?.takeProfitPercent || 2}%
+🛡️ Комиссии: ${update.config?.strategyConfig?.commissionPercent || 0.2}% (${(Math.abs(update.currentProfit) * ((update.config?.strategyConfig?.commissionPercent || 0.2) / 100)).toFixed(4)} USDT)` : '💼 ПОЗИЦИЙ НЕТ'}`;
     ctx.reply(message);
   } catch (error) {
     ctx.reply(`Ошибка получения обновления рынка: ${error.message}`);

@@ -16,6 +16,10 @@ router.get('/balance', async (req, res) => {
 router.get('/ticker/:symbol', async (req, res) => {
     try {
         const { symbol } = req.params;
+        console.log('Fetching ticker for symbol:', symbol);
+        if (symbol.includes(':')) {
+            return res.status(400).json({ error: 'Invalid symbol: placeholder detected' });
+        }
         const ticker = await kucoinService.getTicker(symbol);
         res.json(ticker);
     }
@@ -27,6 +31,10 @@ router.get('/ticker/:symbol', async (req, res) => {
 router.get('/orderbook/:symbol', async (req, res) => {
     try {
         const { symbol } = req.params;
+        console.log('Fetching order book for symbol:', symbol);
+        if (symbol.includes(':')) {
+            return res.status(400).json({ error: 'Invalid symbol: placeholder detected' });
+        }
         const limit = parseInt(req.query.limit) || 20;
         const orderBook = await kucoinService.getOrderBook(symbol, limit);
         res.json(orderBook);
@@ -100,6 +108,16 @@ router.get('/trades', async (req, res) => {
     }
     catch (error) {
         res.status(500).json({ error: 'Failed to fetch trades' });
+    }
+});
+// Get markets
+router.get('/markets', async (req, res) => {
+    try {
+        const markets = await kucoinService.getMarkets();
+        res.json(markets);
+    }
+    catch (error) {
+        res.status(500).json({ error: 'Failed to fetch markets' });
     }
 });
 export default router;
