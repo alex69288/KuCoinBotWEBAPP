@@ -229,13 +229,6 @@ const TradingInterface: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-100 p-4">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">
-          KuCoin Trading Bot
-        </h1>
-
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">
-          KuCoin Trading Bot
-        </h1>
 
         {/* Tabs */}
         <div className="flex space-x-4 mb-6 border-b border-gray-200">
