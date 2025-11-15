@@ -1,5 +1,8 @@
 # Changelog
 
+## [v0.0.30] - 2025-11-16
+- Исправлена высота страницы: добавлен min-height: 100vh для html, body, #root и .gray-container, чтобы страница адаптировалась по размеру контента с минимумом 100vh
+
 ## [v0.0.29] - 2025-11-16
 - Исправлена проблема с вертикальной прокруткой: убрал overflow: hidden для html, body, #root и position: fixed для .menu, .top-tabs-wrapper, .top-tabs-outer, .gray-container, чтобы разрешить скролл всей страницы
 
