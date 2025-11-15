@@ -2,8 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Page root: allow page to grow and scroll when content larger than viewport.
-   When content is smaller, internal elements will use min-height to fill viewport. */
+/* Ensure page scrolling */
 html,
 body,
 #root {
@@ -91,16 +90,19 @@ body,
    autoHeight is used, but provide CSS fallback to prevent large empty space. */
 
 .mySwiper {
-  /* Slides should be at least viewport minus tabs height; allow expansion when content larger */
+  /* limit swiper to screen minus tabs height so slides can scroll inside */
   min-height: calc(100vh - var(--tabs-height, 64px)) !important;
-  /* do not force a max-height here — let slides grow with content when needed */
-  overflow: visible;
+  max-height: calc(100vh - var(--tabs-height, 64px));
+  overflow-y: auto;
+  /* slides will handle internal scroll */
 }
 
 .mySwiper .swiper-slide {
-  min-height: calc(100vh - var(--tabs-height, 64px)) !important;
+  min-height: 100% !important;
+  /* fill available height */
   display: block;
-  overflow: visible !important;
+  overflow-y: auto !important;
+  /* inner container will scroll */
 }
 
 .mySwiper .swiper-wrapper {
@@ -110,15 +112,15 @@ body,
 /* Make slides scroll internally if content exceeds the viewport height.
    Calculate max height based on the top tabs height via CSS variable --tabs-height. */
 .mySwiper .swiper-slide>div {
-  /* Ensure slide content takes natural height but is at least viewport minus tabs.
-     If content is short — slide will fill available viewport space (no scroll).
-     If content is long — slide will expand to fit content (page-level scroll). */
-  overflow: visible;
-  height: auto;
-  min-height: calc(100vh - var(--tabs-height, 64px));
-  overscroll-behavior: auto;
+  overflow-y: auto;
+  height: 100%;
+  max-height: calc(100vh - var(--tabs-height, 64px));
+  overscroll-behavior: contain;
+  /* keep scroll inside slide */
   -webkit-overflow-scrolling: touch;
-  touch-action: auto;
+  /* smooth on iOS */
+  touch-action: pan-y;
+  /* allow vertical pan gestures */
 }
 
 /* removed: Swiper auto-height – we use fixed viewport-based height for internal scrolling */
@@ -183,11 +185,14 @@ body,
 /* Ensure only the menu scrolls, disable page scroll */
 /* Disable page scroll and allow scrolling only inside the menu. */
 /* Prevent page from scrolling and avoid scroll chain/overscroll */
-
-
+html,
+body,
+#root,
 [data-testid="page-container"] {
-  /* Page container should be at least full viewport height and grow with content */
-  min-height: 100vh;
-  height: auto;
-  overflow: visible;
+  height: 100%;
+  /* overflow: hidden !important; */
+  /* Disabled to allow page scroll */
+  /* overscroll-behavior: none; */
+  /* Disabled */
+  /* Stop touch/scroll from propagating to parent */
 }
