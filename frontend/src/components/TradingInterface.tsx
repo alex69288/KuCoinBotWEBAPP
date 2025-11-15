@@ -312,8 +312,10 @@ const TradingInterface: React.FC = () => {
             ref={swiperRef}
             onSlideChange={handleSlideChange}
             className="mySwiper"
-            autoHeight={true}
+            /* Use fixed swiper height (calculated via --tabs-height) so slides can scroll internally */
+            /* autoHeight removed to avoid outer page height change */
             initialSlide={tabs.indexOf(activeTab)}
+            nested={true}
           >
             <SwiperSlide>
               <div>
