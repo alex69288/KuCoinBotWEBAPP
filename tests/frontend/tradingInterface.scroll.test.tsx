@@ -40,5 +40,14 @@ describe('TradingInterface scroll behavior', () => {
     expect(wrapper.className).toMatch(/overflow-x-auto/);
     expect(tabs.className).toMatch(/whitespace-nowrap/);
     expect(page.className).toMatch(/overflow-y-auto/);
+
+    // Убедимся, что у контейнера нет горизонтального padding (удалили p-4)
+    expect(page.className).not.toMatch(/\bp-4\b/);
+    // Убедимся, что теперь используется вертикальный padding: 1rem сверху и 1.5rem снизу (pt-4 pb-6)
+    expect(page.className).toMatch(/pt-4/);
+    expect(page.className).toMatch(/pb-6/);
+    // Убедимся, что wrapper не использует компенсацию ширины (-mx-4 px-4)
+    expect(wrapper.className).not.toMatch(/-mx-4/);
+    expect(wrapper.className).not.toMatch(/px-4/);
   });
 });

@@ -248,7 +248,9 @@ const TradingInterface: React.FC = () => {
 
   return (
     // Добавляем возможность вертикального скролла страницы, если контент выходит за высоту экрана
-    <div data-testid="page-container" className="min-h-screen bg-gray-100 p-4 overflow-y-auto">
+    // Убираем горизонтальные отступы (padding) по левому и правому краям, высота контейнера подстраивается по контенту
+    // Добавляем отступ снизу чтобы последний блок был на 24px от низа экрана
+    <div data-testid="page-container" className="bg-gray-100 pt-4 pb-6 overflow-y-auto">
       <div className="max-w-7xl mx-auto">
 
         {/* Tabs */}
@@ -257,7 +259,8 @@ const TradingInterface: React.FC = () => {
           - overflow-x-auto — включит скролл только при необходимости
           - whitespace-nowrap — предотвратит перенос кнопок на новую строку
         */}
-        <div className="overflow-x-auto -mx-4 px-4" data-testid="top-tabs-wrapper">
+        {/* Убрали компенсацию горизонтальных отступов (-mx-4 px-4), т.к. сбросили padding у контейнера */}
+        <div className="overflow-x-auto" data-testid="top-tabs-wrapper">
           <div className="flex space-x-4 mb-6 border-b border-gray-200 whitespace-nowrap" data-testid="top-tabs">
             <button onClick={() => handleTabChange('home')} className={`py-2 px-4 ${activeTab === 'home' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500'}`}>{t('home')}</button>
             <button onClick={() => handleTabChange('status')} className={`py-2 px-4 ${activeTab === 'status' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500'}`}>{t('statusTab')}</button>
@@ -279,7 +282,7 @@ const TradingInterface: React.FC = () => {
               {marketUpdate && (
                 <div className="bg-white rounded-lg shadow-md p-6 mb-6">
                   <h2 className="text-xl font-semibold mb-4">{t('marketUpdate')}</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {/* Price Card */}
                     <div className="bg-gray-50 rounded-lg p-4">
                       <div className="flex items-center mb-2">
@@ -362,12 +365,12 @@ const TradingInterface: React.FC = () => {
                           {t('profit')}: {marketUpdate.profitPercent ? marketUpdate.profitPercent.toFixed(2) : '0.00'}%
                         </div>
                       )}
-                        <OpenPositionsModal
-                          open={showPositionsModal}
-                          onClose={() => setShowPositionsModal(false)}
-                          positions={marketUpdate.positionsList || []}
-                          currentPrice={marketUpdate.price}
-                        />
+                      <OpenPositionsModal
+                        open={showPositionsModal}
+                        onClose={() => setShowPositionsModal(false)}
+                        positions={marketUpdate.positionsList || []}
+                        currentPrice={marketUpdate.price}
+                      />
                     </div>
                   </div>
                 </div>
@@ -377,7 +380,7 @@ const TradingInterface: React.FC = () => {
               {botStats && (
                 <div className="bg-white rounded-lg shadow-md p-6 mb-6">
                   <h2 className="text-xl font-semibold mb-4">{t('botStatistics')}</h2>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                     <div className="text-center">
                       <div className="text-2xl font-bold text-blue-600">{botStats.totalTrades || 0}</div>
                       <div className="text-sm text-gray-600">{t('totalTrades')}</div>
@@ -406,7 +409,7 @@ const TradingInterface: React.FC = () => {
             <div>
               <div className="bg-white rounded-lg shadow-md p-6 mb-6">
                 <h2 className="text-xl font-semibold mb-4">{t('botControl')}</h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">{t('botStatus')}</label>
                     <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${botEnabled ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
@@ -576,7 +579,7 @@ const TradingInterface: React.FC = () => {
             <div className="bg-white rounded-lg shadow-md p-6 mb-6">
               <h2 className="text-xl font-semibold mb-4">{t('strategyConfig')}</h2>
               {selectedStrategy === 'ema-ml' && (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">{t('fastPeriod')}</label>
                     <input
