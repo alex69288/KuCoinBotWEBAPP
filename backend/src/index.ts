@@ -106,7 +106,7 @@ try {
 
   const botOptions = useWebhook ? {} : { polling: true };
   let bot: TelegramBot | undefined;
-  if (process.env.TELEGRAM_BOT_TOKEN) {
+  if (process.env.TELEGRAM_BOT_TOKEN && isProduction) {  // Only create bot in production to avoid conflicts
     try {
       bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, botOptions);
     } catch (error) {
@@ -114,7 +114,7 @@ try {
       throw error;
     }
   } else {
-    console.log('ℹ️ Telegram bot disabled (no token)');
+    console.log('ℹ️ Telegram bot disabled (no token or not production)');
   }
 
   // Set webhook URL if using webhook

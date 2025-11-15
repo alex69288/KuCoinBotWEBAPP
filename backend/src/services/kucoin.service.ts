@@ -55,7 +55,12 @@ export class KuCoinService {
 
   async getHistoricalData(symbol: string, timeframe: string = '1h', limit: number = 100): Promise<any[]> {
     try {
-      const ohlcv = await this.exchange.fetchOHLCV(symbol, timeframe, undefined, limit);
+      // Add timeout to prevent hanging
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Request timeout')), 10000)
+      );
+      const fetchPromise = this.exchange.fetchOHLCV(symbol, timeframe, undefined, limit);
+      const ohlcv = await Promise.race([fetchPromise, timeoutPromise]) as any[];
       return ohlcv.map((candle: any) => ({
         timestamp: candle[0],
         open: candle[1],
@@ -66,7 +71,8 @@ export class KuCoinService {
       }));
     } catch (error) {
       console.error('Error fetching historical data:', error);
-      throw error;
+      // Return empty array to continue without data
+      return [];
     }
   }
 

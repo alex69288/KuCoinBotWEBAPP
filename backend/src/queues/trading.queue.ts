@@ -85,6 +85,13 @@ class InMemoryTradingQueue {
 let tradingQueue: any;
 
 async function initQueue() {
+  // For development, use in-memory queue to avoid Redis dependency
+  if (process.env.NODE_ENV !== 'production') {
+    console.log('ℹ️ Using in-memory queue for development');
+    tradingQueue = new InMemoryTradingQueue();
+    return;
+  }
+
   try {
     // Try to import Bull and create Redis queue
     const Queue = (await import('bull')).default;
@@ -132,9 +139,12 @@ async function initQueue() {
       },
     });
 
-    // Test Redis connection
+    // Test Redis connection with timeout
     try {
-      await tradingQueue.isReady();
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Redis connection timeout')), 5000)
+      );
+      await Promise.race([tradingQueue.isReady(), timeoutPromise]);
       console.log('✅ Redis queue initialized successfully');
     } catch (error) {
       console.error('❌ Redis connection failed:', error);

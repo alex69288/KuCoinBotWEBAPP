@@ -359,6 +359,10 @@ export class KuCoinBot {
   }
 
   private async trainMLModel(): Promise<void> {
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('Skipping ML training in development mode');
+      return;
+    }
     try {
       // Get historical data for training (last 500 candles, 1h timeframe)
       const historicalData = await this.kucoinService.getHistoricalData(this.config.symbols[0], '1h', 500);
@@ -368,6 +372,7 @@ export class KuCoinBot {
       }
     } catch (error) {
       console.error('Failed to train ML model:', error);
+      console.log('Continuing without ML training');
     }
   }
 
