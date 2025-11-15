@@ -74,13 +74,23 @@ try {
     maxDailyLoss: parseFloat(process.env.MAX_DAILY_LOSS || '5'),
     maxConsecutiveLosses: parseInt(process.env.MAX_CONSECUTIVE_LOSSES || '3'),
     positionSizePercent: parseFloat(process.env.POSITION_SIZE_PERCENT || '1'),
+    volatilityLimit: parseFloat(process.env.VOLATILITY_LIMIT || '0.05'),
+    minOrderAmount: parseFloat(process.env.MIN_ORDER_AMOUNT || '10'),
     telegramToken: process.env.TELEGRAM_BOT_TOKEN!,
     telegramChatId: process.env.TELEGRAM_CHAT_ID!,
     symbols: (process.env.TRADING_SYMBOLS || 'BTC/USDT').split(','),
     strategy: (process.env.TRADING_STRATEGY || 'ema-ml') as 'ema-ml',
     strategyConfig: {
-      emaPeriod: parseInt(process.env.EMA_PERIOD || '20'),
-      mlThreshold: parseFloat(process.env.ML_THRESHOLD || '0.7'),
+      symbol: (process.env.TRADING_SYMBOLS || 'BTC/USDT').split(',')[0],
+      fastPeriod: parseInt(process.env.EMA_FAST_PERIOD || '12'),
+      slowPeriod: parseInt(process.env.EMA_SLOW_PERIOD || '26'),
+      emaThreshold: parseFloat(process.env.EMA_THRESHOLD || '0.5'),
+      mlBuyThreshold: parseFloat(process.env.ML_BUY_THRESHOLD || '0.6'),
+      mlSellThreshold: parseFloat(process.env.ML_SELL_THRESHOLD || '0.4'),
+      takeProfitPercent: parseFloat(process.env.TAKE_PROFIT_PERCENT || '2'),
+      stopLossPercent: parseFloat(process.env.STOP_LOSS_PERCENT || '1'),
+      trailingStop: process.env.TRAILING_STOP === 'true',
+      minHoldTime: parseInt(process.env.MIN_HOLD_TIME || '60')
     },
   };
 

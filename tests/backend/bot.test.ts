@@ -19,6 +19,8 @@ describe('KuCoinBot', () => {
     maxDailyLoss: 5,
     maxConsecutiveLosses: 3,
     positionSizePercent: 10,
+    volatilityLimit: 0.05, // 5%
+    minOrderAmount: 10, // 10 USDT
     telegramToken: 'test_token',
     telegramChatId: 'test_chat',
     symbols: ['BTC/USDT'],
@@ -66,5 +68,22 @@ describe('KuCoinBot', () => {
   test('should update config', () => {
     bot.updateConfig({ enabled: false });
     expect(bot.getStatus().config.enabled).toBe(false);
+  });
+
+  test('should simulate trades in demo mode', async () => {
+    // Установить тестовые данные рынка
+    (bot as any).marketData = [{ close: 50000 }];
+
+    const initialBalance = bot.getStatus().stats.currentBalance;
+
+    // Купить
+    await (bot as any).executeTrade('BTC/USDT', 'buy', 0.001);
+    expect(bot.getStatus().positions.length).toBe(1);
+    expect(bot.getStatus().stats.currentBalance).toBeLessThan(initialBalance);
+
+    // Продать
+    await (bot as any).executeTrade('BTC/USDT', 'sell', 0.001);
+    expect(bot.getStatus().positions.length).toBe(0);
+    expect(bot.getStatus().stats.currentBalance).toBeGreaterThanOrEqual(initialBalance);
   });
 });

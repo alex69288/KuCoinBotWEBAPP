@@ -20,7 +20,7 @@ describe('Bollinger Bands Strategy', () => {
     open: 100,
     high: 105,
     low: 95,
-      close: 100,
+    close: 100,
     volume: 1000,
     timestamp: i,
   }));

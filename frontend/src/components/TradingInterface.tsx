@@ -1,9 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTradingContext } from '../context/TradingContext';
 import { kucoinApi } from '../api/kucoin.api';
 import { botApi } from '../api/bot.api';
 import { useTranslation } from 'react-i18next';
+import axios from 'axios';
+
+interface DemoTrade {
+  symbol: string;
+  side: 'buy' | 'sell';
+  amount: number;
+  price: number;
+  timestamp: number;
+}
 
 const TradingInterface: React.FC = () => {
   const { t } = useTranslation();
@@ -18,6 +27,8 @@ const TradingInterface: React.FC = () => {
   const [botEnabled, setBotEnabled] = useState(false);
   const [selectedStrategy, setSelectedStrategy] = useState('ema-ml');
   const [strategyConfig, setStrategyConfig] = useState<any>({});
+
+  const queryClient = useQueryClient();
 
   // Fetch balance
   const { data: balanceData, refetch: refetchBalance } = useQuery({
@@ -85,6 +96,29 @@ const TradingInterface: React.FC = () => {
     queryFn: botApi.getStats,
     refetchInterval: 10000, // Update every 10 seconds
   });
+
+  // Mutations
+  const toggleDemoMode = useMutation<void, Error, { enabled: boolean }>(
+    async ({ enabled }) => {
+      await axios.post('/api/demo-mode', { enabled });
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ['demoTrades'] });
+      },
+    }
+  );
+
+  const clearDemoTrades = useMutation<void, Error>(
+    async () => {
+      await axios.delete('/api/demo-trades');
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ['demoTrades'] });
+      },
+    }
+  );
 
   useEffect(() => {
     if (balanceData) {
@@ -753,6 +787,39 @@ const TradingInterface: React.FC = () => {
               )}
             </div>
           </div>
+        </div>
+
+        {/* Demo Mode Control */}
+        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+          <h2 className="text-xl font-semibold mb-4">Demo Mode</h2>
+          <div className="space-y-4">
+            <button
+              className="px-4 py-2 bg-blue-500 text-white rounded"
+              onClick={() => toggleDemoMode.mutate({ enabled: true })}
+            >
+              Enable Demo Mode
+            </button>
+            <button
+              className="px-4 py-2 bg-red-500 text-white rounded"
+              onClick={() => toggleDemoMode.mutate({ enabled: false })}
+            >
+              Disable Demo Mode
+            </button>
+            <button
+              className="px-4 py-2 bg-yellow-500 text-white rounded"
+              onClick={() => clearDemoTrades.mutate()}
+            >
+              Clear Demo Trades
+            </button>
+          </div>
+          <h3 className="text-lg font-medium mt-6">Demo Trades</h3>
+          <ul className="mt-4 space-y-2">
+            {demoTrades.map((trade: DemoTrade, index: number) => (
+              <li key={index} className="text-sm">
+                {trade.side.toUpperCase()} {trade.amount} {trade.symbol} at ${trade.price} on {new Date(trade.timestamp).toLocaleString()}
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </div>

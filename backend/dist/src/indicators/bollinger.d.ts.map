@@ -1,0 +1,1 @@
+{"version":3,"file":"bollinger.d.ts","sourceRoot":"","sources":["../../../src/indicators/bollinger.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,oBAAoB;IACnC,KAAK,EAAE,MAAM,EAAE,CAAC;IAChB,MAAM,EAAE,MAAM,EAAE,CAAC;IACjB,KAAK,EAAE,MAAM,EAAE,CAAC;CACjB;AAED,wBAAgB,uBAAuB,CACrC,MAAM,EAAE,MAAM,EAAE,EAChB,MAAM,GAAE,MAAW,EACnB,MAAM,GAAE,MAAU,GACjB,oBAAoB,CAoBtB"}

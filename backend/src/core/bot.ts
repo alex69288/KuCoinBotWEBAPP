@@ -13,6 +13,8 @@ interface BotConfig {
   maxDailyLoss: number; // в %
   maxConsecutiveLosses: number;
   positionSizePercent: number; // % от баланса
+  volatilityLimit: number; // максимальная волатильность для торговли
+  minOrderAmount: number; // минимальная сумма заказа в USDT
   telegramToken: string;
   telegramChatId: string;
   symbols: string[];
@@ -63,6 +65,8 @@ export class KuCoinBot {
   private marketData: OHLCVData[] = [];
 
   private static instance: KuCoinBot | null = null;
+
+  private demoTrades: Array<{ symbol: string; side: 'buy' | 'sell'; amount: number; price: number; timestamp: number }> = [];
 
   constructor(config: BotConfig) {
     this.config = config;
@@ -138,18 +142,185 @@ export class KuCoinBot {
     return positionSize / currentPrice;
   }
 
+  private checkRiskLimits(): boolean {
+    // Проверка дневного лимита потерь
+    const dailyLoss = this.dailyStats.startBalance - this.dailyStats.currentBalance;
+    if (dailyLoss >= this.config.maxDailyLoss) {
+      console.log(`Daily loss limit exceeded: ${dailyLoss} >= ${this.config.maxDailyLoss}`);
+      return false;
+    }
+
+    // Проверка серии убытков
+    if (this.riskManager.consecutiveLosses >= this.config.maxConsecutiveLosses) {
+      console.log(`Consecutive losses limit exceeded: ${this.riskManager.consecutiveLosses} >= ${this.config.maxConsecutiveLosses}`);
+      return false;
+    }
+
+    // Проверка волатильности
+    if (this.marketData.length > 10) {
+      const volatility = this.calculateVolatility();
+      if (volatility > this.config.volatilityLimit) {
+        console.log(`Volatility too high: ${volatility} > ${this.config.volatilityLimit}`);
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  private calculateVolatility(): number {
+    if (this.marketData.length < 10) return 0;
+
+    const closes = this.marketData.slice(-10).map(d => d.close);
+    const mean = closes.reduce((sum, price) => sum + price, 0) / closes.length;
+    const variance = closes.reduce((sum, price) => sum + Math.pow(price - mean, 2), 0) / closes.length;
+    return Math.sqrt(variance) / mean; // Коэффициент вариации
+  }
+
+  private simulateTrade(symbol: string, side: 'buy' | 'sell', amount: number, price: number): void {
+    const timestamp = Date.now();
+    this.demoTrades.push({ symbol, side, amount, price, timestamp });
+    console.log(`Simulated trade: ${side} ${amount} ${symbol} at ${price}`);
+
+    if (side === 'buy') {
+      // Добавить позицию
+      const position: Position = {
+        symbol,
+        side: 'buy',
+        amount,
+        entryPrice: price,
+        timestamp
+      };
+      this.positions.push(position);
+      // Вычесть стоимость из баланса
+      const cost = amount * price;
+      this.dailyStats.currentBalance -= cost;
+      console.log(`Position opened: ${amount} ${symbol} at ${price}, cost: ${cost}, new balance: ${this.dailyStats.currentBalance}`);
+    } else if (side === 'sell') {
+      // Найти и закрыть позицию
+      const positionIndex = this.positions.findIndex(p => p.symbol === symbol && p.side === 'buy');
+      if (positionIndex !== -1) {
+        const position = this.positions[positionIndex];
+        const profit = (price - position.entryPrice) * amount;
+        this.positions.splice(positionIndex, 1);
+        this.dailyStats.currentBalance += amount * price; // Вернуть стоимость продажи
+        this.recordTrade(symbol, side, amount, price, profit);
+        console.log(`Position closed: ${amount} ${symbol} at ${price}, profit: ${profit}, new balance: ${this.dailyStats.currentBalance}`);
+      } else {
+        console.log(`No open position found for ${symbol} to sell`);
+      }
+    }
+  }
+
+  public getDemoTrades(): Array<{ symbol: string; side: 'buy' | 'sell'; amount: number; price: number; timestamp: number }> {
+    return this.demoTrades;
+  }
+
+  public clearDemoTrades(): void {
+    this.demoTrades = [];
+    console.log('Demo trades cleared.');
+  }
+
+  private async executeTrade(symbol: string, side: 'buy' | 'sell', amount: number): Promise<void> {
+    const currentPrice = this.marketData[this.marketData.length - 1]?.close || 0;
+    if (this.config.demoMode) {
+      this.simulateTrade(symbol, side, amount, currentPrice);
+    } else {
+      try {
+        // Проверка минимального размера заказа
+        const orderValue = amount * currentPrice;
+        if (orderValue < this.config.minOrderAmount) {
+          console.log(`Order value too small: ${orderValue} < ${this.config.minOrderAmount}`);
+          return;
+        }
+
+        // Реальный режим
+        const result = await this.kucoinService.placeOrder(symbol, side, amount);
+        console.log(`Real trade executed: ${result}`);
+
+        if (side === 'buy') {
+          // Добавить позицию
+          const position: Position = {
+            symbol,
+            side: 'buy',
+            amount,
+            entryPrice: currentPrice,
+            timestamp: Date.now()
+          };
+          this.positions.push(position);
+          // Вычесть стоимость из баланса (примерно, точный расчет позже)
+          const cost = amount * currentPrice;
+          this.dailyStats.currentBalance -= cost;
+          this.recordTrade(symbol, side, amount, currentPrice, 0); // Profit 0 для покупки
+        } else if (side === 'sell') {
+          // Найти и закрыть позицию
+          const positionIndex = this.positions.findIndex(p => p.symbol === symbol && p.side === 'buy');
+          if (positionIndex !== -1) {
+            const position = this.positions[positionIndex];
+            const profit = (currentPrice - position.entryPrice) * amount;
+            this.positions.splice(positionIndex, 1);
+            this.dailyStats.currentBalance += amount * currentPrice; // Вернуть стоимость продажи
+            this.recordTrade(symbol, side, amount, currentPrice, profit);
+          } else {
+            console.log(`No open position found for ${symbol} to sell`);
+            this.recordTrade(symbol, side, amount, currentPrice, 0);
+          }
+        }
+      } catch (error) {
+        console.error('Failed to execute trade:', error);
+      }
+    }
+  }
+
+  private recordTrade(symbol: string, side: 'buy' | 'sell', amount: number, price: number, profit: number): void {
+    const trade: Trade = {
+      id: Date.now().toString(),
+      symbol,
+      side,
+      amount,
+      profit,
+      timestamp: new Date()
+    };
+
+    // Обновление статистики
+    this.dailyStats.totalTrades++;
+    if (profit > 0) {
+      this.dailyStats.winningTrades++;
+      this.riskManager.consecutiveLosses = 0;
+    } else {
+      this.dailyStats.losingTrades++;
+      this.riskManager.consecutiveLosses++;
+    }
+    this.dailyStats.totalProfit += profit;
+    this.dailyStats.currentBalance += profit;
+
+    // Обновление максимальной просадки
+    const drawdown = this.dailyStats.startBalance - this.dailyStats.currentBalance;
+    if (drawdown > this.dailyStats.maxDrawdown) {
+      this.dailyStats.maxDrawdown = drawdown;
+    }
+
+    console.log(`Trade recorded: ${trade.side} ${trade.amount} ${trade.symbol} profit: ${trade.profit}`);
+  }
+
   async start(): Promise<void> {
     if (this.isRunning) return;
     this.isRunning = true;
     console.log('🤖 KuCoin Bot started');
 
     // Инициализация баланса
-    try {
-      const balance = await this.kucoinService.getBalance();
-      this.dailyStats.startBalance = balance.total.USDT || 0;
+    if (this.config.demoMode) {
+      this.dailyStats.startBalance = 1000; // Виртуальный начальный баланс для демо
       this.dailyStats.currentBalance = this.dailyStats.startBalance;
-    } catch (error) {
-      console.error('Failed to initialize balance:', error);
+      console.log('Demo mode: Virtual balance initialized to 1000 USDT');
+    } else {
+      try {
+        const balance = await this.kucoinService.getBalance();
+        this.dailyStats.startBalance = balance.total.USDT || 0;
+        this.dailyStats.currentBalance = this.dailyStats.startBalance;
+      } catch (error) {
+        console.error('Failed to initialize balance:', error);
+      }
     }
 
     // Train ML model with historical data
@@ -208,58 +379,6 @@ export class KuCoinBot {
     }
   }
 
-  private checkRiskLimits(): boolean {
-    const { dailyLoss, consecutiveLosses } = this.riskManager;
-    const { maxDailyLoss, maxConsecutiveLosses } = this.config;
-
-    // Check daily loss limit
-    if (dailyLoss <= -maxDailyLoss) {
-      console.warn('Daily loss limit reached. Stopping trading.');
-      this.isRunning = false;
-      return false;
-    }
-
-    // Check consecutive losses limit
-    if (consecutiveLosses >= maxConsecutiveLosses) {
-      console.warn('Consecutive losses limit reached. Stopping trading.');
-      this.isRunning = false;
-      return false;
-    }
-
-    return true;
-  }
-
-  private updateRiskStats(profit: number): void {
-    this.dailyStats.totalProfit += profit;
-    this.riskManager.dailyLoss += profit;
-
-    if (profit > 0) {
-      this.riskManager.consecutiveLosses = 0;
-      this.riskManager.lastTradeResult = true;
-    } else {
-      this.riskManager.consecutiveLosses += 1;
-      this.riskManager.lastTradeResult = false;
-    }
-  }
-
-  private async executeTrade(symbol: string, side: 'buy' | 'sell', amount: number): Promise<void> {
-    if (this.config.demoMode) {
-      console.log(`Demo trade executed: ${side} ${amount} ${symbol}`);
-      const price = this.marketData[this.marketData.length - 1]?.close || 0;
-      const profit = side === 'buy' ? -price * amount : price * amount;
-      this.updateRiskStats(profit);
-      return;
-    }
-
-    // Реальная торговля
-    try {
-      const result = await this.kucoinService.placeOrder(symbol, side, amount);
-      console.log(`Trade executed: ${side} ${amount} ${symbol}`, result);
-    } catch (error) {
-      console.error('Failed to execute trade:', error);
-    }
-  }
-
   private calculateTradeProfit(): number {
     // Placeholder logic for calculating trade profit
     // Replace with actual implementation
@@ -315,19 +434,11 @@ export class KuCoinBot {
     }
 
     try {
-      const job = await addTradeJob({
-        symbol,
-        type,
-        side,
-        amount,
-        price,
-        userId: 'manual',
-      });
-
+      // Выполнять trade напрямую, без очереди
+      await this.executeTrade(symbol, side, amount);
       return {
-        jobId: job.id,
-        status: 'queued',
-        message: 'Trade queued successfully'
+        status: 'executed',
+        message: 'Trade executed successfully'
       };
     } catch (error) {
       console.error('Failed to execute manual trade:', error);
@@ -337,5 +448,10 @@ export class KuCoinBot {
 
   updateConfig(newConfig: Partial<BotConfig>): void {
     this.config = { ...this.config, ...newConfig };
+  }
+
+  public setDemoMode(enabled: boolean): void {
+    this.config.demoMode = enabled;
+    console.log(`Demo mode ${enabled ? 'enabled' : 'disabled'}`);
   }
 }

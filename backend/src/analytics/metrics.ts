@@ -1,47 +1,66 @@
-import pandas as pd;
+import { Trade } from '../core/bot';
 
 export class TradingMetrics {
-  static calculateMetrics(trades: any[]): any {
-    const df = pd.DataFrame(trades);
-
+  static calculateMetrics(trades: Trade[]): any {
     // Общее количество сделок
-    const totalTrades = df.shape[0];
+    const totalTrades = trades.length;
 
     // Win Rate
-    const wins = df[df['profit'] > 0].shape[0];
-    const winRate = (wins / totalTrades) * 100;
+    const wins = trades.filter(t => t.profit > 0).length;
+    const winRate = totalTrades > 0 ? (wins / totalTrades) * 100 : 0;
 
     // Profit Factor
-    const totalProfit = df[df['profit'] > 0]['profit'].sum();
-    const totalLoss = df[df['profit'] < 0]['profit'].sum();
-    const profitFactor = totalProfit / Math.abs(totalLoss);
+    const totalProfit = trades.filter(t => t.profit > 0).reduce((sum, t) => sum + t.profit, 0);
+    const totalLoss = trades.filter(t => t.profit < 0).reduce((sum, t) => sum + Math.abs(t.profit), 0);
+    const profitFactor = totalLoss > 0 ? totalProfit / totalLoss : totalProfit > 0 ? Infinity : 0;
 
     // Общая прибыль
-    const netProfit = df['profit'].sum();
+    const netProfit = trades.reduce((sum, t) => sum + t.profit, 0);
 
-    // Максимальная просадка
-    const drawdown = df['balance'].min();
+    // Максимальная просадка (упрощенная версия)
+    let peak = 0;
+    let balance = 0;
+    let maxDrawdown = 0;
+    trades.forEach(trade => {
+      balance += trade.profit;
+      if (balance > peak) peak = balance;
+      const drawdown = peak - balance;
+      if (drawdown > maxDrawdown) maxDrawdown = drawdown;
+    });
 
     // Лучшая/худшая сделка
-    const bestTrade = df['profit'].max();
-    const worstTrade = df['profit'].min();
+    const profits = trades.map(t => t.profit);
+    const bestTrade = profits.length > 0 ? Math.max(...profits) : 0;
+    const worstTrade = profits.length > 0 ? Math.min(...profits) : 0;
 
     // Средняя прибыль/убыток
-    const avgProfit = df['profit'].mean();
+    const avgProfit = totalTrades > 0 ? netProfit / totalTrades : 0;
 
-    // Серии побед/поражений
-    const streaks = df['profit'].apply((x) => (x > 0 ? 1 : -1)).cumsum();
+    // Серии побед/поражений (упрощенная версия)
+    let currentStreak = 0;
+    let maxWinStreak = 0;
+    let maxLossStreak = 0;
+    trades.forEach(trade => {
+      if (trade.profit > 0) {
+        currentStreak = Math.max(0, currentStreak) + 1;
+        maxWinStreak = Math.max(maxWinStreak, currentStreak);
+      } else {
+        currentStreak = Math.min(0, currentStreak) - 1;
+        maxLossStreak = Math.max(maxLossStreak, -currentStreak);
+      }
+    });
 
     return {
       totalTrades,
       winRate,
       profitFactor,
       netProfit,
-      drawdown,
+      maxDrawdown,
       bestTrade,
       worstTrade,
       avgProfit,
-      streaks,
+      maxWinStreak,
+      maxLossStreak,
     };
   }
 }

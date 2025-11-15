@@ -1,0 +1,1 @@
+{"version":3,"file":"macd.d.ts","sourceRoot":"","sources":["../../../src/indicators/macd.ts"],"names":[],"mappings":"AAEA,MAAM,WAAW,UAAU;IACzB,IAAI,EAAE,MAAM,EAAE,CAAC;IACf,MAAM,EAAE,MAAM,EAAE,CAAC;IACjB,SAAS,EAAE,MAAM,EAAE,CAAC;CACrB;AAED,wBAAgB,aAAa,CAC3B,MAAM,EAAE,MAAM,EAAE,EAChB,UAAU,GAAE,MAAW,EACvB,UAAU,GAAE,MAAW,EACvB,YAAY,GAAE,MAAU,GACvB,UAAU,CAwBZ"}
