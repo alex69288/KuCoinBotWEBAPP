@@ -39,7 +39,8 @@ describe('TradingInterface scroll behavior', () => {
 
     expect(wrapper.className).toMatch(/overflow-x-auto/);
     expect(tabs.className).toMatch(/whitespace-nowrap/);
-    expect(page.className).toMatch(/overflow-y-auto/);
+    // Убедимся, что страница не принудительно выставлена на внутренний скролл — теперь она подстраивается под размер контента
+    expect(page.className).not.toMatch(/overflow-y-auto/);
 
     // Проверяем, что верхнее меню приклеено при скролле и имеет границу по всей ширине
     expect(wrapper.className).toMatch(/sticky|top-0/);

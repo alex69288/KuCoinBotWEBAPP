@@ -6,15 +6,17 @@
 /* Add 24px margin to blocks that explicitly opt in via .page-block */
 .page-block {
   /* Add top and bottom separation between logical blocks on the page */
-  margin: 24px 0;
-  /* Keep side spacing controlled by container; this keeps grid/card layouts intact */
+  /* 24px vertical gap and 12px horizontal gap as requested */
+  margin: 24px 12px;
+  /* Keep side spacing controlled by container for very narrow layouts; margins prevent touching edges */
 }
 
 /* Ensure page container height grows with content and does not artificially fill screen */
 [data-testid="page-container"] {
   /* Allow page container to size to its content to avoid large empty spaces below content */
-  min-height: auto;
-  height: auto;
+  min-height: 0 !important;
+  height: auto !important;
+  overflow-y: visible !important;
 }
 
 /* Hide default scrollbar for horizontal overflow (top tabs wrapper). Use attribute selector so tests unaffected. */
@@ -23,6 +25,10 @@
   /* IE and Edge */
   scrollbar-width: none;
   /* Firefox */
+  /* Bring the border 24px up visually by pulling the element up and adding top padding so tabs don't move visually.
+     This keeps the sticky behavior while moving the bottom border (border-b) 24px higher. */
+  margin-top: -24px;
+  padding-top: 24px;
   /* Hide any visible scrollbar track background and prevent an ugly gray bar when scrolling horizontally */
   overflow-y: hidden;
 }

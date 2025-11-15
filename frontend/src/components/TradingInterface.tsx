@@ -250,7 +250,7 @@ const TradingInterface: React.FC = () => {
     // Добавляем возможность вертикального скролла страницы, если контент выходит за высоту экрана
     // Убираем горизонтальные отступы (padding) по левому и правому краям, высота контейнера подстраивается по контенту
     // Добавляем отступ снизу чтобы последний блок был на 24px от низа экрана
-    <div data-testid="page-container" className="bg-gray-100 pt-4 pb-6 overflow-y-auto">
+    <div data-testid="page-container" className="bg-gray-100 pt-4 pb-6">
       <div className="max-w-7xl mx-auto">
 
         {/* Tabs */}
@@ -260,8 +260,8 @@ const TradingInterface: React.FC = () => {
           - whitespace-nowrap — предотвратит перенос кнопок на новую строку
         */}
         {/* Убрали компенсацию горизонтальных отступов (-mx-4 px-4), т.к. сбросили padding у контейнера */}
-        <div className="overflow-x-auto" data-testid="top-tabs-wrapper">
-          <div className="flex space-x-4 mb-6 border-b border-gray-200 whitespace-nowrap" data-testid="top-tabs">
+        <div className="overflow-x-auto border-b border-gray-200 sticky top-0 z-30 bg-gray-100" data-testid="top-tabs-wrapper">
+          <div className="flex space-x-4 mb-6 whitespace-nowrap" data-testid="top-tabs">
             <button onClick={() => handleTabChange('home')} className={`py-2 px-4 ${activeTab === 'home' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500'}`}>{t('home')}</button>
             <button onClick={() => handleTabChange('status')} className={`py-2 px-4 ${activeTab === 'status' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500'}`}>{t('statusTab')}</button>
             <button onClick={() => handleTabChange('account')} className={`py-2 px-4 ${activeTab === 'account' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500'}`}>{t('account')}</button>
@@ -280,7 +280,7 @@ const TradingInterface: React.FC = () => {
           <SwiperSlide>
             <div>
               {marketUpdate && (
-                <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+                <div className="bg-white rounded-lg shadow-md p-6 page-block">
                   <h2 className="text-xl font-semibold mb-4">{t('marketUpdate')}</h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {/* Price Card */}
@@ -378,7 +378,7 @@ const TradingInterface: React.FC = () => {
 
               {/* Bot Statistics */}
               {botStats && (
-                <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+                <div className="bg-white rounded-lg shadow-md p-6 page-block">
                   <h2 className="text-xl font-semibold mb-4">{t('botStatistics')}</h2>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                     <div className="text-center">
@@ -407,7 +407,7 @@ const TradingInterface: React.FC = () => {
           </SwiperSlide>
           <SwiperSlide>
             <div>
-              <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+              <div className="bg-white rounded-lg shadow-md p-6 page-block">
                 <h2 className="text-xl font-semibold mb-4">{t('botControl')}</h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
                   <div>
@@ -455,7 +455,7 @@ const TradingInterface: React.FC = () => {
           </SwiperSlide>
           <SwiperSlide>
             <div>
-              <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+              <div className="bg-white rounded-lg shadow-md p-6 page-block">
                 <h2 className="text-xl font-semibold mb-4">{t('accountBalance')}</h2>
                 <button
                   onClick={() => refetchBalance()}
@@ -495,7 +495,7 @@ const TradingInterface: React.FC = () => {
           </SwiperSlide >
           <SwiperSlide>
             <div>
-              <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+              <div className="bg-white rounded-lg shadow-md p-6 page-block">
                 <h2 className="text-xl font-semibold mb-4">{t('orderHistory')}</h2>
                 {orderHistoryData && orderHistoryData.length > 0 ? (
                   <div className="overflow-x-auto">
@@ -534,7 +534,7 @@ const TradingInterface: React.FC = () => {
               </div>
 
               {/* Trades */}
-              <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+              <div className="bg-white rounded-lg shadow-md p-6 page-block">
                 <h2 className="text-xl font-semibold mb-4">{t('recentTrades')}</h2>
                 {tradesData && tradesData.length > 0 ? (
                   <div className="overflow-x-auto">
@@ -576,7 +576,7 @@ const TradingInterface: React.FC = () => {
 
           </SwiperSlide>
           <SwiperSlide>
-            <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+            <div className="bg-white rounded-lg shadow-md p-6 page-block">
               <h2 className="text-xl font-semibold mb-4">{t('strategyConfig')}</h2>
               {selectedStrategy === 'ema-ml' && (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -679,7 +679,7 @@ const TradingInterface: React.FC = () => {
             </div>
 
             {/* Demo Mode Control */}
-            <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+            <div className="bg-white rounded-lg shadow-md p-6 page-block">
               <h2 className="text-xl font-semibold mb-4">{t('demoMode')}</h2>
               <div className="space-y-4">
                 <button
