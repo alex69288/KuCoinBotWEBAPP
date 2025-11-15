@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { TradingProvider, useTradingContext } from '../src/context/TradingContext';
+import { TradingProvider, useTradingContext } from '../../frontend/src/context/TradingContext';
 
 const TestComponent = () => {
   const { selectedSymbol, setSelectedSymbol } = useTradingContext();

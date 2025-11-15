@@ -150,73 +150,37 @@ export class PriceActionStrategy extends BaseStrategy {
   }
 
   calculateSignal(data: OHLCVData[]): Signal {
-    if (data.length < 50) return 'hold';
+    if (data.length < (this.config as PriceActionConfig).lookbackPeriod) return 'hold';
 
+    this.findSupportResistance(data);
+
+    const currentCandle = data[data.length - 1];
     const config = this.config as PriceActionConfig;
-    const currentPrice = data[data.length - 1].close;
 
-    // Check take profit / stop loss first
-    if (this.lastSignal === 'buy' && this.entryPrice > 0) {
-      const profitPercent = (currentPrice - this.entryPrice) / this.entryPrice * 100;
+    // Проверка на пробой уровня сопротивления
+    for (const resistance of this.resistanceLevels) {
+      if (currentCandle.close > resistance * (1 + config.breakoutThreshold / 100)) {
+        this.lastSignal = 'buy';
+        this.entryPrice = currentCandle.close;
+        return 'buy';
+      }
+    }
 
-      if (profitPercent >= config.takeProfitPercent) {
-        this.lastSignal = 'hold';
-        this.entryPrice = 0;
+    // Проверка на пробой уровня поддержки
+    for (const support of this.supportLevels) {
+      if (currentCandle.close < support * (1 - config.breakoutThreshold / 100)) {
+        this.lastSignal = 'sell';
+        this.entryPrice = currentCandle.close;
         return 'sell';
       }
-
-      if (profitPercent <= -config.stopLossPercent) {
-        this.lastSignal = 'hold';
-        this.entryPrice = 0;
-        return 'sell';
-      }
     }
 
-    // Update support/resistance levels
-    if (config.useSupportResistance) {
-      this.findSupportResistance(data);
-    }
-
-    let buySignal = false;
-    let sellSignal = false;
-
-    // Check support/resistance breakouts
-    if (config.useSupportResistance) {
-      const supportBreakout = this.checkBreakout(currentPrice, this.supportLevels, config.breakoutThreshold);
-      const resistanceBreakout = this.checkBreakout(currentPrice, this.resistanceLevels, config.breakoutThreshold);
-
-      if (supportBreakout) {
-        buySignal = true;
-      }
-      if (resistanceBreakout) {
-        sellSignal = true;
-      }
-    }
-
-    // Check candlestick patterns
+    // Анализ свечных паттернов (если включено)
     if (config.useCandlestickPatterns) {
       const pattern = this.detectCandlestickPatterns(data);
-      if (pattern) {
-        if (pattern.pattern.includes('bullish') && pattern.strength > 0.7) {
-          buySignal = true;
-        }
-        if (pattern.pattern.includes('bearish') && pattern.strength > 0.7) {
-          sellSignal = true;
-        }
+      if (pattern && pattern.strength > 0.8) {
+        return pattern.pattern === 'bullish' ? 'buy' : 'sell';
       }
-    }
-
-    // Generate final signal
-    if (buySignal && this.lastSignal !== 'buy') {
-      this.lastSignal = 'buy';
-      this.entryPrice = currentPrice;
-      return 'buy';
-    }
-
-    if (sellSignal && this.lastSignal === 'buy') {
-      this.lastSignal = 'hold';
-      this.entryPrice = 0;
-      return 'sell';
     }
 
     return 'hold';

@@ -49,6 +49,10 @@ export class KuCoinService {
     }
   }
 
+  async placeOrder(symbol: string, side: 'buy' | 'sell', amount: number): Promise<any> {
+    return await this.createOrder(symbol, 'market', side, amount);
+  }
+
   async getHistoricalData(symbol: string, timeframe: string = '1h', limit: number = 100): Promise<any[]> {
     try {
       const ohlcv = await this.exchange.fetchOHLCV(symbol, timeframe, undefined, limit);

@@ -70,6 +70,16 @@ export const botApi = {
     const response = await api.post('/bot/trade', tradeData);
     return response.data;
   },
+
+  // Start bot
+  startBot: async () => {
+    return await botApi.start();
+  },
+
+  // Stop bot
+  stopBot: async () => {
+    return await botApi.stop();
+  },
 };
 
 export default api;

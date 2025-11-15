@@ -159,21 +159,21 @@ const TradingInterface: React.FC = () => {
 
   const handleStartBot = async () => {
     try {
-      await botApi.start();
-      setBotEnabled(true);
-      console.log('Bot started successfully');
+      await botApi.startBot();
+      alert(t('Бот успешно запущен!'));
     } catch (error) {
-      console.error('Error starting bot:', error);
+      console.error(error);
+      alert(t('Ошибка запуска бота'));
     }
   };
 
   const handleStopBot = async () => {
     try {
-      await botApi.stop();
-      setBotEnabled(false);
-      console.log('Bot stopped successfully');
+      await botApi.stopBot();
+      alert(t('Бот успешно остановлен!'));
     } catch (error) {
-      console.error('Error stopping bot:', error);
+      console.error(error);
+      alert(t('Ошибка остановки бота'));
     }
   };
 
@@ -181,9 +181,10 @@ const TradingInterface: React.FC = () => {
     try {
       await botApi.updateConfig({ strategy });
       setSelectedStrategy(strategy);
-      console.log('Strategy updated successfully');
+      alert(t('Стратегия обновлена!'));
     } catch (error) {
-      console.error('Error updating strategy:', error);
+      console.error(error);
+      alert(t('Ошибка обновления стратегии'));
     }
   };
 

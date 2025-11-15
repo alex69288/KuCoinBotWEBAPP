@@ -1,5 +1,16 @@
 import { KuCoinBot } from '../../backend/src/core/bot';
 
+jest.mock('ccxt', () => ({
+  kucoin: jest.fn().mockImplementation(() => ({
+    loadMarkets: jest.fn(),
+    fetchBalance: jest.fn(),
+    createOrder: jest.fn(),
+    cancelOrder: jest.fn(),
+    fetchOrder: jest.fn(),
+    fetchOHLCV: jest.fn(),
+  })),
+}));
+
 describe('KuCoinBot', () => {
   let bot: any;
   const config = {
@@ -13,6 +24,7 @@ describe('KuCoinBot', () => {
     symbols: ['BTC/USDT'],
     strategy: 'ema-ml' as const,
     strategyConfig: {
+      symbol: 'BTC/USDT',
       fastPeriod: 12,
       slowPeriod: 26,
       emaThreshold: 0.5,
@@ -27,6 +39,10 @@ describe('KuCoinBot', () => {
 
   beforeEach(() => {
     bot = new KuCoinBot(config);
+  });
+
+  afterEach(async () => {
+    await bot.stop();
   });
 
   test('should initialize with config', () => {

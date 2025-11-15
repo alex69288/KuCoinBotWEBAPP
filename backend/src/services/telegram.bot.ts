@@ -1,4 +1,5 @@
 import { Telegraf } from 'telegraf';
+import { exec } from 'node:child_process';
 
 const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 
@@ -12,9 +13,21 @@ bot.start((ctx) => {
   ctx.reply('Добро пожаловать! Используйте /run для запуска приложения.');
 });
 
+// Исправлены типы параметров для функции exec
 bot.command('run', (ctx) => {
-  ctx.reply('Приложение запускается...');
-  // Здесь можно добавить логику запуска приложения
+  ctx.reply('Запуск приложения...');
+
+  exec('npm start', (error: Error | null, stdout: string, stderr: string) => {
+    if (error) {
+      ctx.reply(`Ошибка запуска: ${error.message}`);
+      return;
+    }
+    if (stderr) {
+      ctx.reply(`Ошибка: ${stderr}`);
+      return;
+    }
+    ctx.reply(`Приложение запущено: ${stdout}`);
+  });
 });
 
 bot.launch()

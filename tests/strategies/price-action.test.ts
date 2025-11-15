@@ -159,8 +159,8 @@ describe('PriceActionStrategy', () => {
     });
 
     const signal = strategy.calculateSignal(data);
-    // Should potentially generate sell signal on resistance breakout
-    expect(['sell', 'hold']).toContain(signal);
+    // Should potentially generate buy signal on resistance breakout
+    expect(['buy', 'hold']).toContain(signal);
   });
 
   test('should return status information', () => {

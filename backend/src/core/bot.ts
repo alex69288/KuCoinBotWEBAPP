@@ -4,6 +4,8 @@ import { BaseStrategy, OHLCVData } from '../strategies/base.strategy';
 import { EmaMlStrategy, EmaMlConfig } from '../strategies/ema-ml.strategy';
 import { MacdRsiStrategy, MacdRsiConfig } from '../strategies/macd-rsi.strategy';
 import { PriceActionStrategy, PriceActionConfig } from '../strategies/price-action.strategy';
+import { BollingerBandsConfig, BollingerBandsStrategy } from '../strategies/bollinger.strategy';
+import * as Metrics from '../metrics';
 
 interface BotConfig {
   enabled: boolean;
@@ -15,7 +17,7 @@ interface BotConfig {
   telegramChatId: string;
   symbols: string[];
   strategy: 'ema-ml' | 'price-action' | 'macd-rsi' | 'bollinger';
-  strategyConfig: any;
+  strategyConfig: EmaMlConfig | PriceActionConfig | MacdRsiConfig | BollingerBandsConfig;
 }
 
 interface Position {
@@ -24,6 +26,18 @@ interface Position {
   amount: number;
   entryPrice: number;
   timestamp: number;
+}
+
+/**
+ * Represents a single trade.
+ */
+export interface Trade {
+  id: string;
+  symbol: string;
+  side: 'buy' | 'sell';
+  amount: number;
+  profit: number; // Profit or loss from the trade
+  timestamp: Date;
 }
 
 export class KuCoinBot {
@@ -67,28 +81,23 @@ export class KuCoinBot {
   }
 
   private initializeStrategy(): void {
-    switch (this.config.strategy) {
+    const { strategy, strategyConfig, symbols } = this.config;
+
+    switch (strategy) {
       case 'ema-ml':
-        this.strategy = new EmaMlStrategy({
-          symbol: this.config.symbols[0],
-          ...this.config.strategyConfig
-        });
+        this.strategy = new EmaMlStrategy(strategyConfig as EmaMlConfig);
         break;
       case 'macd-rsi':
-        this.strategy = new MacdRsiStrategy({
-          symbol: this.config.symbols[0],
-          ...this.config.strategyConfig
-        });
+        this.strategy = new MacdRsiStrategy(strategyConfig as MacdRsiConfig);
         break;
       case 'price-action':
-        this.strategy = new PriceActionStrategy({
-          symbol: this.config.symbols[0],
-          ...this.config.strategyConfig
-        });
+        this.strategy = new PriceActionStrategy(strategyConfig as PriceActionConfig);
         break;
-      // Add other strategies here
+      case 'bollinger':
+        this.strategy = new BollingerBandsStrategy(strategyConfig as BollingerBandsConfig);
+        break;
       default:
-        console.warn('Unknown strategy:', this.config.strategy);
+        console.warn('Unknown strategy:', strategy);
     }
   }
 
@@ -200,48 +209,86 @@ export class KuCoinBot {
   }
 
   private checkRiskLimits(): boolean {
-    // Дневной лимит потерь
-    if (this.riskManager.dailyLoss >= this.config.maxDailyLoss) {
+    const { dailyLoss, consecutiveLosses } = this.riskManager;
+    const { maxDailyLoss, maxConsecutiveLosses } = this.config;
+
+    // Check daily loss limit
+    if (dailyLoss <= -maxDailyLoss) {
+      console.warn('Daily loss limit reached. Stopping trading.');
+      this.isRunning = false;
       return false;
     }
 
-    // Серия убытков
-    if (this.riskManager.consecutiveLosses >= this.config.maxConsecutiveLosses) {
+    // Check consecutive losses limit
+    if (consecutiveLosses >= maxConsecutiveLosses) {
+      console.warn('Consecutive losses limit reached. Stopping trading.');
+      this.isRunning = false;
       return false;
     }
 
     return true;
   }
 
-  async executeTrade(symbol: string, side: 'buy' | 'sell', amount: number, price?: number): Promise<void> {
-    if (!this.config.enabled || this.config.demoMode) {
-      console.log(`Demo trade: ${side} ${amount} ${symbol} at ${price}`);
+  private updateRiskStats(profit: number): void {
+    this.dailyStats.totalProfit += profit;
+    this.riskManager.dailyLoss += profit;
+
+    if (profit > 0) {
+      this.riskManager.consecutiveLosses = 0;
+      this.riskManager.lastTradeResult = true;
+    } else {
+      this.riskManager.consecutiveLosses += 1;
+      this.riskManager.lastTradeResult = false;
+    }
+  }
+
+  private async executeTrade(symbol: string, side: 'buy' | 'sell', amount: number): Promise<void> {
+    if (this.config.demoMode) {
+      console.log(`Demo trade executed: ${side} ${amount} ${symbol}`);
+      const price = this.marketData[this.marketData.length - 1]?.close || 0;
+      const profit = side === 'buy' ? -price * amount : price * amount;
+      this.updateRiskStats(profit);
       return;
     }
 
+    // Реальная торговля
     try {
-      const job = await addTradeJob({
-        symbol,
-        type: price ? 'limit' : 'market',
-        side,
-        amount,
-        price,
-        userId: 'bot',
-      });
-
-      // Обновление позиции
-      this.positions.push({
-        symbol,
-        side,
-        amount,
-        entryPrice: price || 0,
-        timestamp: Date.now(),
-      });
-
-      console.log(`Trade executed: ${job.id}`);
+      const result = await this.kucoinService.placeOrder(symbol, side, amount);
+      console.log(`Trade executed: ${side} ${amount} ${symbol}`, result);
     } catch (error) {
       console.error('Failed to execute trade:', error);
     }
+  }
+
+  private calculateTradeProfit(): number {
+    // Placeholder logic for calculating trade profit
+    // Replace with actual implementation
+    return Math.random() * 100 - 50; // Simulated profit/loss
+  }
+
+  private logTradingMetrics(trades: Trade[], initialBalance: number): void {
+    const totalTrades = Metrics.calculateTotalTrades(trades);
+    const winRate = Metrics.calculateWinRate(trades);
+    const profitFactor = Metrics.calculateProfitFactor(trades);
+    const totalProfit = Metrics.calculateTotalProfit(trades, initialBalance);
+    const maxDrawdown = Metrics.calculateMaxDrawdown(trades);
+    const bestAndWorst = Metrics.calculateBestAndWorstTrades(trades);
+    const averageProfitAndLoss = Metrics.calculateAverageProfitAndLoss(trades);
+    const streaks = Metrics.calculateStreaks(trades);
+
+    console.log('--- Trading Metrics ---');
+    console.log(`Total Trades: ${totalTrades}`);
+    console.log(`Win Rate: ${winRate.toFixed(2)}%`);
+    console.log(`Profit Factor: ${profitFactor.toFixed(2)}`);
+    console.log(`Total Profit: ${totalProfit.usdt.toFixed(2)} USDT (${totalProfit.percentage.toFixed(2)}%)`);
+    console.log(`Max Drawdown: ${maxDrawdown.toFixed(2)} USDT`);
+    console.log(`Best Trade: ${bestAndWorst.best?.profit.toFixed(2) || 'N/A'} USDT`);
+    console.log(`Worst Trade: ${bestAndWorst.worst?.profit.toFixed(2) || 'N/A'} USDT`);
+    console.log(`Average Profit: ${averageProfitAndLoss.averageProfit.toFixed(2)} USDT`);
+    console.log(`Average Loss: ${averageProfitAndLoss.averageLoss.toFixed(2)} USDT`);
+    console.log(`Winning Streak: ${streaks.winningStreak}`);
+    console.log(`Losing Streak: ${streaks.losingStreak}`);
+    console.log('-----------------------');
   }
 
   getStatus(): any {

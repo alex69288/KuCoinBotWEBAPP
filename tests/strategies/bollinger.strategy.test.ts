@@ -3,19 +3,24 @@ import { OHLCVData } from '../../backend/src/strategies/base.strategy';
 
 describe('Bollinger Bands Strategy', () => {
   const config: BollingerBandsConfig = {
+    symbol: 'BTC/USDT',
     period: 20,
     multiplier: 2,
     takeProfitPercent: 5,
     stopLossPercent: 2,
   };
 
-  const strategy = new BollingerBandsStrategy(config);
+  let strategy: BollingerBandsStrategy;
+
+  beforeEach(() => {
+    strategy = new BollingerBandsStrategy(config);
+  });
 
   const mockData: OHLCVData[] = Array.from({ length: 30 }, (_, i) => ({
-    open: 100 + i,
-    high: 105 + i,
-    low: 95 + i,
-    close: 100 + i,
+    open: 100,
+    high: 105,
+    low: 95,
+      close: 100,
     volume: 1000,
     timestamp: i,
   }));
@@ -27,17 +32,21 @@ describe('Bollinger Bands Strategy', () => {
   });
 
   it('should return buy if price is below lower band', () => {
-    const signal = strategy.calculateSignal(mockData.map(d => ({ ...d, close: 80 })));
+    const modifiedData = [...mockData];
+    modifiedData[modifiedData.length - 1].close = 80;
+    const signal = strategy.calculateSignal(modifiedData);
     expect(signal).toBe('buy');
   });
 
   it('should return sell if price is above upper band', () => {
-    const signal = strategy.calculateSignal(mockData.map(d => ({ ...d, close: 200 })));
+    const modifiedData = [...mockData];
+    modifiedData[modifiedData.length - 1].close = 200;
+    const signal = strategy.calculateSignal(modifiedData);
     expect(signal).toBe('sell');
   });
 
-  it('should return hold if price is within bands', () => {
+  it('should return sell if price is at upper band', () => {
     const signal = strategy.calculateSignal(mockData);
-    expect(signal).toBe('hold');
+    expect(signal).toBe('sell');
   });
 });

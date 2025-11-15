@@ -1,6 +1,6 @@
 import { BaseStrategy, OHLCVData, StrategyConfig, Signal } from './base.strategy';
 import { calculateEMA } from '../indicators/ema';
-import { SimpleMLPredictor } from '../ml/predictor';
+import { RandomForestPredictor } from '../ml/random_forest.js';
 
 export interface EmaMlConfig extends StrategyConfig {
   fastPeriod: number;
@@ -15,14 +15,15 @@ export interface EmaMlConfig extends StrategyConfig {
 }
 
 export class EmaMlStrategy extends BaseStrategy {
-  private mlPredictor: SimpleMLPredictor;
+  private mlPredictor: RandomForestPredictor;
+  private trailingStopPrice: number | null = null; // For Trailing Stop
   private lastSignal: Signal = 'hold';
   private entryPrice: number = 0;
   private entryTime: number = 0;
 
   constructor(config: EmaMlConfig) {
     super(config);
-    this.mlPredictor = new SimpleMLPredictor();
+    this.mlPredictor = new RandomForestPredictor();
   }
 
   calculateSignal(data: OHLCVData[]): Signal {
@@ -45,7 +46,7 @@ export class EmaMlStrategy extends BaseStrategy {
     // Get ML prediction
     const mlConfidence = this.mlPredictor.predict(data);
 
-    // Check take profit / stop loss
+    // Check take profit / stop loss / trailing stop
     if (this.lastSignal === 'buy' && this.entryPrice > 0) {
       const profitPercent = (currentPrice - this.entryPrice) / this.entryPrice * 100;
 
@@ -59,6 +60,16 @@ export class EmaMlStrategy extends BaseStrategy {
       if (profitPercent <= -(this.config as EmaMlConfig).stopLossPercent) {
         this.resetPosition();
         return 'sell';
+      }
+
+      // Trailing stop
+      if ((this.config as EmaMlConfig).trailingStop) {
+        if (this.trailingStopPrice === null || currentPrice > this.trailingStopPrice) {
+          this.trailingStopPrice = currentPrice * (1 - (this.config as EmaMlConfig).stopLossPercent / 100);
+        } else if (currentPrice < this.trailingStopPrice) {
+          this.resetPosition();
+          return 'sell';
+        }
       }
 
       // Min hold time
@@ -75,6 +86,7 @@ export class EmaMlStrategy extends BaseStrategy {
       this.lastSignal = 'buy';
       this.entryPrice = currentPrice;
       this.entryTime = currentTime;
+      this.trailingStopPrice = null; // Reset trailing stop
       return 'buy';
     }
 
@@ -97,5 +109,6 @@ export class EmaMlStrategy extends BaseStrategy {
     this.lastSignal = 'hold';
     this.entryPrice = 0;
     this.entryTime = 0;
+    this.trailingStopPrice = null;
   }
 }
