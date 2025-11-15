@@ -80,7 +80,6 @@
    autoHeight is used, but provide CSS fallback to prevent large empty space. */
 .mySwiper {
   height: auto !important;
-  overflow: visible;
 }
 
 .mySwiper .swiper-slide {
