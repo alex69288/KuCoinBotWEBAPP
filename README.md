@@ -81,9 +81,18 @@ A Telegram Web App for automated trading on KuCoin cryptocurrency exchange with 
    ```
 
 4. **Configure environment variables**
+   For local development we recommend separating env vars per service:
+
+   Backend (create `backend/.env`):
    ```bash
-   cp .env.example .env
-   # Edit .env with your API keys
+   cp backend/.env.example backend/.env
+   # Edit backend/.env with your KuCoin and Telegram keys
+   ```
+
+   Frontend (optional, for local build):
+   ```bash
+   cp frontend/.env.example frontend/.env
+   # Edit frontend/.env with VITE_API_URL
    ```
 
 5. **Start development servers**

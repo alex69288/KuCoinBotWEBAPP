@@ -14,5 +14,5 @@ export declare class KuCoinService {
     getTrades(symbol?: string, limit?: number): Promise<any[]>;
     getMarkets(): Promise<any[]>;
 }
-export declare const kucoinService: KuCoinService;
+export declare const kucoinService: () => KuCoinService;
 //# sourceMappingURL=kucoin.service.d.ts.map

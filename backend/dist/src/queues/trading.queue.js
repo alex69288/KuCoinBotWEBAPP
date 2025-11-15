@@ -1,4 +1,5 @@
 import { kucoinService } from '../services/kucoin.service';
+const kucoinServiceInstance = kucoinService();
 // In-memory queue implementation (fallback when Redis is not available)
 class InMemoryTradingQueue {
     jobs = [];
@@ -31,7 +32,7 @@ class InMemoryTradingQueue {
             this.stats.active++;
             try {
                 console.log(`Processing trade for user ${job.userId}: ${job.side} ${job.amount} ${job.symbol}`);
-                const order = await kucoinService.createOrder(job.symbol, job.type, job.side, job.amount, job.price);
+                const order = await kucoinServiceInstance.createOrder(job.symbol, job.type, job.side, job.amount, job.price);
                 console.log(`Order created successfully: ${order.id}`);
                 this.stats.completed++;
             }
@@ -124,7 +125,7 @@ async function initQueue() {
             const { symbol, type, side, amount, price, userId } = job.data;
             try {
                 console.log(`Processing trade for user ${userId}: ${side} ${amount} ${symbol}`);
-                const order = await kucoinService.createOrder(symbol, type, side, amount, price);
+                const order = await kucoinServiceInstance.createOrder(symbol, type, side, amount, price);
                 console.log(`Order created successfully: ${order.id}`);
                 return order;
             }

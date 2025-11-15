@@ -2,15 +2,23 @@
 
 echo "Starting KuCoin Trading Bot in Production Mode..."
 
-# Check if .env file exists
-if [ ! -f ".env" ]; then
-    echo "Error: .env file not found!"
-    echo "Please create .env file with required environment variables."
+# Prefer per-service env files: backend/.env and frontend/.env
+if [ -f "backend/.env" ]; then
+    echo "Loading environment variables from backend/.env"
+    export $(grep -v '^#' backend/.env | xargs)
+elif [ -f ".env" ]; then
+    echo "Loading environment variables from root .env (deprecated)"
+    export $(grep -v '^#' .env | xargs)
+else
+    echo "Error: No env file found (backend/.env or .env). Please create backend/.env with required variables."
     exit 1
 fi
 
-# Load environment variables
-export $(grep -v '^#' .env | xargs)
+# Optionally load frontend env for build
+if [ -f "frontend/.env" ]; then
+    echo "Loading frontend env for build from frontend/.env"
+    export $(grep -v '^#' frontend/.env | xargs)
+fi
 
 # Build backend
 echo "Building backend..."

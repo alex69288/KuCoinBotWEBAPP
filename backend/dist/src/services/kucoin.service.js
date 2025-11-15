@@ -87,6 +87,7 @@ export class KuCoinService {
         }
     }
     async getOpenOrders(symbol) {
+        console.log('getOpenOrders: hasCredentials =', this.hasCredentials);
         if (!this.hasCredentials) {
             console.warn('No KuCoin credentials provided, returning empty orders');
             return [];
@@ -147,5 +148,13 @@ export class KuCoinService {
         }
     }
 }
-export const kucoinService = new KuCoinService();
+export const kucoinService = (() => {
+    let instance = null;
+    return () => {
+        if (!instance) {
+            instance = new KuCoinService();
+        }
+        return instance;
+    };
+})();
 //# sourceMappingURL=kucoin.service.js.map

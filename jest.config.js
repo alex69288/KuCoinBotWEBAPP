@@ -1,15 +1,18 @@
 module.exports = {
   preset: 'ts-jest/presets/default-esm',
   testEnvironment: 'node',
-  extensionsToTreatAsEsm: ['.ts'],
+  extensionsToTreatAsEsm: ['.ts', '.tsx'],
   transform: {
-    '^.+\\.ts$': ['ts-jest', {
+    '^.+\\.(ts|tsx)$': ['ts-jest', {
       useESM: true,
       tsconfig: 'tests/tsconfig.json'
     }]
   },
   moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.js$': '$1',
+    '^react$': '<rootDir>/frontend/node_modules/react',
+    '^react-dom$': '<rootDir>/frontend/node_modules/react-dom',
   },
+  moduleDirectories: ['<rootDir>/frontend/node_modules', 'node_modules'],
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js']
 };

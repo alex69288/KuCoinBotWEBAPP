@@ -15,7 +15,8 @@
     "types": [
       "jest",
       "node",
-      "@types/node"
+      "@types/node",
+      "@testing-library/jest-dom"
     ]
   },
   "include": [

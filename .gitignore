@@ -1,4 +1,13 @@
-# Игнорировать node_modules
+# Local env files (sensitive)
+.env
+backend/.env
+frontend/.env
+
+# Node modules
+node_modules/
+
+# Editor settings
+.vscode/# Игнорировать node_modules
 node_modules/
 
 # Игнорировать .vscode

@@ -1,5 +1,7 @@
 import { Router } from 'express';
 import { kucoinService } from '../services/kucoin.service.js';
+
+const kucoinServiceInstance = kucoinService();
 import { addTradeJob } from '../queues/trading.queue.js';
 
 const router = Router();
@@ -7,7 +9,7 @@ const router = Router();
 // Get balance
 router.get('/balance', async (req, res) => {
   try {
-    const balance = await kucoinService.getBalance();
+    const balance = await kucoinServiceInstance.getBalance();
     res.json(balance);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch balance' });
@@ -22,7 +24,7 @@ router.get('/ticker/:symbol', async (req, res) => {
     if (symbol.includes(':')) {
       return res.status(400).json({ error: 'Invalid symbol: placeholder detected' });
     }
-    const ticker = await kucoinService.getTicker(symbol);
+    const ticker = await kucoinServiceInstance.getTicker(symbol);
     res.json(ticker);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch ticker' });
@@ -38,7 +40,7 @@ router.get('/orderbook/:symbol', async (req, res) => {
       return res.status(400).json({ error: 'Invalid symbol: placeholder detected' });
     }
     const limit = parseInt(req.query.limit as string) || 20;
-    const orderBook = await kucoinService.getOrderBook(symbol, limit);
+    const orderBook = await kucoinServiceInstance.getOrderBook(symbol, limit);
     res.json(orderBook);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch order book' });
@@ -73,7 +75,7 @@ router.post('/orders', async (req, res) => {
 router.get('/orders/open', async (req, res) => {
   try {
     const { symbol } = req.query;
-    const orders = await kucoinService.getOpenOrders(symbol as string);
+    const orders = await kucoinServiceInstance.getOpenOrders(symbol as string);
     res.json(orders);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch open orders' });
@@ -85,7 +87,7 @@ router.delete('/orders/:orderId', async (req, res) => {
   try {
     const { orderId } = req.params;
     const { symbol } = req.query;
-    const result = await kucoinService.cancelOrder(orderId, symbol as string);
+    const result = await kucoinServiceInstance.cancelOrder(orderId, symbol as string);
     res.json(result);
   } catch (error) {
     res.status(500).json({ error: 'Failed to cancel order' });
@@ -96,7 +98,7 @@ router.delete('/orders/:orderId', async (req, res) => {
 router.get('/orders/history', async (req, res) => {
   try {
     const { symbol, limit } = req.query;
-    const orders = await kucoinService.getOrderHistory(symbol as string, parseInt(limit as string) || 50);
+    const orders = await kucoinServiceInstance.getOrderHistory(symbol as string, parseInt(limit as string) || 50);
     res.json(orders);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch order history' });
@@ -107,7 +109,7 @@ router.get('/orders/history', async (req, res) => {
 router.get('/trades', async (req, res) => {
   try {
     const { symbol, limit } = req.query;
-    const trades = await kucoinService.getTrades(symbol as string, parseInt(limit as string) || 50);
+    const trades = await kucoinServiceInstance.getTrades(symbol as string, parseInt(limit as string) || 50);
     res.json(trades);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch trades' });
@@ -117,7 +119,7 @@ router.get('/trades', async (req, res) => {
 // Get markets
 router.get('/markets', async (req, res) => {
   try {
-    const markets = await kucoinService.getMarkets();
+    const markets = await kucoinServiceInstance.getMarkets();
     res.json(markets);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch markets' });

@@ -1,4 +1,6 @@
-import { render, screen } from '@testing-library/react';
+/* @jest-environment jsdom */
+
+import { render, screen, fireEvent } from '@testing-library/react';
 import { TradingProvider, useTradingContext } from '../../frontend/src/context/TradingContext';
 
 const TestComponent = () => {
@@ -21,14 +23,14 @@ describe('TradingContext', () => {
     expect(screen.getByText('BTC/USDT')).toBeInTheDocument();
   });
 
-  test('allows changing selectedSymbol', () => {
+  test('allows changing selectedSymbol', async () => {
     render(
       <TradingProvider>
         <TestComponent />
       </TradingProvider>
     );
     const button = screen.getByText('Change Symbol');
-    button.click();
-    expect(screen.getByText('ETH/USDT')).toBeInTheDocument();
+    fireEvent.click(button);
+    expect(await screen.findByText('ETH/USDT')).toBeInTheDocument();
   });
 });

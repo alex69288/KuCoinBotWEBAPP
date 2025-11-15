@@ -1,5 +1,7 @@
 import { kucoinService } from '../services/kucoin.service';
 
+const kucoinServiceInstance = kucoinService();
+
 interface TradeJobData {
   symbol: string;
   type: 'limit' | 'market';
@@ -48,7 +50,7 @@ class InMemoryTradingQueue {
       try {
         console.log(`Processing trade for user ${job.userId}: ${job.side} ${job.amount} ${job.symbol}`);
 
-        const order = await kucoinService.createOrder(job.symbol, job.type, job.side, job.amount, job.price);
+        const order = await kucoinServiceInstance.createOrder(job.symbol, job.type, job.side, job.amount, job.price);
 
         console.log(`Order created successfully: ${order.id}`);
         this.stats.completed++;
@@ -158,7 +160,7 @@ async function initQueue() {
       try {
         console.log(`Processing trade for user ${userId}: ${side} ${amount} ${symbol}`);
 
-        const order = await kucoinService.createOrder(symbol, type, side, amount, price);
+        const order = await kucoinServiceInstance.createOrder(symbol, type, side, amount, price);
 
         console.log(`Order created successfully: ${order.id}`);
 
