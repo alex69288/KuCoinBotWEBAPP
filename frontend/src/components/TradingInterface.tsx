@@ -172,7 +172,13 @@ const TradingInterface: React.FC = () => {
     const checkHealth = async () => {
       try {
         // Use a runtime-friendly API URL resolution to support tests (avoid import.meta in tests)
-        const apiBase = (typeof window !== 'undefined' && (window as any).VITE_API_URL) || process.env?.VITE_API_URL || '';
+        const getApiBase = () => {
+          if (typeof window !== 'undefined' && (window as any).VITE_API_URL) return (window as any).VITE_API_URL;
+          if (typeof process !== 'undefined' && (process as any).env?.VITE_API_URL) return (process as any).env.VITE_API_URL;
+          return '';
+        };
+
+        const apiBase = getApiBase();
         const url = apiBase ? `${apiBase}/health` : '/health';
         const response = await fetch(url);
         const data = await response.json();
@@ -269,109 +275,109 @@ const TradingInterface: React.FC = () => {
           <SwiperSlide>
             <div>
               {marketUpdate && (
-              <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-                <h2 className="text-xl font-semibold mb-4">{t('marketUpdate')}</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {/* Price Card */}
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <div className="flex items-center mb-2">
-                      <span className="text-2xl mr-2">💰</span>
-                      <span className="text-sm font-medium text-gray-700">{t('price')}</span>
-                    </div>
-                    <div className="text-lg font-bold text-gray-900">
-                      {marketUpdate.price ? `${marketUpdate.price.toFixed(2)} USDT` : 'N/A'}
-                    </div>
-                  </div>
-
-                  {/* 24h Change Card */}
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <div className="flex items-center mb-2">
-                      <span className="text-2xl mr-2">📊</span>
-                      <span className="text-sm font-medium text-gray-700">24ч</span>
-                    </div>
-                    <div className={`text-lg font-bold ${marketUpdate.change24h >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                      {marketUpdate.change24h ? `${marketUpdate.change24h.toFixed(2)}%` : 'N/A'}
-                    </div>
-                  </div>
-
-                  {/* EMA Card */}
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <div className="flex items-center mb-2">
-                      <span className="text-2xl mr-2">📈</span>
-                      <span className="text-sm font-medium text-gray-700">EMA</span>
-                    </div>
-                    <div className={`text-lg font-bold ${marketUpdate.emaDirection === 'ВВЕРХ' ? 'text-green-600' : 'text-red-600'}`}>
-                      {marketUpdate.emaDirection} ({marketUpdate.emaPercent ? marketUpdate.emaPercent.toFixed(2) : '0.00'}%)
-                    </div>
-                  </div>
-
-                  {/* Signal Card */}
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <div className="flex items-center mb-2">
-                      <span className="text-2xl mr-2">🎯</span>
-                      <span className="text-sm font-medium text-gray-700">{t('signal')}</span>
-                    </div>
-                    <div className={`text-lg font-bold ${marketUpdate.signal === 'buy' ? 'text-green-600' : marketUpdate.signal === 'sell' ? 'text-red-600' : 'text-gray-600'}`}>
-                      {marketUpdate.signalText}
-                    </div>
-                  </div>
-
-                  {/* ML Card */}
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <div className="flex items-center mb-2">
-                      <span className="text-2xl mr-2">🤖</span>
-                      <span className="text-sm font-medium text-gray-700">ML</span>
-                    </div>
-                    <div className={`text-lg font-bold ${marketUpdate.mlConfidence > 0.6 ? 'text-green-600' : marketUpdate.mlConfidence < 0.4 ? 'text-red-600' : 'text-gray-600'}`}>
-                      {marketUpdate.mlText} ({marketUpdate.mlPercent}%)
-                    </div>
-                  </div>
-
-                  {/* Positions Card */}
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <div className="flex items-center mb-2">
-                      <span className="text-2xl mr-2">💼</span>
-                      <span className="text-sm font-medium text-gray-700">{t('positions')}</span>
-                    </div>
-                    <div className="text-lg font-bold text-gray-900">
-                      {marketUpdate.openPositionsCount || 0} {t('open')}
-                    </div>
-                    {marketUpdate.openPositionsCount > 0 && (
-                      <div className="text-sm text-gray-600">
-                        {t('profit')}: {marketUpdate.profitPercent ? marketUpdate.profitPercent.toFixed(2) : '0.00'}%
+                <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+                  <h2 className="text-xl font-semibold mb-4">{t('marketUpdate')}</h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {/* Price Card */}
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <div className="flex items-center mb-2">
+                        <span className="text-2xl mr-2">💰</span>
+                        <span className="text-sm font-medium text-gray-700">{t('price')}</span>
                       </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Bot Statistics */}
-            {botStats && (
-              <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-                <h2 className="text-xl font-semibold mb-4">{t('botStatistics')}</h2>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-blue-600">{botStats.totalTrades || 0}</div>
-                    <div className="text-sm text-gray-600">{t('totalTrades')}</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-green-600">{botStats.winningTrades || 0}</div>
-                    <div className="text-sm text-gray-600">{t('winningTrades')}</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-red-600">{botStats.losingTrades || 0}</div>
-                    <div className="text-sm text-gray-600">{t('losingTrades')}</div>
-                  </div>
-                  <div className="text-center">
-                    <div className={`text-2xl font-bold ${botStats.totalProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                      ${botStats.totalProfit?.toFixed(2) || '0.00'}
+                      <div className="text-lg font-bold text-gray-900">
+                        {marketUpdate.price ? `${marketUpdate.price.toFixed(2)} USDT` : 'N/A'}
+                      </div>
                     </div>
-                    <div className="text-sm text-gray-600">{t('totalPnL')}</div>
+
+                    {/* 24h Change Card */}
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <div className="flex items-center mb-2">
+                        <span className="text-2xl mr-2">📊</span>
+                        <span className="text-sm font-medium text-gray-700">24ч</span>
+                      </div>
+                      <div className={`text-lg font-bold ${marketUpdate.change24h >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        {marketUpdate.change24h ? `${marketUpdate.change24h.toFixed(2)}%` : 'N/A'}
+                      </div>
+                    </div>
+
+                    {/* EMA Card */}
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <div className="flex items-center mb-2">
+                        <span className="text-2xl mr-2">📈</span>
+                        <span className="text-sm font-medium text-gray-700">EMA</span>
+                      </div>
+                      <div className={`text-lg font-bold ${marketUpdate.emaDirection === 'ВВЕРХ' ? 'text-green-600' : 'text-red-600'}`}>
+                        {marketUpdate.emaDirection} ({marketUpdate.emaPercent ? marketUpdate.emaPercent.toFixed(2) : '0.00'}%)
+                      </div>
+                    </div>
+
+                    {/* Signal Card */}
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <div className="flex items-center mb-2">
+                        <span className="text-2xl mr-2">🎯</span>
+                        <span className="text-sm font-medium text-gray-700">{t('signal')}</span>
+                      </div>
+                      <div className={`text-lg font-bold ${marketUpdate.signal === 'buy' ? 'text-green-600' : marketUpdate.signal === 'sell' ? 'text-red-600' : 'text-gray-600'}`}>
+                        {marketUpdate.signalText}
+                      </div>
+                    </div>
+
+                    {/* ML Card */}
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <div className="flex items-center mb-2">
+                        <span className="text-2xl mr-2">🤖</span>
+                        <span className="text-sm font-medium text-gray-700">ML</span>
+                      </div>
+                      <div className={`text-lg font-bold ${marketUpdate.mlConfidence > 0.6 ? 'text-green-600' : marketUpdate.mlConfidence < 0.4 ? 'text-red-600' : 'text-gray-600'}`}>
+                        {marketUpdate.mlText} ({marketUpdate.mlPercent}%)
+                      </div>
+                    </div>
+
+                    {/* Positions Card */}
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <div className="flex items-center mb-2">
+                        <span className="text-2xl mr-2">💼</span>
+                        <span className="text-sm font-medium text-gray-700">{t('positions')}</span>
+                      </div>
+                      <div className="text-lg font-bold text-gray-900">
+                        {marketUpdate.openPositionsCount || 0} {t('open')}
+                      </div>
+                      {marketUpdate.openPositionsCount > 0 && (
+                        <div className="text-sm text-gray-600">
+                          {t('profit')}: {marketUpdate.profitPercent ? marketUpdate.profitPercent.toFixed(2) : '0.00'}%
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
+
+              {/* Bot Statistics */}
+              {botStats && (
+                <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+                  <h2 className="text-xl font-semibold mb-4">{t('botStatistics')}</h2>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-blue-600">{botStats.totalTrades || 0}</div>
+                      <div className="text-sm text-gray-600">{t('totalTrades')}</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-green-600">{botStats.winningTrades || 0}</div>
+                      <div className="text-sm text-gray-600">{t('winningTrades')}</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-red-600">{botStats.losingTrades || 0}</div>
+                      <div className="text-sm text-gray-600">{t('losingTrades')}</div>
+                    </div>
+                    <div className="text-center">
+                      <div className={`text-2xl font-bold ${botStats.totalProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        ${botStats.totalProfit?.toFixed(2) || '0.00'}
+                      </div>
+                      <div className="text-sm text-gray-600">{t('totalPnL')}</div>
+                    </div>
+                  </div>
+                </div>
+              )}
 
             </div>
           </SwiperSlide>
@@ -379,47 +385,47 @@ const TradingInterface: React.FC = () => {
             <div>
               <div className="bg-white rounded-lg shadow-md p-6 mb-6">
                 <h2 className="text-xl font-semibold mb-4">{t('botControl')}</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">{t('botStatus')}</label>
-                  <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${botEnabled ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                    }`}>
-                    {botEnabled ? t('running') : t('stopped')}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">{t('botStatus')}</label>
+                    <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${botEnabled ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                      }`}>
+                      {botEnabled ? t('running') : t('stopped')}
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">{t('strategy')}</label>
+                    <select
+                      value={selectedStrategy}
+                      onChange={(e) => handleStrategyChange(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      {botStrategies?.map((strategy: any) => (
+                        <option key={strategy.id} value={strategy.id}>
+                          {strategy.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="flex items-end space-x-2">
+                    {!botEnabled ? (
+                      <button
+                        onClick={handleStartBot}
+                        className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+                      >
+                        {t('startBot')}
+                      </button>
+                    ) : (
+                      <button
+                        onClick={handleStopBot}
+                        className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+                      >
+                        {t('stopBot')}
+                      </button>
+                    )}
                   </div>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">{t('strategy')}</label>
-                  <select
-                    value={selectedStrategy}
-                    onChange={(e) => handleStrategyChange(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    {botStrategies?.map((strategy: any) => (
-                      <option key={strategy.id} value={strategy.id}>
-                        {strategy.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="flex items-end space-x-2">
-                  {!botEnabled ? (
-                    <button
-                      onClick={handleStartBot}
-                      className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
-                    >
-                      {t('startBot')}
-                    </button>
-                  ) : (
-                    <button
-                      onClick={handleStopBot}
-                      className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
-                    >
-                      {t('stopBot')}
-                    </button>
-                  )}
-                </div>
               </div>
-            </div>
 
             </div>
           </SwiperSlide>
@@ -427,39 +433,39 @@ const TradingInterface: React.FC = () => {
             <div>
               <div className="bg-white rounded-lg shadow-md p-6 mb-6">
                 <h2 className="text-xl font-semibold mb-4">{t('accountBalance')}</h2>
-              <button
-                onClick={() => refetchBalance()}
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mb-4"
-              >
-                {t('loadBalance')}
-              </button>
-              {balance && (
-                <div className="overflow-x-auto">
-                  <table className="min-w-full table-auto">
-                    <thead>
-                      <tr className="bg-gray-50">
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('currency')}</th>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('available')}</th>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('inOrders')}</th>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('total')}</th>
-                      </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                      {Object.entries(balance)
-                        .filter(([_, data]: [string, any]) => data.total > 0)
-                        .map(([currency, data]: [string, any]) => (
-                          <tr key={currency}>
-                            <td className="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900">{currency}</td>
-                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{data.free?.toFixed(8) || '0'}</td>
-                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{data.used?.toFixed(8) || '0'}</td>
-                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{data.total?.toFixed(8) || '0'}</td>
-                          </tr>
-                        ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </div>
+                <button
+                  onClick={() => refetchBalance()}
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mb-4"
+                >
+                  {t('loadBalance')}
+                </button>
+                {balance && (
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full table-auto">
+                      <thead>
+                        <tr className="bg-gray-50">
+                          <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('currency')}</th>
+                          <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('available')}</th>
+                          <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('inOrders')}</th>
+                          <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('total')}</th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-gray-200">
+                        {Object.entries(balance)
+                          .filter(([_, data]: [string, any]) => data.total > 0)
+                          .map(([currency, data]: [string, any]) => (
+                            <tr key={currency}>
+                              <td className="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900">{currency}</td>
+                              <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{data.free?.toFixed(8) || '0'}</td>
+                              <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{data.used?.toFixed(8) || '0'}</td>
+                              <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{data.total?.toFixed(8) || '0'}</td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
 
             </div>
           </SwiperSlide >
@@ -467,82 +473,82 @@ const TradingInterface: React.FC = () => {
             <div>
               <div className="bg-white rounded-lg shadow-md p-6 mb-6">
                 <h2 className="text-xl font-semibold mb-4">{t('orderHistory')}</h2>
-              {orderHistoryData && orderHistoryData.length > 0 ? (
-                <div className="overflow-x-auto">
-                  <table className="min-w-full table-auto">
-                    <thead>
-                      <tr className="bg-gray-50">
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('symbol')}</th>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('side')}</th>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('amount')}</th>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('price')}</th>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('status')}</th>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('date')}</th>
-                      </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                      {orderHistoryData.slice(0, 20).map((order: any, index: number) => (
-                        <tr key={index}>
-                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{order.symbol}</td>
-                          <td className={`px-4 py-2 whitespace-nowrap text-sm ${order.side === 'buy' ? 'text-green-600' : 'text-red-600'}`}>
-                            {order.side?.toUpperCase()}
-                          </td>
-                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{order.amount}</td>
-                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">${order.price}</td>
-                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{order.status}</td>
-                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
-                            {new Date(order.timestamp || order.datetime).toLocaleString()}
-                          </td>
+                {orderHistoryData && orderHistoryData.length > 0 ? (
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full table-auto">
+                      <thead>
+                        <tr className="bg-gray-50">
+                          <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('symbol')}</th>
+                          <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('side')}</th>
+                          <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('amount')}</th>
+                          <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('price')}</th>
+                          <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('status')}</th>
+                          <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('date')}</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              ) : (
-                <p className="text-gray-500">{t('noOrderHistory')}</p>
-              )}
-            </div>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-gray-200">
+                        {orderHistoryData.slice(0, 20).map((order: any, index: number) => (
+                          <tr key={index}>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{order.symbol}</td>
+                            <td className={`px-4 py-2 whitespace-nowrap text-sm ${order.side === 'buy' ? 'text-green-600' : 'text-red-600'}`}>
+                              {order.side?.toUpperCase()}
+                            </td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{order.amount}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">${order.price}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{order.status}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
+                              {new Date(order.timestamp || order.datetime).toLocaleString()}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <p className="text-gray-500">{t('noOrderHistory')}</p>
+                )}
+              </div>
 
-            {/* Trades */}
-            <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-              <h2 className="text-xl font-semibold mb-4">{t('recentTrades')}</h2>
-              {tradesData && tradesData.length > 0 ? (
-                <div className="overflow-x-auto">
-                  <table className="min-w-full table-auto">
-                    <thead>
-                      <tr className="bg-gray-50">
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('symbol')}</th>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('side')}</th>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('amount')}</th>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('price')}</th>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('fee')}</th>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('date')}</th>
-                      </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                      {tradesData.slice(0, 20).map((trade: any, index: number) => (
-                        <tr key={index}>
-                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{trade.symbol}</td>
-                          <td className={`px-4 py-2 whitespace-nowrap text-sm ${trade.side === 'buy' ? 'text-green-600' : 'text-red-600'}`}>
-                            {trade.side?.toUpperCase()}
-                          </td>
-                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{trade.amount}</td>
-                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">${trade.price}</td>
-                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{trade.fee?.cost} {trade.fee?.currency}</td>
-                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
-                            {new Date(trade.timestamp || trade.datetime).toLocaleString()}
-                          </td>
+              {/* Trades */}
+              <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h2 className="text-xl font-semibold mb-4">{t('recentTrades')}</h2>
+                {tradesData && tradesData.length > 0 ? (
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full table-auto">
+                      <thead>
+                        <tr className="bg-gray-50">
+                          <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('symbol')}</th>
+                          <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('side')}</th>
+                          <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('amount')}</th>
+                          <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('price')}</th>
+                          <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('fee')}</th>
+                          <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{t('date')}</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              ) : (
-                <p className="text-gray-500">{t('noRecentTrades')}</p>
-              )}
-            </div>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-gray-200">
+                        {tradesData.slice(0, 20).map((trade: any, index: number) => (
+                          <tr key={index}>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{trade.symbol}</td>
+                            <td className={`px-4 py-2 whitespace-nowrap text-sm ${trade.side === 'buy' ? 'text-green-600' : 'text-red-600'}`}>
+                              {trade.side?.toUpperCase()}
+                            </td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{trade.amount}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">${trade.price}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{trade.fee?.cost} {trade.fee?.currency}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
+                              {new Date(trade.timestamp || trade.datetime).toLocaleString()}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <p className="text-gray-500">{t('noRecentTrades')}</p>
+                )}
+              </div>
 
-          </div>
+            </div>
 
           </SwiperSlide>
           <SwiperSlide>

@@ -60,3 +60,11 @@
 - Устранены TypeScript ошибки при тестировании: заменены использования `import.meta.env` на runtime-safe проверки, добавлен `vite/client` в `tests/tsconfig.json`.
 - Добавлены моки для `swiper/react` и стилей в Jest, чтобы тесты корректно работали в среде Node.
 - Установлены тестовые зависимости `@tanstack/react-query` и `@testing-library/jest-dom` при необходимости для корректного выполнения тестов.
+
+## [v0.0.20] - 2025-11-15
+- Добавлен `ErrorBoundary` чтобы отображать читаемую информацию об ошибке вместо белого экрана в случае runtime исключений.
+- Добавлена документация `docs/FRONTEND_DEBUG.md` с краткими инструкциями по отладке белого экрана и указанием возможной смены порта Vite (например, 3000 -> 3001).
+
+## [v0.0.21] - 2025-11-15
+- Исправлена ошибка "ReferenceError: process is not defined" на фронтенде — теперь `VITE_API_URL` вычисляется безопасно (prefers `window` then `process.env`), и `import.meta.env` используется через `index.html` injection для Vite.
+- Добавлен runtime-injection `window.VITE_API_URL` в `frontend/index.html` чтобы избегать `import.meta` ссылок в коде (устранение проблем с Jest).

@@ -6,6 +6,15 @@
   <link rel="icon" type="image/svg+xml" href="/vite.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>KuCoin Trading Bot</title>
+  <script type="module">
+    // Inject Vite env into window for runtime access and tests
+    // Vite will replace import.meta.env.VITE_API_URL at build time
+    try {
+      window.VITE_API_URL = import.meta.env?.VITE_API_URL;
+    } catch (e) {
+      // ignore in non-Vite contexts
+    }
+  </script>
 </head>
 
 <body>

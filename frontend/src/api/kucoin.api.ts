@@ -1,6 +1,16 @@
 import axios from 'axios';
 
-const API_BASE_URL = ((typeof window !== 'undefined' && (window as any).VITE_API_URL) || process.env?.VITE_API_URL || 'http://localhost:5000/api');
+const getApiBase = () => {
+  // Prefer runtime config from window (tests or runtime injection)
+  if (typeof window !== 'undefined' && (window as any).VITE_API_URL) return (window as any).VITE_API_URL;
+
+  // Fallback to Node env (e.g., in tests or server-side scenarios)
+  if (typeof process !== 'undefined' && (process as any).env?.VITE_API_URL) return (process as any).env.VITE_API_URL;
+
+  return 'http://localhost:5000/api';
+};
+
+const API_BASE_URL = getApiBase();
 
 const api = axios.create({
   baseURL: API_BASE_URL,
