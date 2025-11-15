@@ -41,6 +41,13 @@ describe('TradingInterface scroll behavior', () => {
     expect(tabs.className).toMatch(/whitespace-nowrap/);
     expect(page.className).toMatch(/overflow-y-auto/);
 
+    // Проверяем, что верхнее меню приклеено при скролле и имеет границу по всей ширине
+    expect(wrapper.className).toMatch(/sticky|top-0/);
+    expect(wrapper.className).toMatch(/border-b/);
+
+    // Контейнер страницы должен подстраиваться под высоту контента (убрали `min-h-screen`)
+    expect(page.className).not.toMatch(/min-h-screen/);
+
     // Убедимся, что у контейнера нет горизонтального padding (удалили p-4)
     expect(page.className).not.toMatch(/\bp-4\b/);
     // Убедимся, что теперь используется вертикальный padding: 1rem сверху и 1.5rem снизу (pt-4 pb-6)

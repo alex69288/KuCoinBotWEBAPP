@@ -1,3 +1,41 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Custom helpers for layout spacing and scrollbars */
+/* Add 24px margin to blocks that explicitly opt in via .page-block */
+.page-block {
+  /* Add top and bottom separation between logical blocks on the page */
+  margin: 24px 0;
+  /* Keep side spacing controlled by container; this keeps grid/card layouts intact */
+}
+
+/* Ensure page container height grows with content and does not artificially fill screen */
+[data-testid="page-container"] {
+  /* Allow page container to size to its content to avoid large empty spaces below content */
+  min-height: auto;
+  height: auto;
+}
+
+/* Hide default scrollbar for horizontal overflow (top tabs wrapper). Use attribute selector so tests unaffected. */
+[data-testid="top-tabs-wrapper"] {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+  /* Hide any visible scrollbar track background and prevent an ugly gray bar when scrolling horizontally */
+  overflow-y: hidden;
+}
+
+[data-testid="top-tabs-wrapper"]::-webkit-scrollbar {
+  height: 0;
+  /* Hide horizontal scrollbar for Webkit browsers */
+}
+
+[data-testid="top-tabs-wrapper"]::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+[data-testid="top-tabs-wrapper"]::-webkit-scrollbar-thumb {
+  background: transparent;
+}
