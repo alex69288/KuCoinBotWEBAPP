@@ -3,10 +3,10 @@ import { Trade } from '../backend/src/core/bot';
 
 describe('Metrics Calculations', () => {
   const mockTrades: Trade[] = [
-    { id: '1', symbol: 'BTC/USDT', side: 'buy', amount: 1, profit: 100, timestamp: new Date() },
-    { id: '2', symbol: 'BTC/USDT', side: 'sell', amount: 1, profit: -50, timestamp: new Date() },
-    { id: '3', symbol: 'BTC/USDT', side: 'buy', amount: 1, profit: 200, timestamp: new Date() },
-    { id: '4', symbol: 'BTC/USDT', side: 'sell', amount: 1, profit: -100, timestamp: new Date() },
+    { id: '1', symbol: 'BTC/USDT', side: 'buy', amount: 1, profit: 100, timestamp: Date.now() },
+    { id: '2', symbol: 'BTC/USDT', side: 'sell', amount: 1, profit: -50, timestamp: Date.now() },
+    { id: '3', symbol: 'BTC/USDT', side: 'buy', amount: 1, profit: 200, timestamp: Date.now() },
+    { id: '4', symbol: 'BTC/USDT', side: 'sell', amount: 1, profit: -100, timestamp: Date.now() },
   ];
 
   test('calculateTotalTrades', () => {

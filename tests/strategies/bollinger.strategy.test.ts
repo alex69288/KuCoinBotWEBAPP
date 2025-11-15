@@ -6,8 +6,9 @@ describe('Bollinger Bands Strategy', () => {
     symbol: 'BTC/USDT',
     period: 20,
     multiplier: 2,
-    takeProfitPercent: 5,
+    takeProfitPercent: 4,
     stopLossPercent: 2,
+    commissionPercent: 0.1,
   };
 
   let strategy: BollingerBandsStrategy;
@@ -38,15 +39,28 @@ describe('Bollinger Bands Strategy', () => {
     expect(signal).toBe('buy');
   });
 
-  it('should return sell if price is above upper band', () => {
+  it('should return hold if price is above upper band', () => {
     const modifiedData = [...mockData];
     modifiedData[modifiedData.length - 1].close = 200;
     const signal = strategy.calculateSignal(modifiedData);
-    expect(signal).toBe('sell');
+    expect(signal).toBe('hold');
   });
 
-  it('should return sell if price is at upper band', () => {
+  it('should return hold if price is at upper band', () => {
     const signal = strategy.calculateSignal(mockData);
+    expect(signal).toBe('hold');
+  });
+
+  it('should return sell on take profit after buy', () => {
+    // First buy
+    const buyData = [...mockData];
+    buyData[buyData.length - 1].close = 80;
+    strategy.calculateSignal(buyData); // Should set buy
+
+    // Then check take profit
+    const profitData = [...mockData];
+    profitData[profitData.length - 1].close = 80 * 1.05; // 5% profit
+    const signal = strategy.calculateSignal(profitData);
     expect(signal).toBe('sell');
   });
 });

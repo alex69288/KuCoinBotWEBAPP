@@ -34,6 +34,7 @@ describe('KuCoinBot', () => {
       mlSellThreshold: 0.4,
       takeProfitPercent: 2,
       stopLossPercent: 1,
+      commissionPercent: 0.1,
       trailingStop: false,
       minHoldTime: 60
     }

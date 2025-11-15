@@ -33,7 +33,7 @@ app.use(compression());
 app.use(express.json());
 
 // Healthcheck route
-app.get('/health', (req, res) => {
+app.get('/api/health', (req, res) => {
   res.status(200).json({
     status: 'ok',
     uptime: process.uptime(),
@@ -85,6 +85,7 @@ try {
       mlSellThreshold: parseFloat(process.env.ML_SELL_THRESHOLD || '0.4'),
       takeProfitPercent: parseFloat(process.env.TAKE_PROFIT_PERCENT || '2'),
       stopLossPercent: parseFloat(process.env.STOP_LOSS_PERCENT || '1'),
+      commissionPercent: parseFloat(process.env.COMMISSION_PERCENT || '0.1'),
       trailingStop: process.env.TRAILING_STOP === 'true',
       minHoldTime: parseInt(process.env.MIN_HOLD_TIME || '60')
     },
@@ -233,6 +234,16 @@ try {
         ]]
       }
     });
+  });
+
+  bot.onText(/\/market/, async (msg) => {
+    const chatId = msg.chat.id;
+    try {
+      const message = await kucoinBot.getMarketUpdateMessage();
+      bot.sendMessage(chatId, message);
+    } catch (error) {
+      bot.sendMessage(chatId, `Ошибка получения обновления рынка: ${error.message}`);
+    }
   });
 
   // Add delay before starting server to allow previous instance to shut down

@@ -1,6 +1,6 @@
 import { BaseStrategy, OHLCVData, StrategyConfig, Signal } from './base.strategy';
 import { calculateEMA } from '../indicators/ema';
-import { RandomForestPredictor } from '../ml/random_forest.js';
+import { RandomForestPredictor } from '../ml/random_forest';
 
 export interface EmaMlConfig extends StrategyConfig {
   fastPeriod: number;
@@ -10,6 +10,7 @@ export interface EmaMlConfig extends StrategyConfig {
   mlSellThreshold: number;
   takeProfitPercent: number;
   stopLossPercent: number;
+  commissionPercent: number;
   trailingStop: boolean;
   minHoldTime: number; // in minutes
 }
@@ -51,7 +52,7 @@ export class EmaMlStrategy extends BaseStrategy {
       const profitPercent = (currentPrice - this.entryPrice) / this.entryPrice * 100;
 
       // Take profit
-      if (profitPercent >= (this.config as EmaMlConfig).takeProfitPercent) {
+      if (profitPercent >= (this.config as EmaMlConfig).takeProfitPercent + 2 * (this.config as EmaMlConfig).commissionPercent) {
         this.resetPosition();
         return 'sell';
       }
@@ -88,14 +89,6 @@ export class EmaMlStrategy extends BaseStrategy {
       this.entryTime = currentTime;
       this.trailingStopPrice = null; // Reset trailing stop
       return 'buy';
-    }
-
-    // Sell signal (if in position and conditions changed)
-    if (this.lastSignal === 'buy' &&
-      (emaDiff < -(this.config as EmaMlConfig).emaThreshold ||
-        mlConfidence < (this.config as EmaMlConfig).mlSellThreshold)) {
-      this.resetPosition();
-      return 'sell';
     }
 
     return 'hold';

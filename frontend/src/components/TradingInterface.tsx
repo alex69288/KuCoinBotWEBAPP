@@ -4,7 +4,6 @@ import { useTradingContext } from '../context/TradingContext';
 import { kucoinApi } from '../api/kucoin.api';
 import { botApi } from '../api/bot.api';
 import { useTranslation } from 'react-i18next';
-import axios from 'axios';
 
 interface DemoTrade {
   symbol: string;
@@ -17,10 +16,6 @@ interface DemoTrade {
 const TradingInterface: React.FC = () => {
   const { t } = useTranslation();
   const { selectedSymbol, setSelectedSymbol, balance, setBalance } = useTradingContext();
-  const [orderType, setOrderType] = useState<'limit' | 'market'>('limit');
-  const [orderSide, setOrderSide] = useState<'buy' | 'sell'>('buy');
-  const [amount, setAmount] = useState('');
-  const [price, setPrice] = useState('');
   const [lastStartTime, setLastStartTime] = useState<number | null>(null);
 
   // Bot state
@@ -97,10 +92,26 @@ const TradingInterface: React.FC = () => {
     refetchInterval: 10000, // Update every 10 seconds
   });
 
+  // Fetch demo trades
+  const { data: demoTrades = [] } = useQuery({
+    queryKey: ['demoTrades'],
+    queryFn: async () => {
+      return await botApi.getDemoTrades();
+    },
+    refetchInterval: 10000, // Update every 10 seconds
+  });
+
+  // Fetch market update
+  const { data: marketUpdate } = useQuery({
+    queryKey: ['marketUpdate'],
+    queryFn: botApi.getMarketUpdate,
+    refetchInterval: 10000, // Update every 10 seconds
+  });
+
   // Mutations
   const toggleDemoMode = useMutation({
     mutationFn: async ({ enabled }: { enabled: boolean }) => {
-      await axios.post('/api/demo-mode', { enabled });
+      return await botApi.setDemoMode(enabled);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['demoTrades'] });
@@ -109,7 +120,7 @@ const TradingInterface: React.FC = () => {
 
   const clearDemoTrades = useMutation({
     mutationFn: async () => {
-      await axios.delete('/api/demo-trades');
+      return await botApi.clearDemoTrades();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['demoTrades'] });
@@ -159,34 +170,6 @@ const TradingInterface: React.FC = () => {
     return () => clearInterval(interval);
   }, [lastStartTime]);
 
-  const handleCreateOrder = async () => {
-    try {
-      await kucoinApi.createOrder({
-        symbol: selectedSymbol,
-        type: orderType,
-        side: orderSide,
-        amount: parseFloat(amount),
-        price: orderType === 'limit' ? parseFloat(price) : undefined,
-      });
-      // Reset form
-      setAmount('');
-      setPrice('');
-      // Refetch balance
-      refetchBalance();
-    } catch (error) {
-      console.error('Error creating order:', error);
-    }
-  };
-
-  const handleCancelOrder = async (orderId: string, symbol: string) => {
-    try {
-      await kucoinApi.cancelOrder(orderId, symbol);
-      console.log('Order cancelled successfully');
-    } catch (error) {
-      console.error('Error cancelling order:', error);
-    }
-  };
-
   const handleStartBot = async () => {
     try {
       await botApi.startBot();
@@ -228,20 +211,8 @@ const TradingInterface: React.FC = () => {
     }
   };
 
-  const handleManualTrade = async (side: 'buy' | 'sell', amount: number) => {
-    try {
-      await botApi.manualTrade({
-        symbol: selectedSymbol,
-        side,
-        amount,
-        type: 'market'
-      });
-      console.log('Manual trade executed successfully');
-      refetchBalance();
-    } catch (error) {
-      console.error('Error executing manual trade:', error);
-    }
-  };
+  // Ensure demoTrades is always an array
+  const safeDemoTrades = Array.isArray(demoTrades) ? demoTrades : [];
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">
@@ -318,6 +289,14 @@ const TradingInterface: React.FC = () => {
             </div>
           )}
         </div>
+
+        {/* Market Update */}
+        {marketUpdate && (
+          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 className="text-xl font-semibold mb-4">📈 Обновление рынка</h2>
+            <pre className="whitespace-pre-wrap text-sm">{marketUpdate.message}</pre>
+          </div>
+        )}
 
         {/* Strategy Configuration */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
@@ -460,142 +439,7 @@ const TradingInterface: React.FC = () => {
         </div>
 
         {/* Trading Interface */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Order Form */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-semibold mb-4">{t('placeOrder')}</h2>
-
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {t('symbol')}
-                </label>
-                <select
-                  value={selectedSymbol}
-                  onChange={(e) => setSelectedSymbol(e.target.value)}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2"
-                >
-                  <option value="BTC/USDT">BTC/USDT</option>
-                  <option value="ETH/USDT">ETH/USDT</option>
-                  <option value="ADA/USDT">ADA/USDT</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {t('orderType')}
-                </label>
-                <div className="flex space-x-2">
-                  <button
-                    onClick={() => setOrderType('limit')}
-                    className={`px-3 py-1 rounded ${orderType === 'limit'
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-gray-200 text-gray-700'
-                      }`}
-                  >
-                    {t('limit')}
-                  </button>
-                  <button
-                    onClick={() => setOrderType('market')}
-                    className={`px-3 py-1 rounded ${orderType === 'market'
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-gray-200 text-gray-700'
-                      }`}
-                  >
-                    {t('market')}
-                  </button>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {t('side')}
-                </label>
-                <div className="flex space-x-2">
-                  <button
-                    onClick={() => setOrderSide('buy')}
-                    className={`px-3 py-1 rounded ${orderSide === 'buy'
-                      ? 'bg-green-500 text-white'
-                      : 'bg-gray-200 text-gray-700'
-                      }`}
-                  >
-                    {t('buy')}
-                  </button>
-                  <button
-                    onClick={() => setOrderSide('sell')}
-                    className={`px-3 py-1 rounded ${orderSide === 'sell'
-                      ? 'bg-red-500 text-white'
-                      : 'bg-gray-200 text-gray-700'
-                      }`}
-                  >
-                    {t('sell')}
-                  </button>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {t('amount')}
-                </label>
-                <input
-                  type="number"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  placeholder={t('enterAmount')}
-                />
-              </div>
-
-              {orderType === 'limit' && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {t('price')}
-                  </label>
-                  <input
-                    type="number"
-                    value={price}
-                    onChange={(e) => setPrice(e.target.value)}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2"
-                    placeholder={t('enterPrice')}
-                  />
-                </div>
-              )}
-
-              <button
-                onClick={handleCreateOrder}
-                disabled={!amount || (orderType === 'limit' && !price)}
-                className={`w-full py-2 rounded font-medium ${orderSide === 'buy'
-                  ? 'bg-green-500 hover:bg-green-600 text-white'
-                  : 'bg-red-500 hover:bg-red-600 text-white'
-                  } disabled:opacity-50 disabled:cursor-not-allowed`}
-              >
-                {orderSide === 'buy' ? t('buy') : t('sell')} {selectedSymbol}
-              </button>
-            </div>
-          </div>
-
-          {/* Manual Trading Panel */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-semibold mb-4">{t('manualTrading')}</h2>
-            <div className="grid grid-cols-2 gap-4">
-              <button
-                onClick={() => handleManualTrade('buy', 0.001)}
-                className="px-4 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 font-medium"
-              >
-                {t('buy')} 0.001 {selectedSymbol.split('/')[0]}
-              </button>
-              <button
-                onClick={() => handleManualTrade('sell', 0.001)}
-                className="px-4 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 font-medium"
-              >
-                {t('sell')} 0.001 {selectedSymbol.split('/')[0]}
-              </button>
-            </div>
-            <p className="text-sm text-gray-600 mt-2">
-              {t('quickTrade')}
-            </p>
-          </div>
-
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Market Data */}
           <div className="lg:col-span-2 space-y-6">
             {/* Ticker */}
@@ -787,32 +631,38 @@ const TradingInterface: React.FC = () => {
 
         {/* Demo Mode Control */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <h2 className="text-xl font-semibold mb-4">Demo Mode</h2>
+          <h2 className="text-xl font-semibold mb-4">{t('demoMode')}</h2>
           <div className="space-y-4">
             <button
               className="px-4 py-2 bg-blue-500 text-white rounded"
               onClick={() => toggleDemoMode.mutate({ enabled: true })}
             >
-              Enable Demo Mode
+              {t('enableDemoMode')}
             </button>
             <button
               className="px-4 py-2 bg-red-500 text-white rounded"
               onClick={() => toggleDemoMode.mutate({ enabled: false })}
             >
-              Disable Demo Mode
+              {t('disableDemoMode')}
             </button>
             <button
               className="px-4 py-2 bg-yellow-500 text-white rounded"
               onClick={() => clearDemoTrades.mutate()}
             >
-              Clear Demo Trades
+              {t('clearDemoTrades')}
             </button>
           </div>
-          <h3 className="text-lg font-medium mt-6">Demo Trades</h3>
+          <h3 className="text-lg font-medium mt-6">{t('demoTrades')}</h3>
           <ul className="mt-4 space-y-2">
-            {demoTrades.map((trade: DemoTrade, index: number) => (
+            {safeDemoTrades.map((trade: DemoTrade, index: number) => (
               <li key={index} className="text-sm">
-                {trade.side.toUpperCase()} {trade.amount} {trade.symbol} at ${trade.price} on {new Date(trade.timestamp).toLocaleString()}
+                {t('tradeDescription', {
+                  side: trade.side.toUpperCase(),
+                  amount: trade.amount,
+                  symbol: trade.symbol,
+                  price: trade.price,
+                  timestamp: new Date(trade.timestamp).toLocaleString(),
+                })}
               </li>
             ))}
           </ul>

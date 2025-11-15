@@ -11,7 +11,8 @@ describe('PriceActionStrategy', () => {
     useSupportResistance: true,
     useCandlestickPatterns: true,
     takeProfitPercent: 2,
-    stopLossPercent: 1
+    stopLossPercent: 1,
+    commissionPercent: 0.1
   };
 
   beforeEach(() => {

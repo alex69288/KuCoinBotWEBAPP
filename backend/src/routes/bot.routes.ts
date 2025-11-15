@@ -49,9 +49,65 @@ export default (bot: KuCoinBot) => {
     try {
       const { strategy, strategyConfig, enabled, maxDailyLoss, positionSizePercent } = req.body;
 
+      let newStrategyConfig = strategyConfig || bot.getConfig().strategyConfig;
+      const newStrategy = strategy || bot.getConfig().strategy;
+
+      // If strategy changed, set default config for new strategy
+      if (strategy && strategy !== bot.getConfig().strategy) {
+        const defaultConfigs = {
+          'ema-ml': {
+            symbol: 'BTC/USDT',
+            fastPeriod: 12,
+            slowPeriod: 26,
+            emaThreshold: 0.5,
+            mlBuyThreshold: 0.6,
+            mlSellThreshold: 0.4,
+            takeProfitPercent: 2,
+            stopLossPercent: 1,
+            commissionPercent: 0.1,
+            trailingStop: false,
+            minHoldTime: 60
+          },
+          'macd-rsi': {
+            symbol: 'BTC/USDT',
+            rsiPeriod: 14,
+            rsiOverbought: 70,
+            rsiOversold: 30,
+            macdFast: 12,
+            macdSlow: 26,
+            macdSignal: 9,
+            takeProfitPercent: 2,
+            stopLossPercent: 1,
+            commissionPercent: 0.1,
+            useMacdCrossover: true,
+            useRsiFilter: true
+          },
+          'price-action': {
+            symbol: 'BTC/USDT',
+            lookbackPeriod: 20,
+            breakoutThreshold: 0.01,
+            minVolume: 1000,
+            useSupportResistance: true,
+            useCandlestickPatterns: true,
+            takeProfitPercent: 2,
+            stopLossPercent: 1,
+            commissionPercent: 0.1
+          },
+          'bollinger': {
+            symbol: 'BTC/USDT',
+            period: 20,
+            multiplier: 2,
+            takeProfitPercent: 5,
+            stopLossPercent: 2,
+            commissionPercent: 0.1
+          }
+        };
+        newStrategyConfig = defaultConfigs[newStrategy as keyof typeof defaultConfigs] || newStrategyConfig;
+      }
+
       const newConfig = {
-        strategy: strategy || bot.getConfig().strategy,
-        strategyConfig: strategyConfig || bot.getConfig().strategyConfig,
+        strategy: newStrategy,
+        strategyConfig: newStrategyConfig,
         enabled: enabled !== undefined ? enabled : bot.getConfig().enabled,
         maxDailyLoss: maxDailyLoss || bot.getConfig().maxDailyLoss,
         positionSizePercent: positionSizePercent || bot.getConfig().positionSizePercent
@@ -150,6 +206,16 @@ export default (bot: KuCoinBot) => {
   router.delete('/demo-trades', (req, res) => {
     bot.clearDemoTrades();
     res.json({ message: 'Demo trades cleared' });
+  });
+
+  // Get market update message
+  router.get('/market-update', async (req, res) => {
+    try {
+      const message = await bot.getMarketUpdateMessage();
+      res.json({ message });
+    } catch (error) {
+      res.status(500).json({ error: 'failedToGetMarketUpdate' });
+    }
   });
 
   return router;

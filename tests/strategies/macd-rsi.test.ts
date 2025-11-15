@@ -13,6 +13,7 @@ describe('MacdRsiStrategy', () => {
     macdSignal: 9,
     takeProfitPercent: 2,
     stopLossPercent: 1,
+    commissionPercent: 0.1,
     useMacdCrossover: true,
     useRsiFilter: true
   };

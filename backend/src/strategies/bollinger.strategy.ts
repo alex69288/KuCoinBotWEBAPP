@@ -6,6 +6,7 @@ export interface BollingerBandsConfig extends StrategyConfig {
   multiplier: number; // Множитель для стандартного отклонения
   takeProfitPercent: number;
   stopLossPercent: number;
+  commissionPercent: number;
 }
 
 export class BollingerBandsStrategy extends BaseStrategy {
@@ -34,11 +35,25 @@ export class BollingerBandsStrategy extends BaseStrategy {
     const upperBand = upper[upper.length - 1];
     const lowerBand = lower[lower.length - 1];
 
-    if (currentPrice > upperBand) {
-      this.lastSignal = 'sell';
-      this.entryPrice = currentPrice;
-      return 'sell';
-    } else if (currentPrice < lowerBand) {
+    // Check take profit / stop loss first
+    if (this.lastSignal === 'buy' && this.entryPrice > 0) {
+      const profitPercent = (currentPrice - this.entryPrice) / this.entryPrice * 100;
+
+      if (profitPercent >= config.takeProfitPercent + 2 * config.commissionPercent) {
+        this.lastSignal = 'hold';
+        this.entryPrice = 0;
+        return 'sell';
+      }
+
+      if (profitPercent <= -config.stopLossPercent) {
+        this.lastSignal = 'hold';
+        this.entryPrice = 0;
+        return 'sell';
+      }
+    }
+
+    // Buy signal
+    if (currentPrice < lowerBand && this.lastSignal !== 'buy') {
       this.lastSignal = 'buy';
       this.entryPrice = currentPrice;
       return 'buy';

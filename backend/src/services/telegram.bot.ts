@@ -1,5 +1,6 @@
 import { Telegraf } from 'telegraf';
 import { exec } from 'node:child_process';
+import { KuCoinBot } from '../core/bot';
 
 const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 
@@ -28,6 +29,16 @@ bot.command('run', (ctx) => {
     }
     ctx.reply(`Приложение запущено: ${stdout}`);
   });
+});
+
+bot.command('market', async (ctx) => {
+  try {
+    const botInstance = KuCoinBot.getInstance();
+    const message = await botInstance.getMarketUpdateMessage();
+    ctx.reply(message);
+  } catch (error) {
+    ctx.reply(`Ошибка получения обновления рынка: ${error.message}`);
+  }
 });
 
 bot.launch()

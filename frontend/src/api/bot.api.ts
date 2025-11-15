@@ -80,6 +80,30 @@ export const botApi = {
   stopBot: async () => {
     return await botApi.stop();
   },
+
+  // Enable or disable demo mode
+  setDemoMode: async (enabled: boolean) => {
+    const response = await api.post('/bot/demo-mode', { enabled });
+    return response.data;
+  },
+
+  // Get demo trades
+  getDemoTrades: async () => {
+    const response = await api.get('/bot/demo-trades');
+    return response.data;
+  },
+
+  // Clear demo trades
+  clearDemoTrades: async () => {
+    const response = await api.delete('/bot/demo-trades');
+    return response.data;
+  },
+
+  // Get market update
+  getMarketUpdate: async () => {
+    const response = await api.get('/bot/market-update');
+    return response.data;
+  },
 };
 
 export default api;

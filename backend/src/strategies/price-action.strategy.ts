@@ -8,6 +8,7 @@ export interface PriceActionConfig extends StrategyConfig {
   useCandlestickPatterns: boolean; // Использовать свечные паттерны
   takeProfitPercent: number;
   stopLossPercent: number;
+  commissionPercent: number;
 }
 
 export class PriceActionStrategy extends BaseStrategy {
@@ -157,29 +158,41 @@ export class PriceActionStrategy extends BaseStrategy {
     const currentCandle = data[data.length - 1];
     const config = this.config as PriceActionConfig;
 
-    // Проверка на пробой уровня сопротивления
-    for (const resistance of this.resistanceLevels) {
-      if (currentCandle.close > resistance * (1 + config.breakoutThreshold / 100)) {
-        this.lastSignal = 'buy';
-        this.entryPrice = currentCandle.close;
-        return 'buy';
+    // Check take profit / stop loss first
+    if (this.lastSignal === 'buy' && this.entryPrice > 0) {
+      const profitPercent = (currentCandle.close - this.entryPrice) / this.entryPrice * 100;
+
+      if (profitPercent >= config.takeProfitPercent + 2 * config.commissionPercent) {
+        this.lastSignal = 'hold';
+        this.entryPrice = 0;
+        return 'sell';
+      }
+
+      if (profitPercent <= -config.stopLossPercent) {
+        this.lastSignal = 'hold';
+        this.entryPrice = 0;
+        return 'sell';
       }
     }
 
-    // Проверка на пробой уровня поддержки
-    for (const support of this.supportLevels) {
-      if (currentCandle.close < support * (1 - config.breakoutThreshold / 100)) {
-        this.lastSignal = 'sell';
-        this.entryPrice = currentCandle.close;
-        return 'sell';
+    // Buy signal on breakout above resistance
+    if (config.useSupportResistance) {
+      for (const resistance of this.resistanceLevels) {
+        if (currentCandle.close > resistance * (1 + config.breakoutThreshold / 100) && this.lastSignal !== 'buy') {
+          this.lastSignal = 'buy';
+          this.entryPrice = currentCandle.close;
+          return 'buy';
+        }
       }
     }
 
     // Анализ свечных паттернов (если включено)
     if (config.useCandlestickPatterns) {
       const pattern = this.detectCandlestickPatterns(data);
-      if (pattern && pattern.strength > 0.8) {
-        return pattern.pattern === 'bullish' ? 'buy' : 'sell';
+      if (pattern && pattern.strength > 0.8 && pattern.pattern.startsWith('bullish') && this.lastSignal !== 'buy') {
+        this.lastSignal = 'buy';
+        this.entryPrice = currentCandle.close;
+        return 'buy';
       }
     }
 
