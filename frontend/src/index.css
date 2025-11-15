@@ -3,7 +3,9 @@
 @tailwind utilities;
 
 /* Ensure page scrolling */
-html, body, #root {
+html,
+body,
+#root {
   overflow-y: auto;
   height: auto;
   min-height: 100vh;
@@ -40,7 +42,8 @@ html, body, #root {
   /* keep the class for tests but hide actual border; we draw the visual border using ::after */
   border-bottom-color: transparent !important;
   /* Hide any visible scrollbar track background and prevent an ugly gray bar when scrolling horizontally */
-  overflow-y: auto;
+  /* Ensure horizontal scrolling only for tabs; avoid vertical scrolling inside the menu */
+  overflow-x: auto;
 }
 
 [data-testid="top-tabs-wrapper"]::-webkit-scrollbar {
@@ -187,8 +190,9 @@ body,
 #root,
 [data-testid="page-container"] {
   height: 100%;
-  /* overflow: hidden !important; */ /* Disabled to allow page scroll */
-  /* overscroll-behavior: none; */ /* Disabled */
+  /* overflow: hidden !important; */
+  /* Disabled to allow page scroll */
+  /* overscroll-behavior: none; */
+  /* Disabled */
   /* Stop touch/scroll from propagating to parent */
 }
-
