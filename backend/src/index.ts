@@ -148,15 +148,6 @@ try {
     console.log('SIGTERM received, shutting down gracefully');
     if (kucoinBot) await kucoinBot.stop();
     if (bot) bot.stopPolling();
-    process.exit(0);
-  });
-
-  process.on('SIGINT', async () => {
-    console.log('SIGINT received, shutting down gracefully');
-    if (kucoinBot) await kucoinBot.stop();
-    if (bot) bot.stopPolling();
-    process.exit(0);
-  });
     server.close(() => {
       console.log('Server closed');
       process.exit(0);
@@ -278,10 +269,8 @@ ${update.openPositionsCount > 0 ? `💼 ПОЗИЦИЯ ОТКРЫТА (РЕЖИ�
   }
 
   // Add delay before starting server to allow previous instance to shut down
-  if (useWebhook) {
-    console.log('⏳ Waiting 5 seconds before starting server...');
-    await new Promise(resolve => setTimeout(resolve, 5000));
-  }
+  console.log('⏳ Waiting 5 seconds before starting server...');
+  await new Promise(resolve => setTimeout(resolve, 5000));
 
   // Start server
   console.log('Before server.listen');
