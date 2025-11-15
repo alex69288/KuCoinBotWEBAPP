@@ -3,7 +3,7 @@
 echo "Starting KuCoin Trading Bot..."
 
 # Start backend in background
-cd backend && npm run dev &
+cd backend && PORT=5000 npm run dev &
 BACKEND_PID=$!
 
 # Start frontend in background
@@ -12,7 +12,7 @@ FRONTEND_PID=$!
 
 echo "Both servers are starting..."
 echo "Backend: http://localhost:5000"
-echo "Frontend: http://localhost:3001"
+echo "Frontend: http://localhost:3000"
 echo "Press Ctrl+C to stop all servers"
 
 # Wait for Ctrl+C

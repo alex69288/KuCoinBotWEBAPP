@@ -2,7 +2,7 @@
 echo Starting KuCoin Trading Bot...
 
 REM Start backend
-start cmd /k "cd backend && npm run dev"
+start cmd /k "cd backend && set PORT=5000 && npm run dev"
 
 REM Start frontend
 start cmd /k "cd frontend && npm run dev"
