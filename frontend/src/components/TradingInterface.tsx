@@ -251,7 +251,7 @@ const TradingInterface: React.FC = () => {
     // Убираем горизонтальные отступы (padding) по левому и правому краям, высота контейнера подстраивается по контенту
     // Добавляем отступ снизу чтобы последний блок был на 24px от низа экрана
     <div data-testid="page-container" className="bg-gray-100 pt-4 pb-6 min-h-screen flex flex-col">
-      <div className="flex-grow">
+      <div>
         <div className="max-w-7xl mx-auto">
 
           {/* Tabs */}
