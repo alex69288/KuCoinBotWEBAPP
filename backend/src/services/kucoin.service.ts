@@ -56,7 +56,7 @@ export class KuCoinService {
   async getHistoricalData(symbol: string, timeframe: string = '1h', limit: number = 100): Promise<any[]> {
     try {
       // Add timeout to prevent hanging
-      const timeoutPromise = new Promise((_, reject) => 
+      const timeoutPromise = new Promise((_, reject) =>
         setTimeout(() => reject(new Error('Request timeout')), 10000)
       );
       const fetchPromise = this.exchange.fetchOHLCV(symbol, timeframe, undefined, limit);

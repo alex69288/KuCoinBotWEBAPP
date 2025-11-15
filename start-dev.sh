@@ -3,7 +3,7 @@
 echo "Starting KuCoin Trading Bot..."
 
 # Start backend in background
-cd backend && PORT=5000 npm run dev &
+cd backend && npm run dev &
 BACKEND_PID=$!
 
 # Start frontend in background

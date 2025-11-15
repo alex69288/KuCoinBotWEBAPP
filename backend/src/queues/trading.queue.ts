@@ -141,7 +141,7 @@ async function initQueue() {
 
     // Test Redis connection with timeout
     try {
-      const timeoutPromise = new Promise((_, reject) => 
+      const timeoutPromise = new Promise((_, reject) =>
         setTimeout(() => reject(new Error('Redis connection timeout')), 5000)
       );
       await Promise.race([tradingQueue.isReady(), timeoutPromise]);
