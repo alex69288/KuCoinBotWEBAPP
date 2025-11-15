@@ -240,7 +240,7 @@ const TradingInterface: React.FC = () => {
         {/* Tabs */}
         <div className="flex space-x-4 mb-6 border-b border-gray-200">
           <button onClick={() => setActiveTab('home')} className={`py-2 px-4 ${activeTab === 'home' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500'}`}>{t('home')}</button>
-          <button onClick={() => setActiveTab('status')} className={`py-2 px-4 ${activeTab === 'status' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500'}`}>{t('status')}</button>
+          <button onClick={() => setActiveTab('status')} className={`py-2 px-4 ${activeTab === 'status' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500'}`}>{t('statusTab')}</button>
           <button onClick={() => setActiveTab('account')} className={`py-2 px-4 ${activeTab === 'account' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500'}`}>{t('account')}</button>
           <button onClick={() => setActiveTab('history')} className={`py-2 px-4 ${activeTab === 'history' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500'}`}>{t('history')}</button>
           <button onClick={() => setActiveTab('settings')} className={`py-2 px-4 ${activeTab === 'settings' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500'}`}>{t('settings')}</button>
