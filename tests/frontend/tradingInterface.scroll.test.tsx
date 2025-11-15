@@ -39,15 +39,15 @@ describe('TradingInterface scroll behavior', () => {
 
     expect(wrapper.className).toMatch(/overflow-x-auto/);
     expect(tabs.className).toMatch(/whitespace-nowrap/);
-    // Убедимся, что страница не принудительно выставлена на внутренний скролл — теперь она подстраивается под размер контента
-    expect(page.className).not.toMatch(/overflow-y-auto/);
+    // Убедимся, что страница всегда занимает полную высоту экрана
+    expect(page.className).toMatch(/h-screen/);
 
     // Проверяем, что верхнее меню приклеено при скролле и имеет границу по всей ширине
     expect(wrapper.className).toMatch(/sticky|top-0/);
     expect(wrapper.className).toMatch(/border-b/);
 
-    // Контейнер страницы должен подстраиваться под высоту контента (убрали `min-h-screen`)
-    expect(page.className).not.toMatch(/min-h-screen/);
+    // Контейнер страницы должен всегда занимать полную высоту экрана (добавили `h-screen`)
+    expect(page.className).toMatch(/h-screen/);
 
     // Убедимся, что у контейнера нет горизонтального padding (удалили p-4)
     expect(page.className).not.toMatch(/\bp-4\b/);

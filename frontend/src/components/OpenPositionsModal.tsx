@@ -25,7 +25,7 @@ const OpenPositionsModal: React.FC<Props> = ({ open, onClose, positions, current
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-      <div className="bg-white rounded-lg p-6 max-w-2xl w-full">
+      <div className="bg-white rounded-lg p-6 max-w-2xl w-full page-block">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-semibold">{t('positions')}</h3>
           <button className="text-gray-500" onClick={onClose}>✖</button>

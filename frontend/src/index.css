@@ -5,18 +5,19 @@
 /* Custom helpers for layout spacing and scrollbars */
 /* Add 24px margin to blocks that explicitly opt in via .page-block */
 .page-block {
-  /* Add top and bottom separation between logical blocks on the page */
-  /* 24px vertical gap and 12px horizontal gap as requested */
-  margin: 24px 12px;
+  /* Add top and bottom separation between logical blocks on the page
+     Top margin set to 0 so blocks sit directly under header/each other
+     Horizontal gap is 12px, bottom gap is 24px as requested: 0 12px 24px 12px */
+  margin: 0 12px 24px 12px;
   /* Keep side spacing controlled by container for very narrow layouts; margins prevent touching edges */
 }
 
-/* Ensure page container height grows with content and does not artificially fill screen */
+/* Ensure page container height fills the screen */
 [data-testid="page-container"] {
-  /* Allow page container to size to its content to avoid large empty spaces below content */
-  min-height: 0 !important;
-  height: auto !important;
-  overflow-y: visible !important;
+  /* Make page container always fill the screen height */
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Hide default scrollbar for horizontal overflow (top tabs wrapper). Use attribute selector so tests unaffected. */
@@ -48,14 +49,40 @@
   background: transparent;
 }
 
-[data-testid="top-tabs-wrapper"]::after {
-  /* Draw the border visually 24px above the element's bottom */
+/* The gray dividing line that should not horizontally scroll is now drawn
+  on the outer (non-scrollable) wrapper. Keep the top-tabs-wrapper selector
+  but change drawing to top-tabs-outer to avoid horizontal movement. */
+/* Visual border for the scrollable tabs was intentionally moved to .top-tabs-outer
+   so it does not move horizontally when the inner tab list scrolls. */
+
+/* New non-scrolling visual separator placed under the sticky tabs.
+   This element is positioned in a parent that does not scroll horizontally
+   so the stripe remains fixed when the top tabs are scrolled horizontally. */
+.top-tabs-outer {
+  position: relative;
+}
+
+.top-tabs-outer::after {
   content: "";
   position: absolute;
   left: 0;
   right: 0;
   height: 1px;
   background-color: rgb(229 231 235);
-  bottom: 24px;
+  bottom: 0;
+  /* sits below the blue active tab border */
   pointer-events: none;
+  z-index: 10;
+  /* below the tab (z-30 on the sticky wrapper) */
+}
+
+/* Swiper slides (tab panels) should size to content and not force a tall container.
+   autoHeight is used, but provide CSS fallback to prevent large empty space. */
+.mySwiper {
+  height: auto !important;
+}
+
+.mySwiper .swiper-slide {
+  height: auto !important;
+  display: block;
 }
