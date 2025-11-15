@@ -1,7 +1,7 @@
 # Changelog
 
-## [v0.0.28] - 2025-11-16
-- Исправлена проблема с вертикальной прокруткой: изменены height на min-height для .mySwiper и .swiper-slide, overflow: hidden на overflow-y: auto для .swiper-slide, добавлены стили overflow-y: auto для html и body
+## [v0.0.29] - 2025-11-16
+- Исправлена проблема с вертикальной прокруткой: убрал overflow: hidden для html, body, #root и position: fixed для .menu, .top-tabs-wrapper, .top-tabs-outer, .gray-container, чтобы разрешить скролл всей страницы
 
 ## [v0.0.25] - 2025-11-16
 - Добавлено overflow: visible к классу .mySwiper для предотвращения обрезания контента при переходах между вкладками

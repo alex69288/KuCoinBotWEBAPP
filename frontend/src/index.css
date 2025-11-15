@@ -187,30 +187,8 @@ body,
 #root,
 [data-testid="page-container"] {
   height: 100%;
-  overflow: hidden !important;
-  /* Disable scrolling on the entire page */
-  overscroll-behavior: none;
+  /* overflow: hidden !important; */ /* Disabled to allow page scroll */
+  /* overscroll-behavior: none; */ /* Disabled */
   /* Stop touch/scroll from propagating to parent */
 }
 
-.menu,
-.top-tabs-wrapper,
-.top-tabs-outer,
-.gray-container {
-  position: fixed;
-  /* Fix the menu at the top */
-  top: 0;
-  left: 0;
-  width: 100%;
-  /* Full width */
-  height: 100vh;
-  /* Full viewport height so it can scroll independently */
-  overflow-y: auto;
-  /* Enable vertical scrolling inside the menu */
-  overscroll-behavior: contain;
-  /* Keep scroll inside menu, avoid parent scroll */
-  -webkit-overflow-scrolling: touch;
-  /* Smooth scrolling on iOS */
-  z-index: 1000;
-  /* Ensure menu stays above other elements */
-}
