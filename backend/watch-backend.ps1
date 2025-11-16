@@ -5,6 +5,9 @@
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
 Set-Location $scriptDir
 
+# cache current process id to avoid accidental overwrite of automatic $PID
+$CurrentProcessId = $PID
+
 function Free-Port {
     param([int]$Port)
     Write-Host "Checking port $Port..."
@@ -29,7 +32,7 @@ function Free-Port {
 
         $pids = $pids | Sort-Object -Unique
         foreach ($procId in $pids) {
-            if ($procId -and $procId -ne $PID) {
+            if ($procId -and $procId -ne $CurrentProcessId) {
                 Write-Host "Killing process $procId on port $Port"
                 try { Stop-Process -Id $procId -Force -ErrorAction Stop } catch { & cmd /c ("taskkill /PID {0} /T /F" -f $procId) | Out-Null }
             }
