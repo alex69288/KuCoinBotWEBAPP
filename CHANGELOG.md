@@ -1,4 +1,7 @@
 # Changelog
+## [v0.0.46] - 2025-11-16
+- Исправлен синтаксис try-catch-finally в start-dev.ps1: объединен } и finally на одну строку для корректного парсинга PowerShell.
+
 ## [v0.0.45] - 2025-11-16
 - Исправлен синтаксис try-catch-finally в start-dev.ps1: разделен } и catch на разные строки для корректного парсинга PowerShell.
 
