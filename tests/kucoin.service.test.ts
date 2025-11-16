@@ -73,3 +73,27 @@ describe('KuCoin API Integration', () => {
     expect(expectedTradesStructure).toBeDefined();
   });
 });
+
+import { kucoinService } from '../backend/src/services/kucoin.service';
+
+describe('KuCoin Service Demo Mode', () => {
+  it('should switch to demo mode', () => {
+    kucoinService.setDemoMode(true);
+    const instance = kucoinService.getInstance();
+    expect(instance.isDemo).toBe(true);
+  });
+
+  it('should switch to live mode', () => {
+    kucoinService.setDemoMode(false);
+    const instance = kucoinService.getInstance();
+    expect(instance.isDemo).toBe(false);
+  });
+
+  it('should recreate instance when mode changes', () => {
+    kucoinService.setDemoMode(true);
+    const demoInstance = kucoinService.getInstance();
+    kucoinService.setDemoMode(false);
+    const liveInstance = kucoinService.getInstance();
+    expect(demoInstance).not.toBe(liveInstance);
+  });
+});

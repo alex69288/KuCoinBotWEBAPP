@@ -1,7 +1,13 @@
 @echo off
-echo Starting KuCoin Trading Bot...
+SETLOCAL ENABLEEXTENSIONS
+SETLOCAL ENABLEDELAYEDEXPANSION
 
-REM Delegate process control to PowerShell for better signal handling
+REM Отключение обработки Ctrl+C
+cmd /c exit
+
+REM Запуск PowerShell-скрипта
 SET PS_SCRIPT=%~dp0start-dev.ps1
 pwsh -NoProfile -ExecutionPolicy Bypass -File "%PS_SCRIPT%"
-goto :eof
+
+ENDLOCAL
+exit /b 0

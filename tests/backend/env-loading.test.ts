@@ -14,7 +14,7 @@ describe('Environment loading and KuCoinService credentials', () => {
 
     const spyLog = jest.spyOn(console, 'log').mockImplementation(() => { });
     const { kucoinService } = await import('../../backend/src/services/kucoin.service.js');
-    const inst = kucoinService();
+    const inst = kucoinService.getInstance();
 
     // The service logs whether credentials are available
     const logged = spyLog.mock.calls.flat().join(' ');

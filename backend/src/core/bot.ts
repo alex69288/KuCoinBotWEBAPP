@@ -49,6 +49,8 @@ export class KuCoinBot {
   private isRunning: boolean = false;
   private positions: Position[] = [];
   private demoTrades: Trade[] = [];
+  // Snapshot of real positions saved when switching to demo mode
+  private savedPositionsSnapshot: Position[] | null = null;
   private dailyStats = {
     startBalance: 0,
     currentBalance: 0,
@@ -71,7 +73,7 @@ export class KuCoinBot {
   constructor(config: BotConfig) {
     this.config = config;
     // Use shared singleton KuCoinService to avoid multiple instances
-    this.kucoinService = kucoinService();
+    this.kucoinService = kucoinService.getInstance();
     this.initializeStrategy();
   }
 
@@ -295,8 +297,8 @@ export class KuCoinBot {
     try {
       const restoreResult = await this.restorePositions();
       console.log(`Positions restored: ${restoreResult?.restored || 0}`);
-    } catch (error) {
-      console.warn('Failed to restore positions on start:', error?.message || error);
+    } catch (error: any) {
+      console.warn('Failed to restore positions on start:', (error as any)?.message || error);
     }
 
     // Train ML model with historical data
@@ -443,9 +445,74 @@ export class KuCoinBot {
     this.config = { ...this.config, ...newConfig };
   }
 
-  public setDemoMode(enabled: boolean): void {
+  public async setDemoMode(enabled: boolean): Promise<void> {
     this.config.demoMode = enabled;
-    console.log(`Demo mode ${enabled ? 'enabled' : 'disabled'}`);
+    // set env flag so kucoinService factory can recreate appropriate instance
+    process.env.DEMO_MODE = enabled ? 'true' : 'false';
+    try {
+      // dynamic import for ESM environments
+      let mod: any;
+      try {
+        mod = await import('../services/kucoin.service');
+      } catch (e) {
+        // Some loaders (tsx/node ESM) expect .js extension at runtime
+        mod = await import('../services/kucoin.service.js');
+      }
+
+      // If enabling demo, capture current market price to seed demo service
+      const symbol = this.config.symbols[0];
+      let lastPrice: number | null = null;
+      try {
+        const ticker = await this.kucoinService.getTicker(symbol);
+        if (ticker && typeof (ticker.last) === 'number') lastPrice = ticker.last;
+      } catch (e) {
+        // ignore
+      }
+
+      // Tell the kucoinService factory to switch mode, then get the real instance
+      if (mod && typeof mod.kucoinService !== 'undefined') {
+        if (typeof mod.kucoinService.setDemoMode === 'function') {
+          mod.kucoinService.setDemoMode(enabled);
+        }
+        this.kucoinService = (typeof mod.kucoinService.getInstance === 'function')
+          ? mod.kucoinService.getInstance()
+          : mod.kucoinService;
+
+        // If demo enabled and we have a lastPrice, seed the demo service
+        if (enabled && lastPrice !== null && typeof this.kucoinService.setDemoSeedPrices === 'function') {
+          try {
+            this.kucoinService.setDemoSeedPrices({ [symbol]: lastPrice });
+            console.log('Demo service seeded with current market price for', symbol, lastPrice);
+          } catch (e) {
+            console.warn('Failed to seed demo service prices:', e);
+          }
+        }
+      } else {
+        throw new Error('kucoinService export not found in module');
+      }
+      // When enabling demo: snapshot current positions and zero them for display
+      if (enabled) {
+        try {
+          this.savedPositionsSnapshot = JSON.parse(JSON.stringify(this.positions || []));
+          // Zero-out amounts so UI shows positions but with no exposure/profit
+          this.positions = (this.positions || []).map(p => ({ ...p, amount: 0 }));
+          console.log('Demo mode: positions snapshot saved and zeroed for display');
+        } catch (e) {
+          console.warn('Failed to snapshot positions on demo enable:', e);
+        }
+      } else {
+        // Restoring positions when leaving demo mode
+        if (this.savedPositionsSnapshot) {
+          this.positions = this.savedPositionsSnapshot;
+          this.savedPositionsSnapshot = null;
+          console.log('Demo mode disabled: positions restored from snapshot');
+        }
+      }
+      console.log(`Demo mode ${enabled ? 'enabled' : 'disabled'}`);
+    } catch (error) {
+      console.error('Failed to reload kucoinService after demo mode change:', error);
+      throw error;
+    }
   }
 
   public getDemoTrades(): Trade[] {
@@ -504,7 +571,7 @@ export class KuCoinBot {
       }
 
       // Build positions from remaining buy stack
-      const restoredPositions = buyStack.map(b => ({
+      const restoredPositions: Position[] = buyStack.map(b => ({
         symbol,
         side: 'buy',
         amount: b.amount,

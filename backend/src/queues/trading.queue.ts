@@ -1,6 +1,6 @@
 import { kucoinService } from '../services/kucoin.service';
 
-const kucoinServiceInstance = kucoinService();
+const kucoinServiceInstance = kucoinService.getInstance();
 
 interface TradeJobData {
   symbol: string;

@@ -20,8 +20,8 @@ function Free-Port {
                 $lines = $net -split "\r?\n" | Where-Object { $_ -match '\S' }
                 foreach ($ln in $lines) {
                     $parts = ($ln -replace ' +', ' ') -split ' '
-                    $pid = $parts[-1]
-                    if ($pid -and $pid -match '^[0-9]+$') { $pids += [int]$pid }
+                    $processId = $parts[-1]
+                    if ($processId -and $processId -match '^[0-9]+$') { $pids += [int]$processId }
                 }
             }
         }
@@ -98,3 +98,4 @@ catch [System.Exception] {
     Free-Port 8080
     Write-Host "All stopped."
     exit 0
+} # Закрытие блока finally

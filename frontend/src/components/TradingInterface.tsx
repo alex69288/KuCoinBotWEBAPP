@@ -170,6 +170,8 @@ const TradingInterface: React.FC = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['demoTrades'] });
+      queryClient.invalidateQueries({ queryKey: ['marketUpdate'] });
+      queryClient.invalidateQueries({ queryKey: ['botConfig'] });
     }
   });
 
@@ -470,6 +472,20 @@ const TradingInterface: React.FC = () => {
                           </option>
                         ))}
                       </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">{t('demoMode')}</label>
+                      <div className="flex items-center space-x-2">
+                        <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${botConfig?.demoMode ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                          {botConfig?.demoMode ? t('enabled') : t('disabled')}
+                        </div>
+                        <button
+                          onClick={() => toggleDemoMode.mutate({ enabled: !botConfig?.demoMode })}
+                          className="px-3 py-1 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                        >
+                          {botConfig?.demoMode ? t('disable') : t('enable')}
+                        </button>
+                      </div>
                     </div>
                     <div className="flex items-end space-x-2">
                       {!botEnabled ? (

@@ -187,13 +187,26 @@ export default (bot: KuCoinBot) => {
   });
 
   // Enable or disable demo mode
-  router.post('/demo-mode', (req, res) => {
+  router.post('/demo-mode', async (req, res) => {
     const { enabled } = req.body;
     if (typeof enabled !== 'boolean') {
       return res.status(400).json({ error: 'Invalid value for enabled' });
     }
-    bot.setDemoMode(enabled);
-    res.json({ message: `Demo mode ${enabled ? 'enabled' : 'disabled'}` });
+    try {
+      await bot.setDemoMode(enabled);
+      // Return updated bot status and market update so frontend can refresh immediately
+      const status = bot.getStatus();
+      let marketUpdate: any = null;
+      try {
+        marketUpdate = await bot.getMarketUpdate();
+      } catch (e) {
+        marketUpdate = null;
+      }
+      res.json({ message: `Demo mode ${enabled ? 'enabled' : 'disabled'}`, status, marketUpdate });
+    } catch (error) {
+      console.error('Failed to change demo mode via API:', error);
+      res.status(500).json({ error: 'failedToSetDemoMode' });
+    }
   });
 
   // Get demo trades
