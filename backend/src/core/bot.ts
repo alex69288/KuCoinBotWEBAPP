@@ -627,12 +627,12 @@ export class KuCoinBot {
     // 50-60%: Нейтрально
     // 40-50%: Умеренное падение
     // <40%: Сильное падение
-    let mlText = 'НЕЙТРАЛЬНО';
-    if (mlConfidence > 0.7) mlText = 'СИЛЬНЫЙ РОСТ';
-    else if (mlConfidence >= 0.6) mlText = 'УМЕРЕННЫЙ РОСТ';
-    else if (mlConfidence >= 0.5) mlText = 'НЕЙТРАЛЬНО';
-    else if (mlConfidence >= 0.4) mlText = 'УМЕРЕННОЕ ПАДЕНИЕ';
-    else mlText = 'СИЛЬНОЕ ПАДЕНИЕ';
+    let mlText = 'Нейтрально';
+    if (mlConfidence > 0.7) mlText = 'Сильный рост';
+    else if (mlConfidence >= 0.6) mlText = 'Умеренный рост';
+    else if (mlConfidence >= 0.5) mlText = 'Нейтрально';
+    else if (mlConfidence >= 0.4) mlText = 'Умеренное падение';
+    else mlText = 'Сильное падение';
 
     // Positions
     const positions = this.positions.filter(p => p.symbol === symbol);
@@ -641,9 +641,24 @@ export class KuCoinBot {
     const stakeSize = positionSize * price;
     const entryPrice = positions[0]?.entryPrice || 0;
     const tpPrice = entryPrice * (1 + (this.config.strategyConfig.takeProfitPercent || 2) / 100);
+    // Учитываем комиссии при расчёте фактической цены для закрытия по Take Profit
+    // Комиссия применяется при покупке и при продаже (maker/taker) — берём из конфига
+    const commissionPercent = (this.config.strategyConfig?.commissionPercent ?? 0.1);
+    const buyFee = commissionPercent / 100; // комиссия при покупке
+    const sellFee = commissionPercent / 100; // комиссия при продаже
+
+    // Целевая прибыль (в десятичной форме)
+    const targetNet = (this.config.strategyConfig.takeProfitPercent || 2) / 100;
+
+    // Если хотим получить чистую прибыль targetNet после оплаты комиссий на покупку и продажу,
+    // то требуемая цена закрытия S вычисляется из уравнения:
+    // ((S * (1 - sellFee)) - (E * (1 + buyFee))) / (E * (1 + buyFee)) = targetNet
+    // => S/E = (1 + targetNet) * (1 + buyFee) / (1 - sellFee)
+    const tpPriceAdjustedForFees = entryPrice * (1 + targetNet) * (1 + buyFee) / (1 - sellFee);
     const currentProfit = positions.length > 0 ? (price - entryPrice) * positionSize : 0;
     const profitPercent = positions.length > 0 ? ((price - entryPrice) / entryPrice) * 100 : 0;
-    const toTPPercent = positions.length > 0 ? ((tpPrice - price) / price) * 100 : 0;
+    // Процент до Take Profit с учётом комиссий (по отношению к текущей цене)
+    const toTPPercent = positions.length > 0 ? ((tpPriceAdjustedForFees - price) / price) * 100 : 0;
 
     // Map positions to include runtime profit/percent per position
     const positionsList = positions.map(p => {
@@ -689,11 +704,16 @@ export class KuCoinBot {
       stakeSize,
       entryPrice,
       tpPrice,
+      // Целевая цена с учётом комиссий (для пользователя — насколько должна вырасти цена,
+      // чтобы после оплат на открытие и закрытие получить целевую прибыль)
+      tpPriceAdjustedForFees,
       currentProfit,
       profitPercent,
       toTPPercent
       ,
       positionsList
+      ,
+      config: this.config
     };
   }
 

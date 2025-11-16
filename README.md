@@ -112,10 +112,6 @@ A Telegram Web App for automated trading on KuCoin cryptocurrency exchange with 
    ```bash
    # Windows
    start-dev.bat
-
-   # Linux/Mac
-   chmod +x start-dev.sh
-   ./start-dev.sh
    ```
 
 6. **Production deployment**
@@ -124,10 +120,6 @@ A Telegram Web App for automated trading on KuCoin cryptocurrency exchange with 
    ```bash
    # Windows
    start-production.bat
-
-   # Linux/Mac
-   chmod +x start-production.sh
-   ./start-production.sh
    ```
 
 7. **Access the application**

@@ -33,12 +33,16 @@ describe('Open Positions modal', () => {
       signalText: 'ПОКУПКА',
       mlConfidence: 0.7,
       mlPercent: '70.0',
-      mlText: 'УМЕРЕННЫЙ РОСТ',
+      mlText: 'Умеренный рост',
       openPositionsCount: 1,
       positionsList: [{ symbol: 'BTC/USDT', side: 'buy', amount: 0.001, entryPrice: 9000, timestamp: Date.now(), profit: 100, profitPercent: 1.11 }],
       positionSize: 0.001,
       stakeSize: 10,
-      entryPrice: 9000
+      entryPrice: 9000,
+      tpPrice: 9180,
+      tpPriceAdjustedForFees: 9190,
+      toTPPercent: 1.5,
+      positionSize: 0.001
     };
 
     jest.spyOn(botApi, 'getMarketUpdate' as any).mockResolvedValue(mockUpdate);
@@ -71,5 +75,10 @@ describe('Open Positions modal', () => {
     // Expect modal with symbol and profit to appear
     await waitFor(() => expect(screen.getByText('BTC/USDT')).toBeInTheDocument());
     expect(screen.getByText(/100.00 USDT/)).toBeInTheDocument();
+    // Новое поле: До Take Profit
+    expect(screen.getByText(/До Take Profit/i)).toBeInTheDocument();
+    // Комиссия и оценочная сумма комиссий тоже должны отображаться
+    expect(screen.getByText(/Комиссия:/i)).toBeInTheDocument();
+    expect(screen.getByText(/Ожидаемая комиссия/i)).toBeInTheDocument();
   });
 });

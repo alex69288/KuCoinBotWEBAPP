@@ -170,6 +170,8 @@ const resources = {
       marketUpdate: 'Обновление рынка',
       signal: 'Сигнал',
       positions: 'Открытые позиции',
+      toTakeProfit: 'До Take Profit',
+      commissionEstimate: 'Ожидаемая комиссия при TP',
       viewOpenPositions: 'Подробнее',
       entryPrice: 'Цена входа',
       open: 'открытых',

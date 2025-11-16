@@ -7182,3 +7182,2526 @@ Trained Random Forest model with 500 samples
 ℹ️ Using Telegram polling for development
 ⏳ Waiting 5 seconds before starting server...
 Before server.listen
+20:21:55 [tsx] change in ./src\core\bot.ts Rerunning...
+cLoading .env from: C:\Users\user\Documents\Scripts\KuCoinBotV5WEBAPP\backend\.env
+File exists: true
+dotenv result: {
+  parsed: {
+    PORT: '8080',
+    BACKEND_URL: 'http://localhost:8080',
+    FRONTEND_URL: 'http://localhost:3000',
+    KUCOIN_API_KEY: '6918cb078e482000016f3e53',
+    KUCOIN_API_SECRET: '4603d01c-a2f1-486b-a68f-26aae5d74706',
+    KUCOIN_API_PASSPHRASE: "j&5R$}MX7]&3EtUK4'JN",
+    TELEGRAM_BOT_TOKEN: '8363311891:AAHJZn0lrKjYCZin11dJbdIGYgFSVBpouHY',
+    TELEGRAM_CHAT_ID: '8094232103',
+    WEBAPP_URL: 'https://kucoinbot-frontend-docker.amvera.io',
+    REDIS_URL: 'redis://127.0.0.1:6379',
+    NODE_ENV: 'production',
+    REDIS_PASSWORD: '312556'
+  }
+}
+KUCOIN_API_KEY: 6918cb078e482000016f3e53
+Starting application...
+🔧 Environment: NODE_ENV=production, isProduction=true
+🔧 URLs: FRONTEND_URL=http://localhost:3000, BACKEND_URL=http://localhost:8080
+🔧 Bot Token: present
+🤖 Telegram bot mode: polling
+kucoinService: mode changed or instance not initialized, recreating instance, demo= false
+kucoinService: creating instance, demo= false
+Creating KuCoinService instance 0.17269400125269696
+Initializing KuCoin with the following credentials:
+apiKey: ***
+secret: ***
+password: ***
+KuCoin exchange initialized: Success
+Credentials available: Yes
+🔧 Redis config: NODE_ENV=production, REDIS_URL=present
+ℹ️ Using localhost Redis (production) or in-memory fallback
+🔧 Final Redis config: {"host":"127.0.0.1","port":6379,"hasPassword":true}
+✅ Redis queue initialized successfully
+✅ Trading queue initialized
+kucoinService: returning existing instance, demo= false
+Manual position added: {
+  symbol: 'BTC/USDT',
+  side: 'buy',
+  amount: 0.00001,
+  entryPrice: 110185.7,
+  timestamp: 1762062027000
+}
+Manual position added: {
+  symbol: 'BTC/USDT',
+  side: 'buy',
+  amount: 0.00001,
+  entryPrice: 103573.5,
+  timestamp: 1762389695000
+}
+🤖 KuCoin Bot started
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 500, id: 0.17269400125269696 }
+fetchMyTrades raw sample: []
+Positions restored: 0
+Trained Random Forest model with 500 samples
+✅ KuCoin Bot started
+ℹ️ Using Telegram polling for development
+⏳ Waiting 5 seconds before starting server...
+Before server.listen
+🚀 Server is running on http://localhost:8080
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+fetchClosedOrders raw sample: []
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.17269400125269696 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.16037399999999996,
+    profitPercent: -14.554883256175705
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09425199999999997,
+    profitPercent: -9.100011103226208
+  }
+]
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+fetchMyTrades raw sample: []
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+fetchClosedOrders raw sample: []
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.17269400125269696 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.160335,
+    profitPercent: -14.551343776914791
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09421300000000003,
+    profitPercent: -9.096245661293674
+  }
+]
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+fetchMyTrades raw sample: []
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+fetchClosedOrders raw sample: []
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.17269400125269696 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.16019300000000003,
+    profitPercent: -14.538456442169903
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09407100000000007,
+    profitPercent: -9.082535590667502
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+fetchClosedOrders raw sample: []
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.17269400125269696 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15987599999999993,
+    profitPercent: -14.509686828690105
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09375399999999995,
+    profitPercent: -9.051929306241457
+  }
+]
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+fetchMyTrades raw sample: []
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+fetchClosedOrders raw sample: []
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.17269400125269696 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15903599999999993,
+    profitPercent: -14.433451890762585
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09291399999999995,
+    profitPercent: -8.970827480002118
+  }
+]
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+fetchMyTrades raw sample: []
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+fetchClosedOrders raw sample: []
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.17269400125269696 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15874399999999997,
+    profitPercent: -14.406951174244927
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09262199999999998,
+    profitPercent: -8.942634940404638
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+fetchClosedOrders raw sample: []
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.17269400125269696 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15825899999999996,
+    profitPercent: -14.362934573179636
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09213699999999998,
+    profitPercent: -8.895808290730734
+  }
+]
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+fetchMyTrades raw sample: []
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.17269400125269696 hasCredentials = true
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15804599999999994,
+    profitPercent: -14.3436035710623
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09192399999999995,
+    profitPercent: -8.87524318479147
+  }
+]
+fetchMyTrades raw sample: []
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.17269400125269696 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+fetchClosedOrders raw sample: []
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15812099999999993,
+    profitPercent: -14.350410261948685
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09199899999999996,
+    profitPercent: -8.882484419277127
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.17269400125269696 hasCredentials = true
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+fetchClosedOrders raw sample: []
+fetchOpenOrders raw length=0 BTC/USDT
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+fetchMyTrades raw sample: []
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15802399999999994,
+    profitPercent: -14.34160694173563
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09190199999999998,
+    profitPercent: -8.87311908934235
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.17269400125269696 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+fetchClosedOrders raw sample: []
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15804500000000002,
+    profitPercent: -14.343512815183823
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09192300000000003,
+    profitPercent: -8.875146634998337
+  }
+]
+fetchMyTrades raw sample: []
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.17269400125269696 hasCredentials = true
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+fetchClosedOrders raw sample: []
+fetchOpenOrders raw length=0 BTC/USDT
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15820199999999998,
+    profitPercent: -14.357761488105986
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09208000000000001,
+    profitPercent: -8.890304952521639
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.17269400125269696 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+fetchClosedOrders raw sample: []
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+fetchMyTrades raw sample: []
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15828599999999993,
+    profitPercent: -14.365384981898732
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09216399999999995,
+    profitPercent: -8.898415135145568
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.17269400125269696 hasCredentials = true
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+fetchOpenOrders raw length=0 BTC/USDT
+fetchClosedOrders raw sample: []
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+fetchMyTrades raw sample: []
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15818300000000005,
+    profitPercent: -14.356037126414773
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09206100000000006,
+    profitPercent: -8.888470506451945
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.17269400125269696 hasCredentials = true
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+fetchClosedOrders raw sample: []
+fetchOpenOrders raw length=0 BTC/USDT
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.158107,
+    profitPercent: -14.349139679649896
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09198500000000001,
+    profitPercent: -8.881132722173144
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.17269400125269696 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+fetchClosedOrders raw sample: []
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+fetchMyTrades raw sample: []
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15801300000000004,
+    profitPercent: -14.3406086270723
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09189100000000007,
+    profitPercent: -8.872057041617794
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.17269400125269696 hasCredentials = true
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+fetchOpenOrders raw length=0 BTC/USDT
+fetchClosedOrders raw sample: []
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+fetchMyTrades raw sample: []
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15806,
+    profitPercent: -14.344874153361097
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09193800000000003,
+    profitPercent: -8.876594881895468
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.17269400125269696 hasCredentials = true
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+fetchOpenOrders raw length=0 BTC/USDT
+fetchClosedOrders raw sample: []
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15808300000000003,
+    profitPercent: -14.34696153856626
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09196100000000007,
+    profitPercent: -8.87881552713774
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.17269400125269696 hasCredentials = true
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+fetchOpenOrders raw length=0 BTC/USDT
+fetchClosedOrders raw sample: []
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+fetchMyTrades raw sample: []
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15818500000000002,
+    profitPercent: -14.356218638171741
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09206300000000003,
+    profitPercent: -8.888663606038227
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.17269400125269696 hasCredentials = true
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+fetchOpenOrders raw length=0 BTC/USDT
+fetchClosedOrders raw sample: []
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+fetchMyTrades raw sample: []
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.158102,
+    profitPercent: -14.348685900257472
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09198,
+    profitPercent: -8.880649973207433
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.17269400125269696 hasCredentials = true
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+fetchClosedOrders raw sample: []
+fetchOpenOrders raw length=0 BTC/USDT
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15818599999999994,
+    profitPercent: -14.356309394050218
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09206399999999995,
+    profitPercent: -8.88876015583136
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.17269400125269696 hasCredentials = true
+fetchMyTrades raw sample: []
+fetchClosedOrders raw sample: []
+fetchOpenOrders raw length=0 BTC/USDT
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15818599999999994,
+    profitPercent: -14.356309394050218
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09206399999999995,
+    profitPercent: -8.88876015583136
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.17269400125269696 hasCredentials = true
+fetchClosedOrders raw sample: []
+fetchOpenOrders raw length=0 BTC/USDT
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+fetchMyTrades raw sample: []
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15789399999999995,
+    profitPercent: -14.32980867753256
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09177199999999998,
+    profitPercent: -8.86056761623388
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.17269400125269696 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+fetchClosedOrders raw sample: []
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15749500000000002,
+    profitPercent: -14.293597082016996
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09137300000000004,
+    profitPercent: -8.8220442487702
+  }
+]
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+fetchMyTrades raw sample: []
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.17269400125269696 hasCredentials = true
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.17269400125269696 }
+fetchClosedOrders raw sample: []
+fetchOpenOrders raw length=0 BTC/USDT
+20:26:25 [tsx] change in ./src\routes\kucoin.routes.ts Restarting...
+cLoading .env from: C:\Users\user\Documents\Scripts\KuCoinBotV5WEBAPP\backend\.env
+File exists: true
+dotenv result: {
+  parsed: {
+    PORT: '8080',
+    BACKEND_URL: 'http://localhost:8080',
+    FRONTEND_URL: 'http://localhost:3000',
+    KUCOIN_API_KEY: '6918cb078e482000016f3e53',
+    KUCOIN_API_SECRET: '4603d01c-a2f1-486b-a68f-26aae5d74706',
+    KUCOIN_API_PASSPHRASE: "j&5R$}MX7]&3EtUK4'JN",
+    TELEGRAM_BOT_TOKEN: '8363311891:AAHJZn0lrKjYCZin11dJbdIGYgFSVBpouHY',
+    TELEGRAM_CHAT_ID: '8094232103',
+    WEBAPP_URL: 'https://kucoinbot-frontend-docker.amvera.io',
+    REDIS_URL: 'redis://127.0.0.1:6379',
+    NODE_ENV: 'production',
+    REDIS_PASSWORD: '312556'
+  }
+}
+KUCOIN_API_KEY: 6918cb078e482000016f3e53
+Starting application...
+🔧 Environment: NODE_ENV=production, isProduction=true
+🔧 URLs: FRONTEND_URL=http://localhost:3000, BACKEND_URL=http://localhost:8080
+🔧 Bot Token: present
+🤖 Telegram bot mode: polling
+kucoinService: mode changed or instance not initialized, recreating instance, demo= false
+kucoinService: creating instance, demo= false
+Creating KuCoinService instance 0.9462604180994043
+Initializing KuCoin with the following credentials:
+apiKey: ***
+secret: ***
+password: ***
+KuCoin exchange initialized: Success
+Credentials available: Yes
+🔧 Redis config: NODE_ENV=production, REDIS_URL=present
+ℹ️ Using localhost Redis (production) or in-memory fallback
+🔧 Final Redis config: {"host":"127.0.0.1","port":6379,"hasPassword":true}
+✅ Redis queue initialized successfully
+✅ Trading queue initialized
+kucoinService: returning existing instance, demo= false
+Manual position added: {
+  symbol: 'BTC/USDT',
+  side: 'buy',
+  amount: 0.00001,
+  entryPrice: 110185.7,
+  timestamp: 1762062027000
+}
+Manual position added: {
+  symbol: 'BTC/USDT',
+  side: 'buy',
+  amount: 0.00001,
+  entryPrice: 103573.5,
+  timestamp: 1762389695000
+}
+🤖 KuCoin Bot started
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 500, id: 0.9462604180994043 }
+fetchMyTrades raw sample: []
+Positions restored: 0
+Trained Random Forest model with 500 samples
+✅ KuCoin Bot started
+ℹ️ Using Telegram polling for development
+⏳ Waiting 5 seconds before starting server...
+Before server.listen
+🚀 Server is running on http://localhost:8080
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.9462604180994043 }
+fetchMyTrades raw sample: []
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15813699999999997,
+    profitPercent: -14.351862356004453
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09201500000000001,
+    profitPercent: -8.884029215967406
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.9462604180994043 }
+fetchClosedOrders raw sample: []
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.9462604180994043 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15813899999999995,
+    profitPercent: -14.352043867761418
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09201699999999997,
+    profitPercent: -8.884222315553686
+  }
+]
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.9462604180994043 }
+fetchMyTrades raw sample: []
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.9462604180994043 }
+fetchClosedOrders raw sample: []
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.9462604180994043 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15810300000000005,
+    profitPercent: -14.34877665613596
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09198100000000006,
+    profitPercent: -8.88074652300058
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.9462604180994043 }
+fetchClosedOrders raw sample: []
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.9462604180994043 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.9462604180994043 }
+fetchMyTrades raw sample: []
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15814,
+    profitPercent: -14.352134623639909
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09201800000000003,
+    profitPercent: -8.884318865346835
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.9462604180994043 }
+fetchClosedOrders raw sample: []
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.9462604180994043 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.1581609999999999,
+    profitPercent: -14.354040497088091
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09203899999999995,
+    profitPercent: -8.886346411002808
+  }
+]
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.9462604180994043 }
+fetchMyTrades raw sample: []
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.9462604180994043 }
+fetchClosedOrders raw sample: []
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.9462604180994043 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15828,
+    profitPercent: -14.36484044662783
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09215800000000003,
+    profitPercent: -8.897835836386724
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.9462604180994043 }
+fetchClosedOrders raw sample: []
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.9462604180994043 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.9462604180994043 }
+fetchMyTrades raw sample: []
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15831,
+    profitPercent: -14.367563122982382
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09218800000000003,
+    profitPercent: -8.900732330180986
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.9462604180994043 }
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.9462604180994043 hasCredentials = true
+fetchClosedOrders raw sample: []
+fetchOpenOrders raw length=0 BTC/USDT
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15831599999999993,
+    profitPercent: -14.368107658253287
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09219399999999994,
+    profitPercent: -8.90131162893983
+  }
+]
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.9462604180994043 }
+fetchMyTrades raw sample: []
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.9462604180994043 }
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.9462604180994043 hasCredentials = true
+fetchClosedOrders raw sample: []
+fetchOpenOrders raw length=0 BTC/USDT
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15831800000000004,
+    profitPercent: -14.368289170010268
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09219600000000007,
+    profitPercent: -8.901504728526124
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.9462604180994043 }
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.9462604180994043 hasCredentials = true
+fetchClosedOrders raw sample: []
+fetchOpenOrders raw length=0 BTC/USDT
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.9462604180994043 }
+fetchMyTrades raw sample: []
+20:28:25 [tsx] change in ./src\core\bot.ts Restarting...
+cLoading .env from: C:\Users\user\Documents\Scripts\KuCoinBotV5WEBAPP\backend\.env
+File exists: true
+dotenv result: {
+  parsed: {
+    PORT: '8080',
+    BACKEND_URL: 'http://localhost:8080',
+    FRONTEND_URL: 'http://localhost:3000',
+    KUCOIN_API_KEY: '6918cb078e482000016f3e53',
+    KUCOIN_API_SECRET: '4603d01c-a2f1-486b-a68f-26aae5d74706',
+    KUCOIN_API_PASSPHRASE: "j&5R$}MX7]&3EtUK4'JN",
+    TELEGRAM_BOT_TOKEN: '8363311891:AAHJZn0lrKjYCZin11dJbdIGYgFSVBpouHY',
+    TELEGRAM_CHAT_ID: '8094232103',
+    WEBAPP_URL: 'https://kucoinbot-frontend-docker.amvera.io',
+    REDIS_URL: 'redis://127.0.0.1:6379',
+    NODE_ENV: 'production',
+    REDIS_PASSWORD: '312556'
+  }
+}
+KUCOIN_API_KEY: 6918cb078e482000016f3e53
+Starting application...
+🔧 Environment: NODE_ENV=production, isProduction=true
+🔧 URLs: FRONTEND_URL=http://localhost:3000, BACKEND_URL=http://localhost:8080
+🔧 Bot Token: present
+🤖 Telegram bot mode: polling
+kucoinService: mode changed or instance not initialized, recreating instance, demo= false
+kucoinService: creating instance, demo= false
+Creating KuCoinService instance 0.8083109894224931
+Initializing KuCoin with the following credentials:
+apiKey: ***
+secret: ***
+password: ***
+KuCoin exchange initialized: Success
+Credentials available: Yes
+🔧 Redis config: NODE_ENV=production, REDIS_URL=present
+ℹ️ Using localhost Redis (production) or in-memory fallback
+🔧 Final Redis config: {"host":"127.0.0.1","port":6379,"hasPassword":true}
+✅ Redis queue initialized successfully
+✅ Trading queue initialized
+kucoinService: returning existing instance, demo= false
+Manual position added: {
+  symbol: 'BTC/USDT',
+  side: 'buy',
+  amount: 0.00001,
+  entryPrice: 110185.7,
+  timestamp: 1762062027000
+}
+Manual position added: {
+  symbol: 'BTC/USDT',
+  side: 'buy',
+  amount: 0.00001,
+  entryPrice: 103573.5,
+  timestamp: 1762389695000
+}
+🤖 KuCoin Bot started
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 500, id: 0.8083109894224931 }
+fetchMyTrades raw sample: []
+Positions restored: 0
+Trained Random Forest model with 500 samples
+✅ KuCoin Bot started
+ℹ️ Using Telegram polling for development
+⏳ Waiting 5 seconds before starting server...
+Before server.listen
+🚀 Server is running on http://localhost:8080
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.8083109894224931 }
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.8083109894224931 hasCredentials = true
+fetchClosedOrders raw sample: []
+fetchOpenOrders raw length=0 BTC/USDT
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15822199999999997,
+    profitPercent: -14.35957660567569
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.0921,
+    profitPercent: -8.89223594838448
+  }
+]
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.8083109894224931 }
+fetchMyTrades raw sample: []
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.8083109894224931 }
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.8083109894224931 hasCredentials = true
+20:28:53 [tsx] change in ./src\index.ts Restarting...
+cLoading .env from: C:\Users\user\Documents\Scripts\KuCoinBotV5WEBAPP\backend\.env
+File exists: true
+dotenv result: {
+  parsed: {
+    PORT: '8080',
+    BACKEND_URL: 'http://localhost:8080',
+    FRONTEND_URL: 'http://localhost:3000',
+    KUCOIN_API_KEY: '6918cb078e482000016f3e53',
+    KUCOIN_API_SECRET: '4603d01c-a2f1-486b-a68f-26aae5d74706',
+    KUCOIN_API_PASSPHRASE: "j&5R$}MX7]&3EtUK4'JN",
+    TELEGRAM_BOT_TOKEN: '8363311891:AAHJZn0lrKjYCZin11dJbdIGYgFSVBpouHY',
+    TELEGRAM_CHAT_ID: '8094232103',
+    WEBAPP_URL: 'https://kucoinbot-frontend-docker.amvera.io',
+    REDIS_URL: 'redis://127.0.0.1:6379',
+    NODE_ENV: 'production',
+    REDIS_PASSWORD: '312556'
+  }
+}
+KUCOIN_API_KEY: 6918cb078e482000016f3e53
+Starting application...
+🔧 Environment: NODE_ENV=production, isProduction=true
+🔧 URLs: FRONTEND_URL=http://localhost:3000, BACKEND_URL=http://localhost:8080
+🔧 Bot Token: present
+🤖 Telegram bot mode: polling
+kucoinService: mode changed or instance not initialized, recreating instance, demo= false
+kucoinService: creating instance, demo= false
+Creating KuCoinService instance 0.6568636352069406
+Initializing KuCoin with the following credentials:
+apiKey: ***
+secret: ***
+password: ***
+KuCoin exchange initialized: Success
+Credentials available: Yes
+🔧 Redis config: NODE_ENV=production, REDIS_URL=present
+ℹ️ Using localhost Redis (production) or in-memory fallback
+🔧 Final Redis config: {"host":"127.0.0.1","port":6379,"hasPassword":true}
+✅ Redis queue initialized successfully
+✅ Trading queue initialized
+kucoinService: returning existing instance, demo= false
+Manual position added: {
+  symbol: 'BTC/USDT',
+  side: 'buy',
+  amount: 0.00001,
+  entryPrice: 110185.7,
+  timestamp: 1762062027000
+}
+Manual position added: {
+  symbol: 'BTC/USDT',
+  side: 'buy',
+  amount: 0.00001,
+  entryPrice: 103573.5,
+  timestamp: 1762389695000
+}
+🤖 KuCoin Bot started
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 500, id: 0.6568636352069406 }
+fetchMyTrades raw sample: []
+Positions restored: 0
+Trained Random Forest model with 500 samples
+✅ KuCoin Bot started
+ℹ️ Using Telegram polling for development
+⏳ Waiting 5 seconds before starting server...
+Before server.listen
+🚀 Server is running on http://localhost:8080
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.6568636352069406 }
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.6568636352069406 }
+fetchMyTrades raw sample: []
+fetchClosedOrders raw sample: []
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.6568636352069406 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15838899999999995,
+    profitPercent: -14.374732837382703
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09226699999999997,
+    profitPercent: -8.908359763839204
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.6568636352069406 }
+fetchClosedOrders raw sample: []
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.6568636352069406 }
+fetchMyTrades raw sample: []
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.6568636352069406 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.157602,
+    profitPercent: -14.303307961014902
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09148,
+    profitPercent: -8.832375076636398
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.6568636352069406 }
+fetchClosedOrders raw sample: []
+20:29:30 [tsx] change in ./src\core\bot.ts Restarting...
+cLoading .env from: C:\Users\user\Documents\Scripts\KuCoinBotV5WEBAPP\backend\.env
+File exists: true
+dotenv result: {
+  parsed: {
+    PORT: '8080',
+    BACKEND_URL: 'http://localhost:8080',
+    FRONTEND_URL: 'http://localhost:3000',
+    KUCOIN_API_KEY: '6918cb078e482000016f3e53',
+    KUCOIN_API_SECRET: '4603d01c-a2f1-486b-a68f-26aae5d74706',
+    KUCOIN_API_PASSPHRASE: "j&5R$}MX7]&3EtUK4'JN",
+    TELEGRAM_BOT_TOKEN: '8363311891:AAHJZn0lrKjYCZin11dJbdIGYgFSVBpouHY',
+    TELEGRAM_CHAT_ID: '8094232103',
+    WEBAPP_URL: 'https://kucoinbot-frontend-docker.amvera.io',
+    REDIS_URL: 'redis://127.0.0.1:6379',
+    NODE_ENV: 'production',
+    REDIS_PASSWORD: '312556'
+  }
+}
+KUCOIN_API_KEY: 6918cb078e482000016f3e53
+Starting application...
+🔧 Environment: NODE_ENV=production, isProduction=true
+🔧 URLs: FRONTEND_URL=http://localhost:3000, BACKEND_URL=http://localhost:8080
+🔧 Bot Token: present
+🤖 Telegram bot mode: polling
+kucoinService: mode changed or instance not initialized, recreating instance, demo= false
+kucoinService: creating instance, demo= false
+Creating KuCoinService instance 0.026323957667301334
+Initializing KuCoin with the following credentials:
+apiKey: ***
+secret: ***
+password: ***
+KuCoin exchange initialized: Success
+Credentials available: Yes
+🔧 Redis config: NODE_ENV=production, REDIS_URL=present
+ℹ️ Using localhost Redis (production) or in-memory fallback
+🔧 Final Redis config: {"host":"127.0.0.1","port":6379,"hasPassword":true}
+✅ Redis queue initialized successfully
+✅ Trading queue initialized
+kucoinService: returning existing instance, demo= false
+Manual position added: {
+  symbol: 'BTC/USDT',
+  side: 'buy',
+  amount: 0.00001,
+  entryPrice: 110185.7,
+  timestamp: 1762062027000
+}
+Manual position added: {
+  symbol: 'BTC/USDT',
+  side: 'buy',
+  amount: 0.00001,
+  entryPrice: 103573.5,
+  timestamp: 1762389695000
+}
+🤖 KuCoin Bot started
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 500, id: 0.026323957667301334 }
+fetchMyTrades raw sample: []
+Positions restored: 0
+Trained Random Forest model with 500 samples
+✅ KuCoin Bot started
+ℹ️ Using Telegram polling for development
+⏳ Waiting 5 seconds before starting server...
+Before server.listen
+🚀 Server is running on http://localhost:8080
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.026323957667301334 }
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15775199999999998,
+    profitPercent: -14.316921342787673
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09163,
+    profitPercent: -8.846857545607708
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.026323957667301334 }
+fetchMyTrades raw sample: []
+fetchClosedOrders raw sample: []
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.026323957667301334 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15775300000000003,
+    profitPercent: -14.317012098666163
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09163100000000006,
+    profitPercent: -8.846954095400857
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.026323957667301334 }
+fetchClosedOrders raw sample: []
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.026323957667301334 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.026323957667301334 }
+fetchMyTrades raw sample: []
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.026323957667301334 }
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15799099999999994,
+    profitPercent: -14.338611997745618
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09186899999999995,
+    profitPercent: -8.869932946168657
+  }
+]
+fetchClosedOrders raw sample: []
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.026323957667301334 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.026323957667301334 }
+fetchMyTrades raw sample: []
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.026323957667301334 }
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15799099999999994,
+    profitPercent: -14.338611997745618
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09186899999999995,
+    profitPercent: -8.869932946168657
+  }
+]
+fetchClosedOrders raw sample: []
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.026323957667301334 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15727899999999995,
+    profitPercent: -14.2739938122642
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09115699999999997,
+    profitPercent: -8.801189493451506
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.026323957667301334 }
+fetchClosedOrders raw sample: []
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.026323957667301334 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.026323957667301334 }
+fetchMyTrades raw sample: []
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15733699999999998,
+    profitPercent: -14.27925765321634
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.091215,
+    profitPercent: -8.80678938145375
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.026323957667301334 }
+fetchClosedOrders raw sample: []
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.026323957667301334 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.026323957667301334 }
+fetchMyTrades raw sample: []
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15756199999999998,
+    profitPercent: -14.299677725875497
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09144000000000001,
+    profitPercent: -8.828513084910714
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.026323957667301334 }
+fetchClosedOrders raw sample: []
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.026323957667301334 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15756599999999993,
+    profitPercent: -14.300040749389431
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09144399999999996,
+    profitPercent: -8.82889928408328
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.026323957667301334 }
+fetchClosedOrders raw sample: []
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.026323957667301334 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.026323957667301334 }
+fetchMyTrades raw sample: []
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15775800000000004,
+    profitPercent: -14.317465878058588
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09163600000000006,
+    profitPercent: -8.847436844366568
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.026323957667301334 }
+fetchClosedOrders raw sample: []
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.026323957667301334 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.026323957667301334 }
+fetchMyTrades raw sample: []
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.157852,
+    profitPercent: -14.325996930636187
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09173,
+    profitPercent: -8.856512524921916
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.026323957667301334 }
+fetchClosedOrders raw sample: []
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.026323957667301334 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15793300000000005,
+    profitPercent: -14.333348156793488
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09181100000000006,
+    profitPercent: -8.864333058166428
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.026323957667301334 }
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.026323957667301334 hasCredentials = true
+fetchClosedOrders raw sample: []
+fetchOpenOrders raw length=0 BTC/USDT
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.026323957667301334 }
+fetchMyTrades raw sample: []
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15798,
+    profitPercent: -14.337613683082287
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09185800000000004,
+    profitPercent: -8.868870898444104
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.026323957667301334 }
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.026323957667301334 hasCredentials = true
+fetchClosedOrders raw sample: []
+fetchOpenOrders raw length=0 BTC/USDT
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.026323957667301334 }
+fetchMyTrades raw sample: []
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15793399999999996,
+    profitPercent: -14.333438912671967
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09181199999999998,
+    profitPercent: -8.864429607959561
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.026323957667301334 }
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.026323957667301334 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+fetchClosedOrders raw sample: []
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15802800000000003,
+    profitPercent: -14.341969965249577
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09190600000000007,
+    profitPercent: -8.873505288514925
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.026323957667301334 hasCredentials = true
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.026323957667301334 }
+fetchClosedOrders raw sample: []
+fetchOpenOrders raw length=0 BTC/USDT
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.026323957667301334 }
+fetchMyTrades raw sample: []
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15835000000000002,
+    profitPercent: -14.37119335812179
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09222800000000003,
+    profitPercent: -8.904594321906668
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.026323957667301334 }
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.026323957667301334 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+fetchClosedOrders raw sample: []
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.026323957667301334 }
+fetchMyTrades raw sample: []
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15835300000000005,
+    profitPercent: -14.37146562575725
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09223100000000006,
+    profitPercent: -8.904883971286097
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.026323957667301334 hasCredentials = true
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.026323957667301334 }
+fetchClosedOrders raw sample: []
+fetchOpenOrders raw length=0 BTC/USDT
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15836699999999998,
+    profitPercent: -14.372736208056033
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09224500000000001,
+    profitPercent: -8.90623566839008
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.026323957667301334 }
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.026323957667301334 }
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.026323957667301334 hasCredentials = true
+fetchMyTrades raw sample: []
+fetchClosedOrders raw sample: []
+fetchOpenOrders raw length=0 BTC/USDT
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.1585209999999999,
+    profitPercent: -14.38671261334274
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09239899999999995,
+    profitPercent: -8.921104336533954
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.026323957667301334 }
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.026323957667301334 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+fetchClosedOrders raw sample: []
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.026323957667301334 }
+fetchMyTrades raw sample: []
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15858199999999997,
+    profitPercent: -14.39224872193034
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09246000000000001,
+    profitPercent: -8.926993873915626
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.026323957667301334 hasCredentials = true
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.026323957667301334 }
+fetchOpenOrders raw length=0 BTC/USDT
+fetchClosedOrders raw sample: []
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15877599999999992,
+    profitPercent: -14.40985536235645
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09265399999999994,
+    profitPercent: -8.94572453378518
+  }
+]
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.026323957667301334 }
+fetchMyTrades raw sample: []
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.026323957667301334 hasCredentials = true
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.026323957667301334 }
+fetchClosedOrders raw sample: []
+fetchOpenOrders raw length=0 BTC/USDT
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15872899999999995,
+    profitPercent: -14.40558983606765
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09260699999999998,
+    profitPercent: -8.941186693507506
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.026323957667301334 }
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.026323957667301334 hasCredentials = true
+fetchClosedOrders raw sample: []
+fetchOpenOrders raw length=0 BTC/USDT
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.026323957667301334 }
+fetchMyTrades raw sample: []
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.15881,
+    profitPercent: -14.412941062224954
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09268800000000003,
+    profitPercent: -8.94900722675202
+  }
+]
+20:42:38 [tsx] change in ./src\index.ts Rerunning...
+cLoading .env from: C:\Users\user\Documents\Scripts\KuCoinBotV5WEBAPP\backend\.env
+File exists: true
+dotenv result: {
+  parsed: {
+    PORT: '8080',
+    BACKEND_URL: 'http://localhost:8080',
+    FRONTEND_URL: 'http://localhost:3000',
+    KUCOIN_API_KEY: '6918cb078e482000016f3e53',
+    KUCOIN_API_SECRET: '4603d01c-a2f1-486b-a68f-26aae5d74706',
+    KUCOIN_API_PASSPHRASE: "j&5R$}MX7]&3EtUK4'JN",
+    TELEGRAM_BOT_TOKEN: '8363311891:AAHJZn0lrKjYCZin11dJbdIGYgFSVBpouHY',
+    TELEGRAM_CHAT_ID: '8094232103',
+    WEBAPP_URL: 'https://kucoinbot-frontend-docker.amvera.io',
+    REDIS_URL: 'redis://127.0.0.1:6379',
+    NODE_ENV: 'production',
+    REDIS_PASSWORD: '312556'
+  }
+}
+KUCOIN_API_KEY: 6918cb078e482000016f3e53
+Starting application...
+🔧 Environment: NODE_ENV=production, isProduction=true
+🔧 URLs: FRONTEND_URL=http://localhost:3000, BACKEND_URL=http://localhost:8080
+🔧 Bot Token: present
+🤖 Telegram bot mode: polling
+kucoinService: mode changed or instance not initialized, recreating instance, demo= false
+kucoinService: creating instance, demo= false
+Creating KuCoinService instance 0.4659612169877514
+Initializing KuCoin with the following credentials:
+apiKey: ***
+secret: ***
+password: ***
+KuCoin exchange initialized: Success
+Credentials available: Yes
+🔧 Redis config: NODE_ENV=production, REDIS_URL=present
+ℹ️ Using localhost Redis (production) or in-memory fallback
+🔧 Final Redis config: {"host":"127.0.0.1","port":6379,"hasPassword":true}
+✅ Redis queue initialized successfully
+✅ Trading queue initialized
+kucoinService: returning existing instance, demo= false
+Manual position added: {
+  symbol: 'BTC/USDT',
+  side: 'buy',
+  amount: 0.00001,
+  entryPrice: 110185.7,
+  timestamp: 1762062027000
+}
+Manual position added: {
+  symbol: 'BTC/USDT',
+  side: 'buy',
+  amount: 0.00001,
+  entryPrice: 103573.5,
+  timestamp: 1762389695000
+}
+🤖 KuCoin Bot started
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 500, id: 0.4659612169877514 }
+fetchMyTrades raw sample: []
+Positions restored: 0
+Trained Random Forest model with 500 samples
+✅ KuCoin Bot started
+ℹ️ Using Telegram polling for development
+⏳ Waiting 5 seconds before starting server...
+Before server.listen
+🚀 Server is running on http://localhost:8080
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.4659612169877514 }
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.16086,
+    profitPercent: -14.59899061311949
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09473800000000003,
+    profitPercent: -9.146934302693259
+  }
+]
+fetchMyTrades raw sample: []
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.4659612169877514 }
+fetchClosedOrders raw sample: []
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.4659612169877514 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.16115000000000002,
+    profitPercent: -14.625309817880177
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09502800000000004,
+    profitPercent: -9.174933742704459
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.4659612169877514 }
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.4659612169877514 hasCredentials = true
+fetchClosedOrders raw sample: []
+fetchOpenOrders raw length=0 BTC/USDT
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.4659612169877514 }
+fetchMyTrades raw sample: []
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.16136199999999998,
+    profitPercent: -14.644550064119025
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09524,
+    profitPercent: -9.195402298850574
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.4659612169877514 }
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.4659612169877514 hasCredentials = true
+fetchClosedOrders raw sample: []
+fetchOpenOrders raw length=0 BTC/USDT
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.4659612169877514 }
+fetchMyTrades raw sample: []
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.161365,
+    profitPercent: -14.644822331754485
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09524300000000004,
+    profitPercent: -9.195691948230003
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.4659612169877514 }
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.4659612169877514 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+fetchClosedOrders raw sample: []
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.1613809999999999,
+    profitPercent: -14.646274425810239
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09525899999999995,
+    profitPercent: -9.19723674492027
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.4659612169877514 hasCredentials = true
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.4659612169877514 }
+fetchOpenOrders raw length=0 BTC/USDT
+fetchClosedOrders raw sample: []
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.4659612169877514 }
+fetchMyTrades raw sample: []
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.16138000000000002,
+    profitPercent: -14.646183669931762
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09525800000000004,
+    profitPercent: -9.197140195127135
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.4659612169877514 hasCredentials = true
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.4659612169877514 }
+fetchOpenOrders raw length=0 BTC/USDT
+fetchClosedOrders raw sample: []
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.4659612169877514 }
+fetchMyTrades raw sample: []
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.16138000000000002,
+    profitPercent: -14.646183669931762
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09525800000000004,
+    profitPercent: -9.197140195127135
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.4659612169877514 hasCredentials = true
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.4659612169877514 }
+fetchClosedOrders raw sample: []
+fetchOpenOrders raw length=0 BTC/USDT
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.16145,
+    profitPercent: -14.652536581425721
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09532800000000004,
+    profitPercent: -9.203898680647079
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.4659612169877514 }
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.4659612169877514 hasCredentials = true
+fetchClosedOrders raw sample: []
+fetchOpenOrders raw length=0 BTC/USDT
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.4659612169877514 }
+fetchMyTrades raw sample: []
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.16145,
+    profitPercent: -14.652536581425721
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09532800000000004,
+    profitPercent: -9.203898680647079
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.4659612169877514 }
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.4659612169877514 hasCredentials = true
+fetchClosedOrders raw sample: []
+fetchOpenOrders raw length=0 BTC/USDT
+20:44:25 [tsx] change in ./src\index.ts Restarting...
+cLoading .env from: C:\Users\user\Documents\Scripts\KuCoinBotV5WEBAPP\backend\.env
+File exists: true
+dotenv result: {
+  parsed: {
+    PORT: '8080',
+    BACKEND_URL: 'http://localhost:8080',
+    FRONTEND_URL: 'http://localhost:3000',
+    KUCOIN_API_KEY: '6918cb078e482000016f3e53',
+    KUCOIN_API_SECRET: '4603d01c-a2f1-486b-a68f-26aae5d74706',
+    KUCOIN_API_PASSPHRASE: "j&5R$}MX7]&3EtUK4'JN",
+    TELEGRAM_BOT_TOKEN: '8363311891:AAHJZn0lrKjYCZin11dJbdIGYgFSVBpouHY',
+    TELEGRAM_CHAT_ID: '8094232103',
+    WEBAPP_URL: 'https://kucoinbot-frontend-docker.amvera.io',
+    REDIS_URL: 'redis://127.0.0.1:6379',
+    NODE_ENV: 'production',
+    REDIS_PASSWORD: '312556'
+  }
+}
+KUCOIN_API_KEY: 6918cb078e482000016f3e53
+Starting application...
+🔧 Environment: NODE_ENV=production, isProduction=true
+🔧 URLs: FRONTEND_URL=http://localhost:3000, BACKEND_URL=http://localhost:8080
+🔧 Bot Token: present
+🤖 Telegram bot mode: polling
+kucoinService: mode changed or instance not initialized, recreating instance, demo= false
+kucoinService: creating instance, demo= false
+Creating KuCoinService instance 0.7737661971902379
+Initializing KuCoin with the following credentials:
+apiKey: ***
+secret: ***
+password: ***
+KuCoin exchange initialized: Success
+Credentials available: Yes
+🔧 Redis config: NODE_ENV=production, REDIS_URL=present
+ℹ️ Using localhost Redis (production) or in-memory fallback
+🔧 Final Redis config: {"host":"127.0.0.1","port":6379,"hasPassword":true}
+✅ Redis queue initialized successfully
+✅ Trading queue initialized
+kucoinService: returning existing instance, demo= false
+Manual position added: {
+  symbol: 'BTC/USDT',
+  side: 'buy',
+  amount: 0.00001,
+  entryPrice: 110185.7,
+  timestamp: 1762062027000
+}
+Manual position added: {
+  symbol: 'BTC/USDT',
+  side: 'buy',
+  amount: 0.00001,
+  entryPrice: 103573.5,
+  timestamp: 1762389695000
+}
+🤖 KuCoin Bot started
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 500, id: 0.7737661971902379 }
+fetchMyTrades raw sample: []
+Positions restored: 0
+Trained Random Forest model with 500 samples
+✅ KuCoin Bot started
+ℹ️ Using Telegram polling for development
+⏳ Waiting 5 seconds before starting server...
+Before server.listen
+🚀 Server is running on http://localhost:8080
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.7737661971902379 }
+fetchMyTrades raw sample: []
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.161177,
+    profitPercent: -14.627760226599277
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09505500000000001,
+    profitPercent: -9.177540587119292
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.7737661971902379 }
+fetchClosedOrders raw sample: []
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.7737661971902379 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.161285,
+    profitPercent: -14.637561861475673
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09516300000000004,
+    profitPercent: -9.187967964778638
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.7737661971902379 }
+fetchClosedOrders raw sample: []
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.7737661971902379 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.7737661971902379 }
+fetchMyTrades raw sample: []
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.16132599999999991,
+    profitPercent: -14.641282852493557
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.09520399999999996,
+    profitPercent: -9.191926506297454
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.7737661971902379 }
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.7737661971902379 hasCredentials = true
+fetchClosedOrders raw sample: []
+fetchOpenOrders raw length=0 BTC/USDT
+kucoinService: returning existing instance, demo= false
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.7737661971902379 }
+fetchMyTrades raw sample: []
+getMarketUpdate: totalPositions= 2 filteredForSymbol= 2
+getMarketUpdate: positionsList sample= [
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 110185.7,
+    timestamp: 1762062027000,
+    profit: -0.16122199999999998,
+    profitPercent: -14.631844241131105
+  },
+  {
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    amount: 0.00001,
+    entryPrice: 103573.5,
+    timestamp: 1762389695000,
+    profit: -0.0951,
+    profitPercent: -9.181885327810685
+  }
+]
+kucoinService: returning existing instance, demo= false
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.7737661971902379 }
+kucoinService: returning existing instance, demo= false
+getOpenOrders: id = 0.7737661971902379 hasCredentials = true
+fetchClosedOrders raw sample: []
+fetchOpenOrders raw length=0 BTC/USDT

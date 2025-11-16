@@ -632,3 +632,25 @@ Failed to start server: Error: listen EADDRINUSE: address already in use :::8080
 }
 Port 8080 is already in use. Please check if another instance is running.
 💡 Try waiting longer or check Amvera configuration
+Error fetching order history: InvalidNonce: kucoin {"code":"400002","msg":"Invalid KC-API-TIMESTAMP"}
+    at kucoin.throwExactlyMatchedException (c:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/base/Exchange.js:5291:19)
+    at kucoin.handleErrors (file:///C:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/kucoin.js:5781:14)
+    at <anonymous> (c:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/base/Exchange.js:794:51)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at kucoin.fetch2 (c:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/base/Exchange.js:4795:24)
+    at kucoin.request (c:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/base/Exchange.js:4819:16)
+    at async kucoin.fetchOrdersByStatus (file:///C:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/kucoin.js:3246:24)
+    at async kucoin.fetchClosedOrders (file:///C:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/kucoin.js:3327:16)
+    at KuCoinService.getOrderHistory (c:\Users\user\Documents\Scripts\KuCoinBotV5WEBAPP\backend\src\services\kucoin.service.ts:155:19)
+    at <anonymous> (c:\Users\user\Documents\Scripts\KuCoinBotV5WEBAPP\backend\src\routes\kucoin.routes.ts:101:20)
+Error fetching open orders: InvalidNonce: kucoin {"code":"400002","msg":"Invalid KC-API-TIMESTAMP"}
+    at kucoin.throwExactlyMatchedException (c:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/base/Exchange.js:5291:19)
+    at kucoin.handleErrors (file:///C:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/kucoin.js:5781:14)
+    at <anonymous> (c:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/base/Exchange.js:794:51)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at kucoin.fetch2 (c:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/base/Exchange.js:4795:24)
+    at kucoin.request (c:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/base/Exchange.js:4819:16)
+    at async kucoin.fetchOrdersByStatus (file:///C:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/kucoin.js:3246:24)
+    at async kucoin.fetchOpenOrders (file:///C:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/kucoin.js:3359:16)
+    at KuCoinService.getOpenOrders (c:\Users\user\Documents\Scripts\KuCoinBotV5WEBAPP\backend\src\services\kucoin.service.ts:127:19)
+    at <anonymous> (c:\Users\user\Documents\Scripts\KuCoinBotV5WEBAPP\backend\src\routes\kucoin.routes.ts:78:20)

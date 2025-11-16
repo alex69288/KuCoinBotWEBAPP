@@ -34,7 +34,7 @@ services:
     volumes:
       - ./backend:/app
       - /app/node_modules
-    command: sh start-with-delay.sh
+    command: ["sh","-c","sleep 25 && npx nodemon --watch src --exec 'npx tsx src/index.ts'"]
     restart: always
     stdin_open: true
     tty: true
@@ -58,7 +58,7 @@ services:
     volumes:
       - ./frontend:/app
       - /app/node_modules
-    command: sh -c "npm run dev"
+    command: ["sh","-c","sleep 10 && npm run dev"]
     restart: always
     stdin_open: true
     tty: true

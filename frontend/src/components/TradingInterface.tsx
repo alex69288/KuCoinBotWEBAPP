@@ -405,6 +405,15 @@ const TradingInterface: React.FC = () => {
                         {marketUpdate.openPositionsCount > 0 && (
                           <div className="text-sm text-gray-600">
                             {t('profit')}: {marketUpdate.profitPercent ? marketUpdate.profitPercent.toFixed(2) : '0.00'}%
+                            <div>
+                              {t('toTakeProfit')}: {marketUpdate.toTPPercent ? marketUpdate.toTPPercent.toFixed(2) : '0.00'}%
+                            </div>
+                            <div>
+                              🛡️ {t('fee')}: {botConfig?.strategyConfig?.commissionPercent || 0.1}% на покупку / {botConfig?.strategyConfig?.commissionPercent || 0.1}% на продажу (итого: {((botConfig?.strategyConfig?.commissionPercent || 0.1) * 2).toFixed(2)}%)
+                            </div>
+                            <div>
+                              💸 {t('commissionEstimate')}: {((marketUpdate.positionSize || 0) * (marketUpdate.entryPrice || 0) * ((botConfig?.strategyConfig?.commissionPercent || 0.1) / 100) + (marketUpdate.positionSize || 0) * (marketUpdate.tpPriceAdjustedForFees || marketUpdate.tpPrice || 0) * ((botConfig?.strategyConfig?.commissionPercent || 0.1) / 100)).toFixed(4)} USDT
+                            </div>
                           </div>
                         )}
                         <OpenPositionsModal

@@ -87,4 +87,29 @@ describe('KuCoinBot', () => {
     expect(bot.getStatus().positions.length).toBe(0);
     expect(bot.getStatus().stats.currentBalance).toBeGreaterThanOrEqual(initialBalance);
   });
+
+  test('getMarketUpdate includes commission when calculating toTPPercent', async () => {
+    // Prepare environment
+    // Set current price via kucoinService mock
+    (bot as any).kucoinService.getTicker = async () => ({ last: 10100, percentage: 0 });
+    // Provide market data to avoid division by zero
+    (bot as any).marketData = [{ close: 10100 }];
+
+    // Add an open position at entryPrice = 10000
+    bot.addPosition({ symbol: 'BTC/USDT', side: 'buy', amount: 0.001, entryPrice: 10000, timestamp: Date.now() });
+
+    // Get market update
+    const update: any = await bot.getMarketUpdate();
+
+    expect(update.openPositionsCount).toBeGreaterThan(0);
+
+    const commissionPercent = (bot.getStatus().config as any).strategyConfig.commissionPercent;
+    const targetNet = ((bot.getStatus().config as any).strategyConfig.takeProfitPercent) / 100;
+    const buyFee = commissionPercent / 100;
+    const sellFee = commissionPercent / 100;
+    const expectedTpPriceAdjusted = 10000 * (1 + targetNet) * (1 + buyFee) / (1 - sellFee);
+    const expectedToTPPercent = ((expectedTpPriceAdjusted - 10100) / 10100) * 100;
+
+    expect(Math.abs(update.toTPPercent - expectedToTPPercent)).toBeLessThan(0.0001);
+  });
 });
