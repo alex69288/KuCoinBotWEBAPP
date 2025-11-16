@@ -63,7 +63,8 @@ try {
     Wait-Process -Id $backendProc.Id, $frontendProc.Id
 } catch [System.Exception] {
     Write-Host "Interrupted — stopping child processes..."
-} finally {
+}
+finally {
     foreach ($p in @($backendProc, $frontendProc)) {
         if ($p) {
             try {
