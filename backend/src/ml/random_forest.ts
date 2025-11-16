@@ -7,10 +7,9 @@ export class RandomForestPredictor {
     console.log(`Trained Random Forest model with ${data.length} samples`);
   }
 
-  predict(data: OHLCVData[]): number {
+  predict(data: OHLCVData[]): string {
     // Placeholder for Random Forest prediction logic
-    // Return fraction in range 0..1 (confidence) — not percentage
-    // Replace this with actual model inference logic
-    return Math.random();
+    // Return status based on confidence
+    return 'neutral'; // Default
   }
 }

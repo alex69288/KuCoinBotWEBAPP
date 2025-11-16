@@ -45,7 +45,7 @@ export class EmaMlStrategy extends BaseStrategy {
     const emaDiff = (fastEMA - slowEMA) / slowEMA * 100; // percentage difference
 
     // Get ML prediction
-    const mlConfidence = this.mlPredictor.predict(data);
+    const mlStatus = this.mlPredictor.predict(data);
 
     // Check take profit / stop loss / trailing stop
     if (this.lastSignal === 'buy' && this.entryPrice > 0) {
@@ -82,7 +82,7 @@ export class EmaMlStrategy extends BaseStrategy {
 
     // Buy signal
     if (emaDiff > (this.config as EmaMlConfig).emaThreshold &&
-      mlConfidence > (this.config as EmaMlConfig).mlBuyThreshold &&
+      (mlStatus === 'strong_up' || mlStatus === 'moderate_up') &&
       this.lastSignal !== 'buy') {
       this.lastSignal = 'buy';
       this.entryPrice = currentPrice;

@@ -47,7 +47,7 @@ export class SimpleMLPredictor {
     };
   }
 
-  predict(data: OHLCVData[]): number {
+  predict(data: OHLCVData[]): string {
     if (data.length < 50) return 0.5; // Not enough data
 
     const closes = data.map(d => d.close);
@@ -74,11 +74,22 @@ export class SimpleMLPredictor {
     // If model is trained, use it; otherwise use rule-based
     if (this.model && this.model.constructor.name === 'RandomForestClassifier') {
       const prediction = this.model.predictProba([features]);
-      // prediction[0][1] is probability of class 1 (up)
-      return prediction[0][1];
+      const confidence = prediction[0][1];
+      if (confidence > 0.7) return 'strong_up';
+      else if (confidence > 0.6) return 'moderate_up';
+      else if (confidence > 0.5) return 'neutral';
+      else if (confidence > 0.4) return 'moderate_down';
+      else return 'strong_down';
     }
 
-    return this.model.predict(features);
+    // Rule-based fallback
+    const [emaFast, emaSlow, rsi, macd, bbUpper, bbLower] = features;
+    if (emaFast > emaSlow && rsi < 70) {
+      return 'strong_up';
+    } else if (emaFast < emaSlow && rsi > 30) {
+      return 'strong_down';
+    }
+    return 'neutral';
   }
 
   // Train the Random Forest model
