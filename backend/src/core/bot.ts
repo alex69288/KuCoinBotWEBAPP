@@ -627,12 +627,12 @@ export class KuCoinBot {
     // 50-60%: Нейтрально
     // 40-50%: Умеренное падение
     // <40%: Сильное падение
-    let mlText = 'Нейтрально';
-    if (mlConfidence > 0.7) mlText = 'Сильный рост';
-    else if (mlConfidence >= 0.6) mlText = 'Умеренный рост';
-    else if (mlConfidence >= 0.5) mlText = 'Нейтрально';
-    else if (mlConfidence >= 0.4) mlText = 'Умеренное падение';
-    else mlText = 'Сильное падение';
+    let mlText = 'НЕЙТРАЛЬНО';
+    if (mlConfidence > 0.7) mlText = 'СИЛЬНЫЙ РОСТ';
+    else if (mlConfidence >= 0.6) mlText = 'УМЕРЕННЫЙ РОСТ';
+    else if (mlConfidence >= 0.5) mlText = 'НЕЙТРАЛЬНО';
+    else if (mlConfidence >= 0.4) mlText = 'УМЕРЕННОЕ ПАДЕНИЕ';
+    else mlText = 'СИЛЬНОЕ ПАДЕНИЕ';
 
     // Positions
     const positions = this.positions.filter(p => p.symbol === symbol);
