@@ -62,5 +62,4 @@ start "Frontend Server" cmd /k "npm run preview"
 echo Production servers started successfully!
 echo Backend: http://localhost:5000
 echo Frontend: http://localhost:3000
-echo Press any key to exit...
-pause >nul
+exit /b 0
