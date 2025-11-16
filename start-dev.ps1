@@ -61,7 +61,8 @@ Write-Host "Press Ctrl+C in this terminal to stop both windows and free ports."
 
 try {
     Wait-Process -Id $backendProc.Id, $frontendProc.Id
-} catch [System.Exception] {
+}
+catch [System.Exception] {
     Write-Host "Interrupted — stopping child processes..."
 }
 finally {
