@@ -1,0 +1,189 @@
+
+> kucoin-bot-backend@1.0.0 dev
+> tsx watch src/index.ts
+
+Loading .env from: C:\Users\user\Documents\Scripts\KuCoinBotV5WEBAPP\backend\.env
+File exists: true
+dotenv result: {
+  parsed: {
+    PORT: '8080',
+    BACKEND_URL: 'http://localhost:8080',
+    FRONTEND_URL: 'http://localhost:3000',
+    KUCOIN_API_KEY: '6918cb078e482000016f3e53',
+    KUCOIN_API_SECRET: '4603d01c-a2f1-486b-a68f-26aae5d74706',
+    KUCOIN_API_PASSPHRASE: "j&5R$}MX7]&3EtUK4'JN",
+    TELEGRAM_BOT_TOKEN: '8363311891:AAHJZn0lrKjYCZin11dJbdIGYgFSVBpouHY',
+    TELEGRAM_CHAT_ID: '8094232103',
+    WEBAPP_URL: 'https://kucoinbot-frontend-docker.amvera.io',
+    REDIS_URL: 'redis://127.0.0.1:6379',
+    NODE_ENV: 'production',
+    REDIS_PASSWORD: '312556'
+  }
+}
+KUCOIN_API_KEY: 6918cb078e482000016f3e53
+Starting application...
+🔧 Environment: NODE_ENV=production, isProduction=true
+🔧 URLs: FRONTEND_URL=http://localhost:3000, BACKEND_URL=http://localhost:8080
+🔧 Bot Token: present
+🤖 Telegram bot mode: polling
+kucoinService called, instance exists: false
+Creating new instance
+Creating KuCoinService instance 0.8939674039908827
+Initializing KuCoin with the following credentials:
+apiKey: 6918cb078e482000016f3e53
+secret: 4603d01c-a2f1-486b-a68f-26aae5d74706
+password: j&5R$}MX7]&3EtUK4'JN
+KuCoin exchange initialized: Success
+Credentials available: Yes
+🔧 Redis config: NODE_ENV=production, REDIS_URL=present
+ℹ️ Using localhost Redis (production) or in-memory fallback
+🔧 Final Redis config: {"host":"127.0.0.1","port":6379,"hasPassword":true}
+✅ Redis queue initialized successfully
+kucoinService called, instance exists: true
+Returning existing instance 0.8939674039908827
+✅ Trading queue initialized
+Creating KuCoinService instance 0.21010940322323934
+Initializing KuCoin with the following credentials:
+apiKey: 6918cb078e482000016f3e53
+secret: 4603d01c-a2f1-486b-a68f-26aae5d74706
+password: j&5R$}MX7]&3EtUK4'JN
+KuCoin exchange initialized: Success
+Credentials available: Yes
+🤖 KuCoin Bot started
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 500, id: 0.21010940322323934 }
+fetchMyTrades raw sample: []
+Positions restored: 0
+Trained Random Forest model with 500 samples
+✅ KuCoin Bot started
+ℹ️ Using Telegram polling for development
+⏳ Waiting 5 seconds before starting server...
+Before server.listen
+🚀 Server is running on http://localhost:8080
+getOpenOrders: id = 0.8939674039908827 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.8939674039908827 }
+fetchClosedOrders raw sample: []
+getOpenOrders: id = 0.8939674039908827 hasCredentials = true
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.8939674039908827 }
+fetchOpenOrders raw length=0 BTC/USDT
+fetchMyTrades raw sample: []
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.8939674039908827 }
+fetchClosedOrders raw sample: []
+getOpenOrders: id = 0.8939674039908827 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 500, id: 0.8939674039908827 }
+fetchMyTrades raw sample: []
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 500, id: 0.8939674039908827 }
+fetchClosedOrders raw sample: []
+getOpenOrders: id = 0.8939674039908827 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 500, id: 0.21010940322323934 }
+fetchMyTrades raw sample: []
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.8939674039908827 }
+fetchMyTrades raw sample: []
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.8939674039908827 }
+fetchClosedOrders raw sample: []
+getOpenOrders: id = 0.8939674039908827 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.8939674039908827 }
+fetchClosedOrders raw sample: []
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.8939674039908827 }
+getOpenOrders: id = 0.8939674039908827 hasCredentials = true
+fetchMyTrades raw sample: []
+fetchOpenOrders raw length=0 BTC/USDT
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.8939674039908827 }
+fetchClosedOrders raw sample: []
+getOpenOrders: id = 0.8939674039908827 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.8939674039908827 }
+fetchMyTrades raw sample: []
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.8939674039908827 }
+fetchClosedOrders raw sample: []
+getOpenOrders: id = 0.8939674039908827 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.8939674039908827 }
+fetchClosedOrders raw sample: []
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.8939674039908827 }
+fetchMyTrades raw sample: []
+getOpenOrders: id = 0.8939674039908827 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.8939674039908827 }
+fetchClosedOrders raw sample: []
+getOpenOrders: id = 0.8939674039908827 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.8939674039908827 }
+fetchMyTrades raw sample: []
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.8939674039908827 }
+fetchClosedOrders raw sample: []
+getOpenOrders: id = 0.8939674039908827 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.8939674039908827 }
+fetchClosedOrders raw sample: []
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.8939674039908827 }
+fetchMyTrades raw sample: []
+getOpenOrders: id = 0.8939674039908827 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.8939674039908827 }
+fetchClosedOrders raw sample: []
+getOpenOrders: id = 0.8939674039908827 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.8939674039908827 }
+fetchMyTrades raw sample: []
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.8939674039908827 }
+fetchClosedOrders raw sample: []
+getOpenOrders: id = 0.8939674039908827 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.8939674039908827 }
+fetchClosedOrders raw sample: []
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.8939674039908827 }
+fetchMyTrades raw sample: []
+getOpenOrders: id = 0.8939674039908827 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.8939674039908827 }
+fetchClosedOrders raw sample: []
+getOpenOrders: id = 0.8939674039908827 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.8939674039908827 }
+fetchMyTrades raw sample: []
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.8939674039908827 }
+fetchClosedOrders raw sample: []
+getOpenOrders: id = 0.8939674039908827 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.8939674039908827 }
+fetchClosedOrders raw sample: []
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.8939674039908827 }
+fetchMyTrades raw sample: []
+getOpenOrders: id = 0.8939674039908827 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.8939674039908827 }
+fetchClosedOrders raw sample: []
+getOpenOrders: id = 0.8939674039908827 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.8939674039908827 }
+fetchMyTrades raw sample: []
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.8939674039908827 }
+fetchClosedOrders raw sample: []
+getOpenOrders: id = 0.8939674039908827 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.8939674039908827 }
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.8939674039908827 }
+fetchMyTrades raw sample: []
+fetchClosedOrders raw sample: []
+getOpenOrders: id = 0.8939674039908827 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.8939674039908827 }
+fetchClosedOrders raw sample: []
+getOpenOrders: id = 0.8939674039908827 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.8939674039908827 }
+fetchMyTrades raw sample: []
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.8939674039908827 }
+fetchClosedOrders raw sample: []
+getOpenOrders: id = 0.8939674039908827 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 50, id: 0.8939674039908827 }
+fetchMyTrades raw sample: []
+getOrderHistory: fetching closed orders { symbol: 'BTC/USDT', limit: 50, id: 0.8939674039908827 }
+fetchClosedOrders raw sample: []
+getOpenOrders: id = 0.8939674039908827 hasCredentials = true
+fetchOpenOrders raw length=0 BTC/USDT

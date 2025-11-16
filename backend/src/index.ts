@@ -46,6 +46,8 @@ app.use(cors({
 }));
 app.use(compression());
 app.use(express.json());
+// Accept text/csv payloads for trade import
+app.use(express.text({ type: ['text/*', 'application/csv', 'text/csv'] }));
 
 // Healthcheck route
 app.get('/api/health', (req, res) => {
@@ -114,6 +116,52 @@ try {
   // Routes
   app.use('/api/kucoin', kucoinRoutes);
   app.use('/api/bot', botRoutesFactory(kucoinBot));
+
+  // One-time manual positions from CSV (hardcoded two open buys)
+  try {
+    // These two positions come from the provided CSV and represent remaining open buys
+    const manualPositions = [
+      {
+        symbol: (botConfig.strategyConfig as any).symbol || 'BTC/USDT',
+        side: 'buy',
+        amount: 0.00001,
+        entryPrice: 110185.7,
+        timestamp: new Date('2025-11-02T05:40:27Z').getTime()
+      },
+      {
+        symbol: (botConfig.strategyConfig as any).symbol || 'BTC/USDT',
+        side: 'buy',
+        amount: 0.00001,
+        entryPrice: 103573.5,
+        timestamp: new Date('2025-11-06T00:41:35Z').getTime()
+      }
+    ];
+    for (const p of manualPositions) {
+      try { kucoinBot.addPosition(p as any); } catch (e) { console.warn('Failed to add manual position', e); }
+    }
+  } catch (e) {
+    console.warn('Failed to add manual positions:', e);
+  }
+
+  // One-time import of trades from CSV file if present (for manual restoration)
+  try {
+    const importsDir = path.join(__dirname, '..', 'imports');
+    const importFile = path.join(importsDir, 'initial_trades.csv');
+    if (fs.existsSync(importFile)) {
+      try {
+        const csv = fs.readFileSync(importFile, 'utf8');
+        console.log('Found initial trades CSV, importing...');
+        const importResult = await kucoinBot.importTradesCsv(csv);
+        console.log('Import result:', importResult);
+        // remove file after successful import to avoid repeated imports
+        try { fs.unlinkSync(importFile); console.log('Initial trades CSV removed after import'); } catch (e) { console.warn('Failed to remove import file:', e); }
+      } catch (e) {
+        console.error('Failed to read/import initial trades CSV:', e);
+      }
+    }
+  } catch (e) {
+    console.warn('Import step failed:', e);
+  }
 
   if (botConfig.enabled) {
     await kucoinBot.start();

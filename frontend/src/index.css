@@ -112,9 +112,9 @@ body,
 .mySwiper .swiper-slide>div {
   overflow-y: auto;
   height: 100%;
-    /* Prevent slide content from exceeding most of the viewport height (leave small margin)
+  /* Prevent slide content from exceeding most of the viewport height (leave small margin)
       and allow internal scrolling when content is larger than this limit. */
-    max-height: calc(98vh - var(--tabs-height, 64px));
+  max-height: calc(98vh - var(--tabs-height, 64px));
   overscroll-behavior: contain;
   /* keep scroll inside slide */
   -webkit-overflow-scrolling: touch;

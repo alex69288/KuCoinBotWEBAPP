@@ -218,5 +218,28 @@ export default (bot: KuCoinBot) => {
     }
   });
 
+  // Restore open positions from exchange trade history
+  router.post('/restore-positions', async (req, res) => {
+    try {
+      const result = await bot.restorePositions();
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({ error: 'failedToRestorePositions' });
+    }
+  });
+
+  // Import trades CSV and restore positions
+  router.post('/import-trades', async (req, res) => {
+    try {
+      const csv = req.body as string;
+      if (!csv || typeof csv !== 'string') return res.status(400).json({ error: 'invalidCsv' });
+      const result = await bot.importTradesCsv(csv);
+      res.json(result);
+    } catch (error) {
+      console.error('import-trades error:', error);
+      res.status(500).json({ error: 'failedToImportTrades' });
+    }
+  });
+
   return router;
 };

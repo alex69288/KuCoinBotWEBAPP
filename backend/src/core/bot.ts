@@ -1,4 +1,4 @@
-import { KuCoinService } from '../services/kucoin.service';
+import { KuCoinService, kucoinService } from '../services/kucoin.service';
 import { addTradeJob } from '../queues/trading.queue';
 import { BaseStrategy, OHLCVData } from '../strategies/base.strategy';
 import { EmaMlStrategy, EmaMlConfig } from '../strategies/ema-ml.strategy';
@@ -70,7 +70,8 @@ export class KuCoinBot {
 
   constructor(config: BotConfig) {
     this.config = config;
-    this.kucoinService = new KuCoinService();
+    // Use shared singleton KuCoinService to avoid multiple instances
+    this.kucoinService = kucoinService();
     this.initializeStrategy();
   }
 
@@ -290,6 +291,14 @@ export class KuCoinBot {
       }
     }
 
+    // Попытаться восстановить открытые позиции из истории сделок
+    try {
+      const restoreResult = await this.restorePositions();
+      console.log(`Positions restored: ${restoreResult?.restored || 0}`);
+    } catch (error) {
+      console.warn('Failed to restore positions on start:', error?.message || error);
+    }
+
     // Train ML model with historical data
     await this.trainMLModel();
 
@@ -447,6 +456,73 @@ export class KuCoinBot {
     this.demoTrades = [];
   }
 
+  // Add a single open position manually
+  public addPosition(position: Position): void {
+    if (!position) return;
+    this.positions.push(position);
+    console.log('Manual position added:', position);
+  }
+
+  // Restore open positions from exchange trade history (FIFO matching)
+  public async restorePositions(limit: number = 500): Promise<any> {
+    const symbol = this.config.symbols[0];
+    try {
+      const trades = await this.kucoinService.getTrades(symbol, limit);
+      if (!Array.isArray(trades)) {
+        return { restored: 0, positions: [] };
+      }
+
+      // Normalize and sort trades by timestamp ascending
+      const normalized = trades
+        .map((t: any) => ({
+          timestamp: t.timestamp || t.datetime || Date.now(),
+          side: (t.side || t.direction || '').toLowerCase(),
+          amount: Number(t.amount || t.size || 0),
+          price: Number(t.price || (t.cost && t.amount ? t.cost / t.amount : 0) || 0),
+        }))
+        .sort((a: any, b: any) => a.timestamp - b.timestamp);
+
+      // Use FIFO stack of buys and consume by sells
+      const buyStack: Array<{ amount: number; price: number; timestamp: number }> = [];
+
+      for (const t of normalized) {
+        if (t.side === 'buy' && t.amount > 0) {
+          buyStack.push({ amount: t.amount, price: t.price, timestamp: t.timestamp });
+        } else if (t.side === 'sell' && t.amount > 0) {
+          let remaining = t.amount;
+          while (remaining > 0 && buyStack.length > 0) {
+            const head = buyStack[0];
+            if (head.amount > remaining) {
+              head.amount = +(head.amount - remaining).toFixed(12);
+              remaining = 0;
+            } else {
+              remaining = +(remaining - head.amount).toFixed(12);
+              buyStack.shift();
+            }
+          }
+        }
+      }
+
+      // Build positions from remaining buy stack
+      const restoredPositions = buyStack.map(b => ({
+        symbol,
+        side: 'buy',
+        amount: b.amount,
+        entryPrice: b.price,
+        timestamp: b.timestamp,
+      }));
+
+      // Merge restored positions with any existing in-memory positions (do not overwrite manual adds)
+      const newPositions = restoredPositions.filter(r => !this.positions.some(p => p.symbol === r.symbol && p.entryPrice === r.entryPrice && p.amount === r.amount && p.timestamp === r.timestamp));
+      this.positions = [...this.positions, ...newPositions];
+
+      return { restored: newPositions.length, positions: this.positions };
+    } catch (error) {
+      console.error('Failed to restore positions:', error);
+      throw error;
+    }
+  }
+
   public async getMarketUpdate(): Promise<any> {
     const symbol = this.config.symbols[0];
     const ticker = await this.kucoinService.getTicker(symbol);
@@ -506,6 +582,16 @@ export class KuCoinBot {
       };
     });
 
+    // Debug logging: show positions present in memory and what will be returned
+    try {
+      console.log('getMarketUpdate: totalPositions=', this.positions.length, 'filteredForSymbol=', positions.length);
+      if (positionsList.length > 0) {
+        console.log('getMarketUpdate: positionsList sample=', positionsList.slice(0, 3));
+      }
+    } catch (e) {
+      // ignore logging errors
+    }
+
     const change24hAmount = (price && change24h) ? price * (change24h / 100) : 0;
 
     return {
@@ -531,5 +617,68 @@ export class KuCoinBot {
       ,
       positionsList
     };
+  }
+
+  // Импорт сделок из CSV-строки и восстановление позиций (FIFO)
+  public async importTradesCsv(csv: string): Promise<any> {
+    try {
+      if (!csv || typeof csv !== 'string') return { restored: 0, positions: [] };
+
+      const lines = csv.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+      if (lines.length <= 1) return { restored: 0, positions: [] };
+
+      const header = lines[0].split(',').map(h => h.trim());
+      const rows = lines.slice(1);
+
+      const trades = rows.map(r => {
+        const cols = r.split(',');
+        const obj: any = {};
+        for (let i = 0; i < Math.min(cols.length, header.length); i++) {
+          obj[header[i]] = cols[i];
+        }
+        return obj;
+      }).filter(t => t.symbol && t.side && t.size);
+
+      const normalized = trades.map((t: any) => {
+        const ts = t.tradeCreatedAt ? new Date(t.tradeCreatedAt).getTime() : Date.now();
+        const side = (t.side || '').toLowerCase();
+        const amount = Number((t.size || t.amount || 0));
+        const price = Number(t.price || 0);
+        const symbolRaw = (t.symbol || '').trim();
+        const symbol = symbolRaw.includes('-') ? symbolRaw.replace('-', '/') : symbolRaw;
+        return { timestamp: ts, side, amount, price, symbol };
+      }).sort((a: any, b: any) => a.timestamp - b.timestamp);
+
+      // For now operate on the bot's configured symbol only
+      const targetSymbol = this.config.symbols[0];
+      const relevant = normalized.filter((t: any) => t.symbol === targetSymbol || t.symbol === targetSymbol.replace('/', '-'));
+
+      const buyStack: Array<{ amount: number; price: number; timestamp: number }> = [];
+
+      for (const t of relevant) {
+        if (t.side === 'buy' && t.amount > 0) {
+          buyStack.push({ amount: t.amount, price: t.price, timestamp: t.timestamp });
+        } else if (t.side === 'sell' && t.amount > 0) {
+          let remaining = t.amount;
+          while (remaining > 0 && buyStack.length > 0) {
+            const head = buyStack[0];
+            if (head.amount > remaining) {
+              head.amount = +(head.amount - remaining).toFixed(12);
+              remaining = 0;
+            } else {
+              remaining = +(remaining - head.amount).toFixed(12);
+              buyStack.shift();
+            }
+          }
+        }
+      }
+
+      this.positions = buyStack.map(b => ({ symbol: targetSymbol, side: 'buy', amount: b.amount, entryPrice: b.price, timestamp: b.timestamp }));
+
+      return { restored: this.positions.length, positions: this.positions };
+    } catch (error) {
+      console.error('Failed to import trades CSV:', error);
+      throw error;
+    }
   }
 }

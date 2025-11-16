@@ -3,7 +3,7 @@ import axios from 'axios';
 const getApiBase = () => {
   if (typeof window !== 'undefined' && (window as any).VITE_API_URL) return (window as any).VITE_API_URL;
   if (typeof process !== 'undefined' && (process as any).env?.VITE_API_URL) return (process as any).env.VITE_API_URL;
-  return 'http://localhost:5000/api';
+  return 'http://localhost:8080/api';
 };
 
 const API_BASE_URL = getApiBase();

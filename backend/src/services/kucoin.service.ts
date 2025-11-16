@@ -106,7 +106,9 @@ export class KuCoinService {
       return [];
     }
     try {
-      return await this.exchange.fetchOpenOrders(symbol);
+      const raw = await this.exchange.fetchOpenOrders(symbol);
+      try { console.log(`fetchOpenOrders raw length=${Array.isArray(raw) ? raw.length : 0}`, symbol || 'all'); } catch (e) { console.log('fetchOpenOrders raw logging failed', e) }
+      return raw;
     } catch (error) {
       console.error('Error fetching open orders:', error);
       throw error;
@@ -131,7 +133,10 @@ export class KuCoinService {
       return [];
     }
     try {
-      return await this.exchange.fetchClosedOrders(symbol, undefined, limit);
+      console.log('getOrderHistory: fetching closed orders', { symbol, limit, id: this.id });
+      const raw = await this.exchange.fetchClosedOrders(symbol, undefined, limit);
+      try { console.log('fetchClosedOrders raw sample:', Array.isArray(raw) ? raw.slice(0, 3) : raw); } catch (e) { console.log('fetchClosedOrders raw logging failed', e) }
+      return raw;
     } catch (error) {
       console.error('Error fetching order history:', error);
       throw error;
@@ -144,7 +149,10 @@ export class KuCoinService {
       return [];
     }
     try {
-      return await this.exchange.fetchMyTrades(symbol, undefined, limit);
+      console.log('getTrades: fetching my trades', { symbol, limit, id: this.id });
+      const raw = await this.exchange.fetchMyTrades(symbol, undefined, limit);
+      try { console.log('fetchMyTrades raw sample:', Array.isArray(raw) ? raw.slice(0, 3) : raw); } catch (e) { console.log('fetchMyTrades raw logging failed', e) }
+      return raw;
     } catch (error) {
       console.error('Error fetching trades:', error);
       throw error;
