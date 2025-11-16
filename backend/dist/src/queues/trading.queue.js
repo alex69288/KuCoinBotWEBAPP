@@ -1,5 +1,5 @@
 import { kucoinService } from '../services/kucoin.service';
-const kucoinServiceInstance = kucoinService();
+const kucoinServiceInstance = kucoinService.getInstance();
 // In-memory queue implementation (fallback when Redis is not available)
 class InMemoryTradingQueue {
     jobs = [];

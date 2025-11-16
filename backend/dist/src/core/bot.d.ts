@@ -16,6 +16,13 @@ interface BotConfig {
     strategy: 'ema-ml' | 'price-action' | 'macd-rsi' | 'bollinger';
     strategyConfig: EmaMlConfig | PriceActionConfig | MacdRsiConfig | BollingerBandsConfig;
 }
+interface Position {
+    symbol: string;
+    side: 'buy' | 'sell';
+    amount: number;
+    entryPrice: number;
+    timestamp: number;
+}
 /**
  * Represents a single trade.
  */
@@ -33,6 +40,7 @@ export declare class KuCoinBot {
     private isRunning;
     private positions;
     private demoTrades;
+    private savedPositionsSnapshot;
     private dailyStats;
     private riskManager;
     private strategy;
@@ -60,10 +68,13 @@ export declare class KuCoinBot {
     getStats(): any;
     manualTrade(symbol: string, side: 'buy' | 'sell', amount: number, type?: 'market' | 'limit', price?: number): Promise<any>;
     updateConfig(newConfig: Partial<BotConfig>): void;
-    setDemoMode(enabled: boolean): void;
+    setDemoMode(enabled: boolean): Promise<void>;
     getDemoTrades(): Trade[];
     clearDemoTrades(): void;
+    addPosition(position: Position): void;
+    restorePositions(limit?: number): Promise<any>;
     getMarketUpdate(): Promise<any>;
+    importTradesCsv(csv: string): Promise<any>;
 }
 export {};
 //# sourceMappingURL=bot.d.ts.map

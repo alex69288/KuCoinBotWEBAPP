@@ -6,8 +6,9 @@ export class RandomForestPredictor {
     }
     predict(data) {
         // Placeholder for Random Forest prediction logic
+        // Return fraction in range 0..1 (confidence) — not percentage
         // Replace this with actual model inference logic
-        return Math.random() * 100; // Simulated confidence percentage
+        return Math.random();
     }
 }
 //# sourceMappingURL=random_forest.js.map

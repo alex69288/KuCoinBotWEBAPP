@@ -40,6 +40,8 @@ app.use(cors({
 }));
 app.use(compression());
 app.use(express.json());
+// Accept text/csv payloads for trade import
+app.use(express.text({ type: ['text/*', 'application/csv', 'text/csv'] }));
 // Healthcheck route
 app.get('/api/health', (req, res) => {
     res.status(200).json({
@@ -100,6 +102,64 @@ try {
     // Routes
     app.use('/api/kucoin', kucoinRoutes);
     app.use('/api/bot', botRoutesFactory(kucoinBot));
+    // One-time manual positions from CSV (hardcoded two open buys)
+    try {
+        // These two positions come from the provided CSV and represent remaining open buys
+        const manualPositions = [
+            {
+                symbol: botConfig.strategyConfig.symbol || 'BTC/USDT',
+                side: 'buy',
+                amount: 0.00001,
+                entryPrice: 110185.7,
+                timestamp: new Date('2025-11-02T05:40:27Z').getTime()
+            },
+            {
+                symbol: botConfig.strategyConfig.symbol || 'BTC/USDT',
+                side: 'buy',
+                amount: 0.00001,
+                entryPrice: 103573.5,
+                timestamp: new Date('2025-11-06T00:41:35Z').getTime()
+            }
+        ];
+        for (const p of manualPositions) {
+            try {
+                kucoinBot.addPosition(p);
+            }
+            catch (e) {
+                console.warn('Failed to add manual position', e);
+            }
+        }
+    }
+    catch (e) {
+        console.warn('Failed to add manual positions:', e);
+    }
+    // One-time import of trades from CSV file if present (for manual restoration)
+    try {
+        const importsDir = path.join(__dirname, '..', 'imports');
+        const importFile = path.join(importsDir, 'initial_trades.csv');
+        if (fs.existsSync(importFile)) {
+            try {
+                const csv = fs.readFileSync(importFile, 'utf8');
+                console.log('Found initial trades CSV, importing...');
+                const importResult = await kucoinBot.importTradesCsv(csv);
+                console.log('Import result:', importResult);
+                // remove file after successful import to avoid repeated imports
+                try {
+                    fs.unlinkSync(importFile);
+                    console.log('Initial trades CSV removed after import');
+                }
+                catch (e) {
+                    console.warn('Failed to remove import file:', e);
+                }
+            }
+            catch (e) {
+                console.error('Failed to read/import initial trades CSV:', e);
+            }
+        }
+    }
+    catch (e) {
+        console.warn('Import step failed:', e);
+    }
     if (botConfig.enabled) {
         await kucoinBot.start();
         console.log('✅ KuCoin Bot started');
@@ -245,22 +305,29 @@ try {
             const chatId = msg.chat.id;
             try {
                 const update = await kucoinBot.getMarketUpdate();
+                const commissionPercent = update.config?.strategyConfig?.commissionPercent || 0.1;
+                const buyFeesUSDT = (update.positionSize || 0) * (update.entryPrice || 0) * (commissionPercent / 100);
+                const sellFeesUSDT = (update.positionSize || 0) * (update.tpPriceAdjustedForFees || update.tpPrice || 0) * (commissionPercent / 100);
+                const totalFeesUSDT = buyFeesUSDT + sellFeesUSDT;
                 const message = `📈 ОБНОВЛЕНИЕ РЫНКА
 💱 Пара: ₿ Bitcoin (${update.symbol})
 💰 Цена: ${update.price.toFixed(2)} USDT
-📊 24ч: ${update.change24h.toFixed(2)}%
+📊 24ч: ${update.change24h.toFixed(2)}% (${update.change24hAmount?.toFixed(2) || '0.00'} USDT)
 📈 EMA: ${update.emaDirection === 'ВВЕРХ' ? '🟢' : '🔴'} ${update.emaDirection} (${update.emaPercent.toFixed(2)}%)
 🎯 Сигнал: ${update.signal === 'buy' ? '🟢 ПОКУПКА' : update.signal === 'sell' ? '🔴 ПРОДАЖА' : '⚪️ ОЖИДАНИЕ'}
-🤖 ML: ${update.mlConfidence > 0.6 ? '🟢' : update.mlConfidence < 0.4 ? '🔴' : '⚪️'} ${update.mlText} (${update.mlPercent}%)
+🤖 ML: ${update.mlConfidence > 0.7 ? '🟢' : update.mlConfidence < 0.4 ? '🔴' : '⚪️'} ${update.mlText} (${update.mlPercent}%)
 
 ${update.openPositionsCount > 0 ? `💼 ПОЗИЦИЯ ОТКРЫТА (РЕЖИМ %)
 📊 Количество открытых позиций: ${update.openPositionsCount}
 💰 Размер ставки: ${update.stakeSize.toFixed(2)} USDT
 🎯 Цена входа (TP): ${update.entryPrice.toFixed(2)} USDT
 📈 Текущая прибыль: ${update.profitPercent.toFixed(2)}% (${update.currentProfit.toFixed(4)} USDT)
-🎯 До Take Profit: ${update.toTPPercent.toFixed(1)}%
+🎯 До Take Profit: ${update.toTPPercent.toFixed(1)}% (учтены комиссии)
 🎯 Цель TP: ${update.config?.strategyConfig?.takeProfitPercent || 2}%
-🛡️ Комиссии: ${update.config?.strategyConfig?.commissionPercent || 0.2}% (${(Math.abs(update.currentProfit) * ((update.config?.strategyConfig?.commissionPercent || 0.2) / 100)).toFixed(4)} USDT)` : '💼 ПОЗИЦИЙ НЕТ'}`;
+🛡️ Комиссия: ${commissionPercent}% на покупку / ${commissionPercent}% на продажу (итого: ${(commissionPercent * 2).toFixed(2)}%)
+💸 Расчётная комиссия при достижении TP: ${totalFeesUSDT.toFixed(4)} USDT (купля: ${buyFeesUSDT.toFixed(4)} / продажа: ${sellFeesUSDT.toFixed(4)})
+
+` : '💼 ПОЗИЦИЙ НЕТ'}`;
                 bot.sendMessage(chatId, message);
             }
             catch (error) {

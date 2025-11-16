@@ -1,4 +1,4 @@
-import { KuCoinService } from '../services/kucoin.service';
+import { kucoinService } from '../services/kucoin.service';
 import { EmaMlStrategy } from '../strategies/ema-ml.strategy';
 import { MacdRsiStrategy } from '../strategies/macd-rsi.strategy';
 import { PriceActionStrategy } from '../strategies/price-action.strategy';
@@ -11,6 +11,8 @@ export class KuCoinBot {
     isRunning = false;
     positions = [];
     demoTrades = [];
+    // Snapshot of real positions saved when switching to demo mode
+    savedPositionsSnapshot = null;
     dailyStats = {
         startBalance: 0,
         currentBalance: 0,
@@ -30,7 +32,8 @@ export class KuCoinBot {
     static instance = null;
     constructor(config) {
         this.config = config;
-        this.kucoinService = new KuCoinService();
+        // Use shared singleton KuCoinService to avoid multiple instances
+        this.kucoinService = kucoinService.getInstance();
         this.initializeStrategy();
     }
     static getInstance(config) {
@@ -237,6 +240,14 @@ export class KuCoinBot {
                 console.error('Failed to initialize balance:', error);
             }
         }
+        // Попытаться восстановить открытые позиции из истории сделок
+        try {
+            const restoreResult = await this.restorePositions();
+            console.log(`Positions restored: ${restoreResult?.restored || 0}`);
+        }
+        catch (error) {
+            console.warn('Failed to restore positions on start:', error?.message || error);
+        }
         // Train ML model with historical data
         await this.trainMLModel();
         // Основной цикл (пока заглушка, будет расширен стратегиями)
@@ -367,9 +378,79 @@ export class KuCoinBot {
     updateConfig(newConfig) {
         this.config = { ...this.config, ...newConfig };
     }
-    setDemoMode(enabled) {
+    async setDemoMode(enabled) {
         this.config.demoMode = enabled;
-        console.log(`Demo mode ${enabled ? 'enabled' : 'disabled'}`);
+        // set env flag so kucoinService factory can recreate appropriate instance
+        process.env.DEMO_MODE = enabled ? 'true' : 'false';
+        try {
+            // dynamic import for ESM environments
+            let mod;
+            try {
+                mod = await import('../services/kucoin.service');
+            }
+            catch (e) {
+                // Some loaders (tsx/node ESM) expect .js extension at runtime
+                mod = await import('../services/kucoin.service.js');
+            }
+            // If enabling demo, capture current market price to seed demo service
+            const symbol = this.config.symbols[0];
+            let lastPrice = null;
+            try {
+                const ticker = await this.kucoinService.getTicker(symbol);
+                if (ticker && typeof (ticker.last) === 'number')
+                    lastPrice = ticker.last;
+            }
+            catch (e) {
+                // ignore
+            }
+            // Tell the kucoinService factory to switch mode, then get the real instance
+            if (mod && typeof mod.kucoinService !== 'undefined') {
+                if (typeof mod.kucoinService.setDemoMode === 'function') {
+                    mod.kucoinService.setDemoMode(enabled);
+                }
+                this.kucoinService = (typeof mod.kucoinService.getInstance === 'function')
+                    ? mod.kucoinService.getInstance()
+                    : mod.kucoinService;
+                // If demo enabled and we have a lastPrice, seed the demo service
+                if (enabled && lastPrice !== null && typeof this.kucoinService.setDemoSeedPrices === 'function') {
+                    try {
+                        this.kucoinService.setDemoSeedPrices({ [symbol]: lastPrice });
+                        console.log('Demo service seeded with current market price for', symbol, lastPrice);
+                    }
+                    catch (e) {
+                        console.warn('Failed to seed demo service prices:', e);
+                    }
+                }
+            }
+            else {
+                throw new Error('kucoinService export not found in module');
+            }
+            // When enabling demo: snapshot current positions and zero them for display
+            if (enabled) {
+                try {
+                    this.savedPositionsSnapshot = JSON.parse(JSON.stringify(this.positions || []));
+                    // Zero-out amounts so UI shows positions but with no exposure/profit
+                    this.positions = (this.positions || []).map(p => ({ ...p, amount: 0 }));
+                    console.log('Demo mode: positions snapshot saved and zeroed for display');
+                }
+                catch (e) {
+                    console.warn('Failed to snapshot positions on demo enable:', e);
+                }
+            }
+            else {
+                // Restoring positions when leaving demo mode
+                if (this.savedPositionsSnapshot) {
+                    this.positions = this.savedPositionsSnapshot;
+                    this.savedPositionsSnapshot = null;
+                    console.log('Demo mode disabled: positions restored from snapshot');
+                }
+            }
+            console.log(`Demo mode ${enabled ? 'enabled' : 'disabled'}`);
+        }
+        catch (error) {
+            console.error('Failed to reload kucoinService after demo mode change:', error);
+            throw error;
+        }
     }
     getDemoTrades() {
         return this.demoTrades;
@@ -377,11 +458,76 @@ export class KuCoinBot {
     clearDemoTrades() {
         this.demoTrades = [];
     }
+    // Add a single open position manually
+    addPosition(position) {
+        if (!position)
+            return;
+        this.positions.push(position);
+        console.log('Manual position added:', position);
+    }
+    // Restore open positions from exchange trade history (FIFO matching)
+    async restorePositions(limit = 500) {
+        const symbol = this.config.symbols[0];
+        try {
+            const trades = await this.kucoinService.getTrades(symbol, limit);
+            if (!Array.isArray(trades)) {
+                return { restored: 0, positions: [] };
+            }
+            // Normalize and sort trades by timestamp ascending
+            const normalized = trades
+                .map((t) => ({
+                timestamp: t.timestamp || t.datetime || Date.now(),
+                side: (t.side || t.direction || '').toLowerCase(),
+                amount: Number(t.amount || t.size || 0),
+                price: Number(t.price || (t.cost && t.amount ? t.cost / t.amount : 0) || 0),
+            }))
+                .sort((a, b) => a.timestamp - b.timestamp);
+            // Use FIFO stack of buys and consume by sells
+            const buyStack = [];
+            for (const t of normalized) {
+                if (t.side === 'buy' && t.amount > 0) {
+                    buyStack.push({ amount: t.amount, price: t.price, timestamp: t.timestamp });
+                }
+                else if (t.side === 'sell' && t.amount > 0) {
+                    let remaining = t.amount;
+                    while (remaining > 0 && buyStack.length > 0) {
+                        const head = buyStack[0];
+                        if (head.amount > remaining) {
+                            head.amount = +(head.amount - remaining).toFixed(12);
+                            remaining = 0;
+                        }
+                        else {
+                            remaining = +(remaining - head.amount).toFixed(12);
+                            buyStack.shift();
+                        }
+                    }
+                }
+            }
+            // Build positions from remaining buy stack
+            const restoredPositions = buyStack.map(b => ({
+                symbol,
+                side: 'buy',
+                amount: b.amount,
+                entryPrice: b.price,
+                timestamp: b.timestamp,
+            }));
+            // Merge restored positions with any existing in-memory positions (do not overwrite manual adds)
+            const newPositions = restoredPositions.filter(r => !this.positions.some(p => p.symbol === r.symbol && p.entryPrice === r.entryPrice && p.amount === r.amount && p.timestamp === r.timestamp));
+            this.positions = [...this.positions, ...newPositions];
+            return { restored: newPositions.length, positions: this.positions };
+        }
+        catch (error) {
+            console.error('Failed to restore positions:', error);
+            throw error;
+        }
+    }
     async getMarketUpdate() {
         const symbol = this.config.symbols[0];
         const ticker = await this.kucoinService.getTicker(symbol);
         const price = ticker.last;
-        const change24h = ticker.percentage * 100;
+        // ccxt `ticker.percentage` already returns percent value (e.g. 0.2 for 0.2%) so
+        // don't multiply by 100 - it leads to values like 20.00 instead of 0.20.
+        const change24h = typeof ticker.percentage === 'number' ? ticker.percentage : 0;
         // EMA
         const closes = this.marketData.map(d => d.close);
         const emaFast = calculateEMA(closes, 12);
@@ -403,7 +549,23 @@ export class KuCoinBot {
             mlConfidence = this.strategy.mlPredictor.predict(this.marketData);
         }
         const mlPercent = (mlConfidence * 100).toFixed(1);
-        const mlText = mlConfidence > 0.6 ? 'ВВЕРХ' : mlConfidence < 0.4 ? 'ВНИЗ' : 'НЕЙТРАЛЬНО';
+        // Map numeric confidence to status strings according to specification
+        // >70%: Сильный рост
+        // 60-70%: Умеренный рост
+        // 50-60%: Нейтрально
+        // 40-50%: Умеренное падение
+        // <40%: Сильное падение
+        let mlText = 'Нейтрально';
+        if (mlConfidence > 0.7)
+            mlText = 'Сильный рост';
+        else if (mlConfidence >= 0.6)
+            mlText = 'Умеренный рост';
+        else if (mlConfidence >= 0.5)
+            mlText = 'Нейтрально';
+        else if (mlConfidence >= 0.4)
+            mlText = 'Умеренное падение';
+        else
+            mlText = 'Сильное падение';
         // Positions
         const positions = this.positions.filter(p => p.symbol === symbol);
         const openPositionsCount = positions.length;
@@ -411,13 +573,52 @@ export class KuCoinBot {
         const stakeSize = positionSize * price;
         const entryPrice = positions[0]?.entryPrice || 0;
         const tpPrice = entryPrice * (1 + (this.config.strategyConfig.takeProfitPercent || 2) / 100);
+        // Учитываем комиссии при расчёте фактической цены для закрытия по Take Profit
+        // Комиссия применяется при покупке и при продаже (maker/taker) — берём из конфига
+        const commissionPercent = (this.config.strategyConfig?.commissionPercent ?? 0.1);
+        const buyFee = commissionPercent / 100; // комиссия при покупке
+        const sellFee = commissionPercent / 100; // комиссия при продаже
+        // Целевая прибыль (в десятичной форме)
+        const targetNet = (this.config.strategyConfig.takeProfitPercent || 2) / 100;
+        // Если хотим получить чистую прибыль targetNet после оплаты комиссий на покупку и продажу,
+        // то требуемая цена закрытия S вычисляется из уравнения:
+        // ((S * (1 - sellFee)) - (E * (1 + buyFee))) / (E * (1 + buyFee)) = targetNet
+        // => S/E = (1 + targetNet) * (1 + buyFee) / (1 - sellFee)
+        const tpPriceAdjustedForFees = entryPrice * (1 + targetNet) * (1 + buyFee) / (1 - sellFee);
         const currentProfit = positions.length > 0 ? (price - entryPrice) * positionSize : 0;
         const profitPercent = positions.length > 0 ? ((price - entryPrice) / entryPrice) * 100 : 0;
-        const toTPPercent = positions.length > 0 ? ((tpPrice - price) / price) * 100 : 0;
+        // Процент до Take Profit с учётом комиссий (по отношению к текущей цене)
+        const toTPPercent = positions.length > 0 ? ((tpPriceAdjustedForFees - price) / price) * 100 : 0;
+        // Map positions to include runtime profit/percent per position
+        const positionsList = positions.map(p => {
+            const profit = (price - p.entryPrice) * p.amount;
+            const profitPercentSingle = p.entryPrice ? ((price - p.entryPrice) / p.entryPrice) * 100 : 0;
+            return {
+                symbol: p.symbol,
+                side: p.side,
+                amount: p.amount,
+                entryPrice: p.entryPrice,
+                timestamp: p.timestamp,
+                profit,
+                profitPercent: profitPercentSingle
+            };
+        });
+        // Debug logging: show positions present in memory and what will be returned
+        try {
+            console.log('getMarketUpdate: totalPositions=', this.positions.length, 'filteredForSymbol=', positions.length);
+            if (positionsList.length > 0) {
+                console.log('getMarketUpdate: positionsList sample=', positionsList.slice(0, 3));
+            }
+        }
+        catch (e) {
+            // ignore logging errors
+        }
+        const change24hAmount = (price && change24h) ? price * (change24h / 100) : 0;
         return {
             symbol,
             price,
             change24h,
+            change24hAmount,
             emaDirection,
             emaPercent,
             signal,
@@ -430,10 +631,73 @@ export class KuCoinBot {
             stakeSize,
             entryPrice,
             tpPrice,
+            // Целевая цена с учётом комиссий (для пользователя — насколько должна вырасти цена,
+            // чтобы после оплат на открытие и закрытие получить целевую прибыль)
+            tpPriceAdjustedForFees,
             currentProfit,
             profitPercent,
-            toTPPercent
+            toTPPercent,
+            positionsList,
+            config: this.config
         };
+    }
+    // Импорт сделок из CSV-строки и восстановление позиций (FIFO)
+    async importTradesCsv(csv) {
+        try {
+            if (!csv || typeof csv !== 'string')
+                return { restored: 0, positions: [] };
+            const lines = csv.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+            if (lines.length <= 1)
+                return { restored: 0, positions: [] };
+            const header = lines[0].split(',').map(h => h.trim());
+            const rows = lines.slice(1);
+            const trades = rows.map(r => {
+                const cols = r.split(',');
+                const obj = {};
+                for (let i = 0; i < Math.min(cols.length, header.length); i++) {
+                    obj[header[i]] = cols[i];
+                }
+                return obj;
+            }).filter(t => t.symbol && t.side && t.size);
+            const normalized = trades.map((t) => {
+                const ts = t.tradeCreatedAt ? new Date(t.tradeCreatedAt).getTime() : Date.now();
+                const side = (t.side || '').toLowerCase();
+                const amount = Number((t.size || t.amount || 0));
+                const price = Number(t.price || 0);
+                const symbolRaw = (t.symbol || '').trim();
+                const symbol = symbolRaw.includes('-') ? symbolRaw.replace('-', '/') : symbolRaw;
+                return { timestamp: ts, side, amount, price, symbol };
+            }).sort((a, b) => a.timestamp - b.timestamp);
+            // For now operate on the bot's configured symbol only
+            const targetSymbol = this.config.symbols[0];
+            const relevant = normalized.filter((t) => t.symbol === targetSymbol || t.symbol === targetSymbol.replace('/', '-'));
+            const buyStack = [];
+            for (const t of relevant) {
+                if (t.side === 'buy' && t.amount > 0) {
+                    buyStack.push({ amount: t.amount, price: t.price, timestamp: t.timestamp });
+                }
+                else if (t.side === 'sell' && t.amount > 0) {
+                    let remaining = t.amount;
+                    while (remaining > 0 && buyStack.length > 0) {
+                        const head = buyStack[0];
+                        if (head.amount > remaining) {
+                            head.amount = +(head.amount - remaining).toFixed(12);
+                            remaining = 0;
+                        }
+                        else {
+                            remaining = +(remaining - head.amount).toFixed(12);
+                            buyStack.shift();
+                        }
+                    }
+                }
+            }
+            this.positions = buyStack.map(b => ({ symbol: targetSymbol, side: 'buy', amount: b.amount, entryPrice: b.price, timestamp: b.timestamp }));
+            return { restored: this.positions.length, positions: this.positions };
+        }
+        catch (error) {
+            console.error('Failed to import trades CSV:', error);
+            throw error;
+        }
     }
 }
 //# sourceMappingURL=bot.js.map

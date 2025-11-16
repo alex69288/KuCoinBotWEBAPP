@@ -25,7 +25,7 @@ export class EmaMlStrategy extends BaseStrategy {
         const fastEMA = emaFast[emaFast.length - 1];
         const slowEMA = emaSlow[emaSlow.length - 1];
         const emaDiff = (fastEMA - slowEMA) / slowEMA * 100; // percentage difference
-        // Get ML prediction
+        // Get ML prediction (confidence 0..1)
         const mlConfidence = this.mlPredictor.predict(data);
         // Check take profit / stop loss / trailing stop
         if (this.lastSignal === 'buy' && this.entryPrice > 0) {

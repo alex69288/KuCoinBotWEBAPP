@@ -1,12 +1,12 @@
 import { Router } from 'express';
 import { kucoinService } from '../services/kucoin.service.js';
-const kucoinServiceInstance = kucoinService();
+const getKucoin = () => kucoinService.getInstance();
 import { addTradeJob } from '../queues/trading.queue.js';
 const router = Router();
 // Get balance
 router.get('/balance', async (req, res) => {
     try {
-        const balance = await kucoinServiceInstance.getBalance();
+        const balance = await getKucoin().getBalance();
         res.json(balance);
     }
     catch (error) {
@@ -21,7 +21,7 @@ router.get('/ticker/:symbol', async (req, res) => {
         if (symbol.includes(':')) {
             return res.status(400).json({ error: 'Invalid symbol: placeholder detected' });
         }
-        const ticker = await kucoinServiceInstance.getTicker(symbol);
+        const ticker = await getKucoin().getTicker(symbol);
         res.json(ticker);
     }
     catch (error) {
@@ -37,7 +37,7 @@ router.get('/orderbook/:symbol', async (req, res) => {
             return res.status(400).json({ error: 'Invalid symbol: placeholder detected' });
         }
         const limit = parseInt(req.query.limit) || 20;
-        const orderBook = await kucoinServiceInstance.getOrderBook(symbol, limit);
+        const orderBook = await getKucoin().getOrderBook(symbol, limit);
         res.json(orderBook);
     }
     catch (error) {
@@ -70,7 +70,7 @@ router.post('/orders', async (req, res) => {
 router.get('/orders/open', async (req, res) => {
     try {
         const { symbol } = req.query;
-        const orders = await kucoinServiceInstance.getOpenOrders(symbol);
+        const orders = await getKucoin().getOpenOrders(symbol);
         res.json(orders);
     }
     catch (error) {
@@ -82,7 +82,7 @@ router.delete('/orders/:orderId', async (req, res) => {
     try {
         const { orderId } = req.params;
         const { symbol } = req.query;
-        const result = await kucoinServiceInstance.cancelOrder(orderId, symbol);
+        const result = await getKucoin().cancelOrder(orderId, symbol);
         res.json(result);
     }
     catch (error) {
@@ -93,7 +93,7 @@ router.delete('/orders/:orderId', async (req, res) => {
 router.get('/orders/history', async (req, res) => {
     try {
         const { symbol, limit } = req.query;
-        const orders = await kucoinServiceInstance.getOrderHistory(symbol, parseInt(limit) || 50);
+        const orders = await getKucoin().getOrderHistory(symbol, parseInt(limit) || 50);
         res.json(orders);
     }
     catch (error) {
@@ -104,7 +104,7 @@ router.get('/orders/history', async (req, res) => {
 router.get('/trades', async (req, res) => {
     try {
         const { symbol, limit } = req.query;
-        const trades = await kucoinServiceInstance.getTrades(symbol, parseInt(limit) || 50);
+        const trades = await getKucoin().getTrades(symbol, parseInt(limit) || 50);
         res.json(trades);
     }
     catch (error) {
@@ -114,7 +114,7 @@ router.get('/trades', async (req, res) => {
 // Get markets
 router.get('/markets', async (req, res) => {
     try {
-        const markets = await kucoinServiceInstance.getMarkets();
+        const markets = await getKucoin().getMarkets();
         res.json(markets);
     }
     catch (error) {

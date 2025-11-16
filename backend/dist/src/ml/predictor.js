@@ -65,11 +65,19 @@ export class SimpleMLPredictor {
         ];
         // If model is trained, use it; otherwise use rule-based
         if (this.model && this.model.constructor.name === 'RandomForestClassifier') {
-            const prediction = this.model.predict([features]);
-            // Assuming prediction is 0 or 1, convert to confidence
-            return prediction[0] === 1 ? 0.75 : 0.25;
+            const prediction = this.model.predictProba([features]);
+            // prediction[0][1] is probability of class 1 (up)
+            return prediction[0][1];
         }
-        return this.model.predict(features);
+        // Rule-based fallback returns confidence as a number 0..1
+        const [emaFast, emaSlow, rsi, macd, bbUpper, bbLower] = features;
+        if (emaFast > emaSlow && rsi < 70) {
+            return 0.75; // 75% confidence for up
+        }
+        else if (emaFast < emaSlow && rsi > 30) {
+            return 0.25; // 25% confidence for down
+        }
+        return 0.5; // Neutral
     }
     // Train the Random Forest model
     train(data) {
