@@ -96,4 +96,4 @@ try {
     # Ensure port cleaned
     Free-Port 8080
     Write-Host "All stopped."
-}
+    exit 0
