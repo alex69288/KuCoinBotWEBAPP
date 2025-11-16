@@ -6743,3 +6743,199 @@ Manual position added: {
   timestamp: 1762389695000
 }
 🤖 KuCoin Bot started
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 500, id: 0.9455292459451956 }
+fetchMyTrades raw sample: []
+Positions restored: 0
+Trained Random Forest model with 500 samples
+✅ KuCoin Bot started
+ℹ️ Using Telegram polling for development
+⏳ Waiting 5 seconds before starting server...
+Before server.listen
+20:07:35 [tsx] change in ./src\ml\random_forest.ts Rerunning...
+c20:07:44 [tsx] change in ./src\strategies\ema-ml.strategy.ts Restarting...
+cLoading .env from: C:\Users\user\Documents\Scripts\KuCoinBotV5WEBAPP\backend\.env
+File exists: true
+dotenv result: {
+  parsed: {
+    PORT: '8080',
+    BACKEND_URL: 'http://localhost:8080',
+    FRONTEND_URL: 'http://localhost:3000',
+    KUCOIN_API_KEY: '6918cb078e482000016f3e53',
+    KUCOIN_API_SECRET: '4603d01c-a2f1-486b-a68f-26aae5d74706',
+    KUCOIN_API_PASSPHRASE: "j&5R$}MX7]&3EtUK4'JN",
+    TELEGRAM_BOT_TOKEN: '8363311891:AAHJZn0lrKjYCZin11dJbdIGYgFSVBpouHY',
+    TELEGRAM_CHAT_ID: '8094232103',
+    WEBAPP_URL: 'https://kucoinbot-frontend-docker.amvera.io',
+    REDIS_URL: 'redis://127.0.0.1:6379',
+    NODE_ENV: 'production',
+    REDIS_PASSWORD: '312556'
+  }
+}
+KUCOIN_API_KEY: 6918cb078e482000016f3e53
+Starting application...
+🔧 Environment: NODE_ENV=production, isProduction=true
+🔧 URLs: FRONTEND_URL=http://localhost:3000, BACKEND_URL=http://localhost:8080
+🔧 Bot Token: present
+🤖 Telegram bot mode: polling
+kucoinService: mode changed or instance not initialized, recreating instance, demo= false
+kucoinService: creating instance, demo= false
+Creating KuCoinService instance 0.0007627339568263558
+Initializing KuCoin with the following credentials:
+apiKey: ***
+secret: ***
+password: ***
+KuCoin exchange initialized: Success
+Credentials available: Yes
+🔧 Redis config: NODE_ENV=production, REDIS_URL=present
+ℹ️ Using localhost Redis (production) or in-memory fallback
+🔧 Final Redis config: {"host":"127.0.0.1","port":6379,"hasPassword":true}
+✅ Redis queue initialized successfully
+✅ Trading queue initialized
+kucoinService: returning existing instance, demo= false
+Manual position added: {
+  symbol: 'BTC/USDT',
+  side: 'buy',
+  amount: 0.00001,
+  entryPrice: 110185.7,
+  timestamp: 1762062027000
+}
+Manual position added: {
+  symbol: 'BTC/USDT',
+  side: 'buy',
+  amount: 0.00001,
+  entryPrice: 103573.5,
+  timestamp: 1762389695000
+}
+🤖 KuCoin Bot started
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 500, id: 0.0007627339568263558 }
+Trained Random Forest model with 0 samples
+✅ KuCoin Bot started
+ℹ️ Using Telegram polling for development
+⏳ Waiting 5 seconds before starting server...
+Before server.listen
+20:08:13 [tsx] change in ./src\core\bot.ts Rerunning...
+cLoading .env from: C:\Users\user\Documents\Scripts\KuCoinBotV5WEBAPP\backend\.env
+File exists: true
+dotenv result: {
+  parsed: {
+    PORT: '8080',
+    BACKEND_URL: 'http://localhost:8080',
+    FRONTEND_URL: 'http://localhost:3000',
+    KUCOIN_API_KEY: '6918cb078e482000016f3e53',
+    KUCOIN_API_SECRET: '4603d01c-a2f1-486b-a68f-26aae5d74706',
+    KUCOIN_API_PASSPHRASE: "j&5R$}MX7]&3EtUK4'JN",
+    TELEGRAM_BOT_TOKEN: '8363311891:AAHJZn0lrKjYCZin11dJbdIGYgFSVBpouHY',
+    TELEGRAM_CHAT_ID: '8094232103',
+    WEBAPP_URL: 'https://kucoinbot-frontend-docker.amvera.io',
+    REDIS_URL: 'redis://127.0.0.1:6379',
+    NODE_ENV: 'production',
+    REDIS_PASSWORD: '312556'
+  }
+}
+KUCOIN_API_KEY: 6918cb078e482000016f3e53
+Starting application...
+🔧 Environment: NODE_ENV=production, isProduction=true
+🔧 URLs: FRONTEND_URL=http://localhost:3000, BACKEND_URL=http://localhost:8080
+🔧 Bot Token: present
+🤖 Telegram bot mode: polling
+kucoinService: mode changed or instance not initialized, recreating instance, demo= false
+kucoinService: creating instance, demo= false
+Creating KuCoinService instance 0.9740749120450758
+Initializing KuCoin with the following credentials:
+apiKey: ***
+secret: ***
+password: ***
+KuCoin exchange initialized: Success
+Credentials available: Yes
+🔧 Redis config: NODE_ENV=production, REDIS_URL=present
+ℹ️ Using localhost Redis (production) or in-memory fallback
+🔧 Final Redis config: {"host":"127.0.0.1","port":6379,"hasPassword":true}
+✅ Redis queue initialized successfully
+✅ Trading queue initialized
+kucoinService: returning existing instance, demo= false
+Manual position added: {
+  symbol: 'BTC/USDT',
+  side: 'buy',
+  amount: 0.00001,
+  entryPrice: 110185.7,
+  timestamp: 1762062027000
+}
+Manual position added: {
+  symbol: 'BTC/USDT',
+  side: 'buy',
+  amount: 0.00001,
+  entryPrice: 103573.5,
+  timestamp: 1762389695000
+}
+🤖 KuCoin Bot started
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 500, id: 0.9740749120450758 }
+fetchMyTrades raw sample: []
+Positions restored: 0
+Trained Random Forest model with 500 samples
+✅ KuCoin Bot started
+ℹ️ Using Telegram polling for development
+⏳ Waiting 5 seconds before starting server...
+Before server.listen
+20:08:43 [tsx] change in ./src\index.ts Rerunning...
+cLoading .env from: C:\Users\user\Documents\Scripts\KuCoinBotV5WEBAPP\backend\.env
+File exists: true
+dotenv result: {
+  parsed: {
+    PORT: '8080',
+    BACKEND_URL: 'http://localhost:8080',
+    FRONTEND_URL: 'http://localhost:3000',
+    KUCOIN_API_KEY: '6918cb078e482000016f3e53',
+    KUCOIN_API_SECRET: '4603d01c-a2f1-486b-a68f-26aae5d74706',
+    KUCOIN_API_PASSPHRASE: "j&5R$}MX7]&3EtUK4'JN",
+    TELEGRAM_BOT_TOKEN: '8363311891:AAHJZn0lrKjYCZin11dJbdIGYgFSVBpouHY',
+    TELEGRAM_CHAT_ID: '8094232103',
+    WEBAPP_URL: 'https://kucoinbot-frontend-docker.amvera.io',
+    REDIS_URL: 'redis://127.0.0.1:6379',
+    NODE_ENV: 'production',
+    REDIS_PASSWORD: '312556'
+  }
+}
+KUCOIN_API_KEY: 6918cb078e482000016f3e53
+Starting application...
+🔧 Environment: NODE_ENV=production, isProduction=true
+🔧 URLs: FRONTEND_URL=http://localhost:3000, BACKEND_URL=http://localhost:8080
+🔧 Bot Token: present
+🤖 Telegram bot mode: polling
+kucoinService: mode changed or instance not initialized, recreating instance, demo= false
+kucoinService: creating instance, demo= false
+Creating KuCoinService instance 0.5240321768231964
+Initializing KuCoin with the following credentials:
+apiKey: ***
+secret: ***
+password: ***
+KuCoin exchange initialized: Success
+Credentials available: Yes
+🔧 Redis config: NODE_ENV=production, REDIS_URL=present
+ℹ️ Using localhost Redis (production) or in-memory fallback
+🔧 Final Redis config: {"host":"127.0.0.1","port":6379,"hasPassword":true}
+✅ Redis queue initialized successfully
+✅ Trading queue initialized
+kucoinService: returning existing instance, demo= false
+Manual position added: {
+  symbol: 'BTC/USDT',
+  side: 'buy',
+  amount: 0.00001,
+  entryPrice: 110185.7,
+  timestamp: 1762062027000
+}
+Manual position added: {
+  symbol: 'BTC/USDT',
+  side: 'buy',
+  amount: 0.00001,
+  entryPrice: 103573.5,
+  timestamp: 1762389695000
+}
+🤖 KuCoin Bot started
+getTrades: fetching my trades { symbol: 'BTC/USDT', limit: 500, id: 0.5240321768231964 }
+fetchMyTrades raw sample: []
+Positions restored: 0
+Trained Random Forest model with 500 samples
+✅ KuCoin Bot started
+ℹ️ Using Telegram polling for development
+⏳ Waiting 5 seconds before starting server...
+Before server.listen

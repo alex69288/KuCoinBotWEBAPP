@@ -33,7 +33,7 @@ describe('Open Positions modal', () => {
       signalText: 'ПОКУПКА',
       mlConfidence: 0.7,
       mlPercent: '70.0',
-      mlText: 'ВВЕРХ',
+      mlText: 'Умеренный рост',
       openPositionsCount: 1,
       positionsList: [{ symbol: 'BTC/USDT', side: 'buy', amount: 0.001, entryPrice: 9000, timestamp: Date.now(), profit: 100, profitPercent: 1.11 }],
       positionSize: 0.001,

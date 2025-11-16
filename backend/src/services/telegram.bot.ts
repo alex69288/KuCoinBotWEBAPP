@@ -41,7 +41,7 @@ bot.command('market', async (ctx) => {
 📊 24ч: ${update.change24h.toFixed(2)}% (${update.change24hAmount?.toFixed(2) || '0.00'} USDT)
 📈 EMA: ${update.emaDirection === 'ВВЕРХ' ? '🟢' : '🔴'} ${update.emaDirection} (${update.emaPercent.toFixed(2)}%)
 🎯 Сигнал: ${update.signal === 'buy' ? '🟢 ПОКУПКА' : update.signal === 'sell' ? '🔴 ПРОДАЖА' : '⚪️ ОЖИДАНИЕ'}
-🤖 ML: ${update.mlConfidence > 0.6 ? '🟢' : update.mlConfidence < 0.4 ? '🔴' : '⚪️'} ${update.mlText} (${update.mlPercent}%)
+🤖 ML: ${update.mlConfidence > 0.7 ? '🟢' : update.mlConfidence < 0.4 ? '🔴' : '⚪️'} ${update.mlText} (${update.mlPercent}%)
 
 ${update.openPositionsCount > 0 ? `💼 ПОЗИЦИЯ ОТКРЫТА (РЕЖИМ %)
 📊 Количество открытых позиций: ${update.openPositionsCount}

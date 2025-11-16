@@ -621,7 +621,18 @@ export class KuCoinBot {
       mlConfidence = (this.strategy as any).mlPredictor.predict(this.marketData);
     }
     const mlPercent = (mlConfidence * 100).toFixed(1);
-    const mlText = mlConfidence > 0.6 ? 'ВВЕРХ' : mlConfidence < 0.4 ? 'ВНИЗ' : 'НЕЙТРАЛЬНО';
+    // Map numeric confidence to status strings according to specification
+    // >70%: Сильный рост
+    // 60-70%: Умеренный рост
+    // 50-60%: Нейтрально
+    // 40-50%: Умеренное падение
+    // <40%: Сильное падение
+    let mlText = 'Нейтрально';
+    if (mlConfidence > 0.7) mlText = 'Сильный рост';
+    else if (mlConfidence >= 0.6) mlText = 'Умеренный рост';
+    else if (mlConfidence >= 0.5) mlText = 'Нейтрально';
+    else if (mlConfidence >= 0.4) mlText = 'Умеренное падение';
+    else mlText = 'Сильное падение';
 
     // Positions
     const positions = this.positions.filter(p => p.symbol === symbol);

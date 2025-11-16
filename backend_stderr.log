@@ -500,3 +500,120 @@ Failed to start server: Error: listen EADDRINUSE: address already in use :::8080
 }
 Port 8080 is already in use. Please check if another instance is running.
 💡 Try waiting longer or check Amvera configuration
+Failed to start server: Error: listen EADDRINUSE: address already in use :::8080
+    at __node_internal_captureLargerStackTrace (node:internal/errors:563:5)
+    at __node_internal_uvExceptionWithHostPort (node:internal/errors:660:12)
+    at Server.setupListenHandle [as _listen2] (node:net:1872:16)
+    at listenInCluster (node:net:1920:12)
+    at Server.listen (node:net:2008:7)
+    at <anonymous> (c:\Users\user\Documents\Scripts\KuCoinBotV5WEBAPP\backend\src\index.ts:345:10) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::',
+  port: 8080
+}
+Port 8080 is already in use. Please check if another instance is running.
+💡 Try waiting longer or check Amvera configuration
+Error fetching balance: RequestTimeout: kucoin GET https://api.kucoin.com/api/v3/currencies request timed out (10000 ms)
+    at kucoin.fetch (c:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/base/Exchange.js:736:23)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at kucoin.fetch2 (c:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/base/Exchange.js:4795:24)
+    at kucoin.request (c:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/base/Exchange.js:4819:16)
+    at async kucoin.fetchCurrencies (file:///C:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/kucoin.js:1601:26)
+    at kucoin.loadMarketsHelper (c:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/base/Exchange.js:820:26)
+    at async kucoin.fetchBalance (file:///C:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/kucoin.js:4387:9)
+    at KuCoinService.getBalance (c:\Users\user\Documents\Scripts\KuCoinBotV5WEBAPP\backend\src\services\kucoin.service.ts:46:14)
+    at KuCoinBot.start (c:\Users\user\Documents\Scripts\KuCoinBotV5WEBAPP\backend\src\core\bot.ts:288:25)
+    at <anonymous> (c:\Users\user\Documents\Scripts\KuCoinBotV5WEBAPP\backend\src\index.ts:167:5)
+Failed to initialize balance: RequestTimeout: kucoin GET https://api.kucoin.com/api/v3/currencies request timed out (10000 ms)
+    at kucoin.fetch (c:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/base/Exchange.js:736:23)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at kucoin.fetch2 (c:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/base/Exchange.js:4795:24)
+    at kucoin.request (c:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/base/Exchange.js:4819:16)
+    at async kucoin.fetchCurrencies (file:///C:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/kucoin.js:1601:26)
+    at kucoin.loadMarketsHelper (c:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/base/Exchange.js:820:26)
+    at async kucoin.fetchBalance (file:///C:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/kucoin.js:4387:9)
+    at KuCoinService.getBalance (c:\Users\user\Documents\Scripts\KuCoinBotV5WEBAPP\backend\src\services\kucoin.service.ts:46:14)
+    at KuCoinBot.start (c:\Users\user\Documents\Scripts\KuCoinBotV5WEBAPP\backend\src\core\bot.ts:288:25)
+    at <anonymous> (c:\Users\user\Documents\Scripts\KuCoinBotV5WEBAPP\backend\src\index.ts:167:5)
+Error fetching trades: RequestTimeout: kucoin GET https://api.kucoin.com/api/v3/currencies request timed out (10000 ms)
+    at kucoin.fetch (c:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/base/Exchange.js:736:23)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at kucoin.fetch2 (c:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/base/Exchange.js:4795:24)
+    at kucoin.request (c:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/base/Exchange.js:4819:16)
+    at async kucoin.fetchCurrencies (file:///C:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/kucoin.js:1601:26)
+    at kucoin.loadMarketsHelper (c:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/base/Exchange.js:820:26)
+    at async kucoin.fetchBalance (file:///C:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/kucoin.js:4387:9)
+    at KuCoinService.getBalance (c:\Users\user\Documents\Scripts\KuCoinBotV5WEBAPP\backend\src\services\kucoin.service.ts:46:14)
+    at KuCoinBot.start (c:\Users\user\Documents\Scripts\KuCoinBotV5WEBAPP\backend\src\core\bot.ts:288:25)
+    at <anonymous> (c:\Users\user\Documents\Scripts\KuCoinBotV5WEBAPP\backend\src\index.ts:167:5)
+Failed to restore positions: RequestTimeout: kucoin GET https://api.kucoin.com/api/v3/currencies request timed out (10000 ms)
+    at kucoin.fetch (c:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/base/Exchange.js:736:23)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at kucoin.fetch2 (c:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/base/Exchange.js:4795:24)
+    at kucoin.request (c:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/base/Exchange.js:4819:16)
+    at async kucoin.fetchCurrencies (file:///C:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/kucoin.js:1601:26)
+    at kucoin.loadMarketsHelper (c:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/base/Exchange.js:820:26)
+    at async kucoin.fetchBalance (file:///C:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/kucoin.js:4387:9)
+    at KuCoinService.getBalance (c:\Users\user\Documents\Scripts\KuCoinBotV5WEBAPP\backend\src\services\kucoin.service.ts:46:14)
+    at KuCoinBot.start (c:\Users\user\Documents\Scripts\KuCoinBotV5WEBAPP\backend\src\core\bot.ts:288:25)
+    at <anonymous> (c:\Users\user\Documents\Scripts\KuCoinBotV5WEBAPP\backend\src\index.ts:167:5)
+Failed to restore positions on start: kucoin GET https://api.kucoin.com/api/v3/currencies request timed out (10000 ms)
+Error fetching historical data: RequestTimeout: kucoin GET https://api.kucoin.com/api/v3/currencies request timed out (10000 ms)
+    at kucoin.fetch (c:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/base/Exchange.js:736:23)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at kucoin.fetch2 (c:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/base/Exchange.js:4795:24)
+    at kucoin.request (c:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/base/Exchange.js:4819:16)
+    at async kucoin.fetchCurrencies (file:///C:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/kucoin.js:1601:26)
+    at kucoin.loadMarketsHelper (c:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/base/Exchange.js:820:26)
+    at async kucoin.fetchBalance (file:///C:/Users/user/Documents/Scripts/KuCoinBotV5WEBAPP/backend/node_modules/ccxt/js/src/kucoin.js:4387:9)
+    at KuCoinService.getBalance (c:\Users\user\Documents\Scripts\KuCoinBotV5WEBAPP\backend\src\services\kucoin.service.ts:46:14)
+    at KuCoinBot.start (c:\Users\user\Documents\Scripts\KuCoinBotV5WEBAPP\backend\src\core\bot.ts:288:25)
+    at <anonymous> (c:\Users\user\Documents\Scripts\KuCoinBotV5WEBAPP\backend\src\index.ts:167:5)
+error: [polling_error] {"code":"ETELEGRAM","message":"ETELEGRAM: 409 Conflict: terminated by other getUpdates request; make sure that only one bot instance is running"}
+Failed to start server: Error: listen EADDRINUSE: address already in use :::8080
+    at __node_internal_captureLargerStackTrace (node:internal/errors:563:5)
+    at __node_internal_uvExceptionWithHostPort (node:internal/errors:660:12)
+    at Server.setupListenHandle [as _listen2] (node:net:1872:16)
+    at listenInCluster (node:net:1920:12)
+    at Server.listen (node:net:2008:7)
+    at <anonymous> (c:\Users\user\Documents\Scripts\KuCoinBotV5WEBAPP\backend\src\index.ts:345:10) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::',
+  port: 8080
+}
+Port 8080 is already in use. Please check if another instance is running.
+💡 Try waiting longer or check Amvera configuration
+Failed to start server: Error: listen EADDRINUSE: address already in use :::8080
+    at __node_internal_captureLargerStackTrace (node:internal/errors:563:5)
+    at __node_internal_uvExceptionWithHostPort (node:internal/errors:660:12)
+    at Server.setupListenHandle [as _listen2] (node:net:1872:16)
+    at listenInCluster (node:net:1920:12)
+    at Server.listen (node:net:2008:7)
+    at <anonymous> (c:\Users\user\Documents\Scripts\KuCoinBotV5WEBAPP\backend\src\index.ts:345:10) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::',
+  port: 8080
+}
+Port 8080 is already in use. Please check if another instance is running.
+💡 Try waiting longer or check Amvera configuration
+Failed to start server: Error: listen EADDRINUSE: address already in use :::8080
+    at __node_internal_captureLargerStackTrace (node:internal/errors:563:5)
+    at __node_internal_uvExceptionWithHostPort (node:internal/errors:660:12)
+    at Server.setupListenHandle [as _listen2] (node:net:1872:16)
+    at listenInCluster (node:net:1920:12)
+    at Server.listen (node:net:2008:7)
+    at <anonymous> (c:\Users\user\Documents\Scripts\KuCoinBotV5WEBAPP\backend\src\index.ts:345:10) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::',
+  port: 8080
+}
+Port 8080 is already in use. Please check if another instance is running.
+💡 Try waiting longer or check Amvera configuration
